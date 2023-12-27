@@ -3,8 +3,6 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using AutoMapper;
-using DebugMenu.Silo;
 using DebugMenu.Silo.Abstractions;
 using DebugMenu.Silo.Common;
 using DebugMenu.Silo.Grains;
@@ -22,8 +20,6 @@ using DebugMenu.Silo.Web.Users.Persistence.EntityFramework;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Orleans;
-using Orleans.Hosting;
 
 var reference = typeof(DebugInstanceGrain);
 
@@ -74,7 +70,7 @@ builder.Services
 
 builder.Services
     .AddDbContext<DebugMenuDbContext>(options => {
-    options.UseNpgsql(builder.Configuration.GetConnectionString("Host=localhost;Database=debugmenu;Username=postgres;Password=knowingly;Include Error Detail=true;")!,
+    options.UseNpgsql(builder.Configuration.GetConnectionString("Host=localhost;Port=5432;Database=debugmenu;Username=postgres;Password=postgres;Include Error Detail=true;")!,
         serverOptions => serverOptions
             .EnableRetryOnFailure(5, TimeSpan.FromSeconds(30), null)
             .MigrationsAssembly("DebugMenu.Silo")
