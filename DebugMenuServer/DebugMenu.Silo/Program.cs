@@ -44,7 +44,6 @@ using var host = new HostBuilder()
         //     options.CollectionAge = TimeSpan.FromSeconds(15);
         //     options.CollectionQuantum = TimeSpan.FromSeconds(5);
         // });
-
     })
     .ConfigureServices(serviceCollection => serviceCollection
         .AddSingleton<ILocalWebsocketUrlProvider, LocalWebsocketUrlProvider>()
@@ -70,12 +69,15 @@ builder.Services
 
 builder.Services
     .AddDbContext<DebugMenuDbContext>(options => {
-    options.UseNpgsql(builder.Configuration.GetConnectionString("Host=localhost;Port=5432;Database=debugmenu;Username=postgres;Password=postgres;Include Error Detail=true;")!,
-        serverOptions => serverOptions
-            .EnableRetryOnFailure(5, TimeSpan.FromSeconds(30), null)
-            .MigrationsAssembly("DebugMenu.Silo")
-    );
-});
+        options.UseNpgsql(
+            builder.Configuration.GetConnectionString(
+                "Host=localhost;Port=5432;Database=debugmenu;Username=postgres;Password=postgres;Include Error Detail=true;")
+            !,
+            serverOptions => serverOptions
+                .EnableRetryOnFailure(5, TimeSpan.FromSeconds(30), null)
+                .MigrationsAssembly("DebugMenu.Silo")
+        );
+    });
 
 string jwtSecretKey = "ed5b824bd6f6a2db592c0273d9fb176decae1c5f6b86e6ab03df741815827e90";
 
@@ -87,8 +89,7 @@ builder
         options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
         options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     })
-    .AddJwtBearer(options => options.TokenValidationParameters = new TokenValidationParameters
-    {
+    .AddJwtBearer(options => options.TokenValidationParameters = new TokenValidationParameters {
         ValidateIssuer = true,
         ValidIssuer = "debugmenu",
         ValidateAudience = true,
@@ -96,7 +97,7 @@ builder
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecretKey)),
         ValidateIssuerSigningKey = true,
         ValidateLifetime = false
-    });;
+    });
 
 builder.Services.AddScoped<IJwtService, DebugMenuIoJwtService>();
 
@@ -127,27 +128,26 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapGet("/get-jwt", () => {
-        Claim[] claims = new Claim[]
-        {
-            new Claim("Id", "1"),
-            new Claim("Name", "daniel"),
-            new Claim("Email", "d@d.d"),
-        };
+    Claim[] claims = new Claim[] {
+        new Claim("Id", "1"),
+        new Claim("Name", "daniel"),
+        new Claim("Email", "d@d.d"),
+    };
 
-        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecretKey));
+    var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecretKey));
 
-        var signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+    var signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
-        var token = new
-            JwtSecurityToken(
-                "debugmenu",
-                "http://debugmenu.io",
-                claims,
-                expires: DateTime.Now.AddMinutes(30),
-                signingCredentials: signingCredentials);
+    var token = new
+        JwtSecurityToken(
+            "debugmenu",
+            "http://debugmenu.io",
+            claims,
+            expires: DateTime.Now.AddMinutes(30),
+            signingCredentials: signingCredentials);
 
-        return Results.Ok(new JwtSecurityTokenHandler().WriteToken(token));
-    });
+    return Results.Ok(new JwtSecurityTokenHandler().WriteToken(token));
+});
 
 app.MapGet("/version", () => "1.0.0")
     .RequireAuthorization();
@@ -157,9 +157,9 @@ app.MapUsersEndpoints();
 app.MapRuntimeTokensEndpoints();
 app.MapRunningInstancesEndpoints();
 
-app.MapPost("/instance/start", async (StartInstanceRequestDto request, IClusterClient clusterClient) => 
+app.MapPost("/instance/start", async (StartInstanceRequestDto request, IClusterClient clusterClient) =>
     await clusterClient.GetGrain<IDebugInstanceGrain>(Guid.NewGuid().ToString())
-    .StartInstance(request));
+        .StartInstance(request));
 
 app.UseWebSockets();
 app.Map("/ws", ws => ws.UseMiddleware<WebSocketPubSubMiddleware>());
@@ -171,7 +171,7 @@ await app.StartAsync();
 
 Console.WriteLine("Orleans is running.\nPress Enter to terminate...");
 
-while (!Console.KeyAvailable) {
+while(!Console.KeyAvailable) {
     await Task.Delay(1000);
 }
 
