@@ -1,9 +1,7 @@
 {
-    "name": "DebugMenu",
-    "rootNamespace": "",
-    "references": [
-        ""
-    ],
+    "name": "DebugMenuIO",
+    "rootNamespace": "DebugMenuIO",
+    "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
