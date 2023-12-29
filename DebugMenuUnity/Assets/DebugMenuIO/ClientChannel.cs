@@ -2,12 +2,12 @@
 using System;
 using System.Threading;
 
-public class Channel : IChannel {
+public class ClientChannel : IChannel {
     private readonly DebugMenuWebSocketClient _client;
     private readonly string _channelPath;
     private readonly CancellationToken _cancellationToken;
 
-    public Channel(DebugMenuWebSocketClient client, string channelPath, CancellationToken cancellationToken) {
+    public ClientChannel(DebugMenuWebSocketClient client, string channelPath, CancellationToken cancellationToken) {
         _client = client;
         _channelPath = channelPath;
         _cancellationToken = cancellationToken;

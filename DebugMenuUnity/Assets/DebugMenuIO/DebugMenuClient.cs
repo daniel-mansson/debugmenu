@@ -9,9 +9,15 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using DebugMenuIO;
+using DebugMenuIO.AsyncApi;
+using Newtonsoft.Json.Serialization;
 using Unity.Plastic.Newtonsoft.Json;
 using Unity.Plastic.Newtonsoft.Json.Linq;
+using UnityEngine;
 using UnityEngine.XR;
+using Channel = DebugMenuIO.AsyncApi.Channel;
+using JsonSerializerSettings = Newtonsoft.Json.JsonSerializerSettings;
+using NullValueHandling = Newtonsoft.Json.NullValueHandling;
 
 namespace DebugMenu {
     public class DebugMenuClient : IDisposable {
@@ -20,7 +26,7 @@ namespace DebugMenu {
         private readonly Dictionary<string, string> _metadata;
         private DebugMenuWebSocketClient? _webSocketClient;
         private Task? _clientTask;
-        private readonly Dictionary<string, Channel> _channels = new();
+        private readonly Dictionary<string, ClientChannel> _channels = new();
         private readonly Dictionary<string, HandlerInfo> _handlers = new();
 
         public DebugMenuClient(string url, string token, Dictionary<string, string> metadata) {
@@ -30,6 +36,7 @@ namespace DebugMenu {
         }
 
         private Task OnConnected() {
+            TryUpdateSchema();
             return Task.CompletedTask;
         }
 
@@ -70,15 +77,22 @@ namespace DebugMenu {
                 new DebugMenuWebSocketClient(instance.WebsocketUrl! + "/instance", _token, _metadata, OnConnected);
 
             _webSocketClient.ReceivedJson += OnReceivedJson;
+            _webSocketClient.ErrorOccurred += OnError;
 
             _clientTask = _webSocketClient.Run();
 
             return instance;
         }
 
+        private void OnError(Exception ex) {
+            Debug.LogException(ex);
+        }
+
         private void TryUpdateSchema() {
             if(_webSocketClient != null) {
                 var api = BuildApi();
+
+                Debug.Log(api);
 
                 var _ = _webSocketClient.SendBytes("__internal/api",
                     Encoding.UTF8.GetBytes(api),
@@ -87,17 +101,94 @@ namespace DebugMenu {
         }
 
         private string BuildApi() {
-            throw new NotImplementedException();
+            var document = new Document() {
+                Asyncapi = "2.6.0",
+                Info = new Info() {
+                    Title = "Test",
+                    Version = "1.0.0"
+                },
+                Channels = _handlers.ToDictionary(
+                    kvp => kvp.Key,
+                    kvp => BuildChannel(kvp.Value))
+            };
+
+            var settings = new JsonSerializerSettings {
+                ContractResolver = new CamelCasePropertyNamesContractResolver(),
+                NullValueHandling = NullValueHandling.Ignore
+            };
+            return Newtonsoft.Json.JsonConvert.SerializeObject(document, settings);
+        }
+
+        private Channel BuildChannel(HandlerInfo handlerInfo) {
+            var parameters = handlerInfo.Method.GetParameters();
+
+            return new Channel() {
+                Publish = new Publish() {
+                    Tags = new List<Tag>() {
+                        new Tag() {
+                            Name = "button"
+                        }
+                    },
+                    Message = new Message() {
+                        Payload = new Payload() {
+                            Type = "object",
+                            Properties = parameters.Select(p => {
+                                return (p.Name, new Property() {
+                                    Type = GetPropertyType(p.ParameterType),
+                                });
+                            }).ToDictionary(p => p.Name, p => p.Item2)
+                        }
+                    }
+                }
+            };
+        }
+
+        private string GetPropertyType(Type type) {
+            if(type == typeof(int) || type == typeof(float) || type == typeof(double)) {
+                return "number";
+            }
+
+            if(type == typeof(string)) {
+                return "string";
+            }
+
+            return "unknown";
         }
 
         private void OnReceivedJson((string channel, JObject payload) message) {
-            if(_handlers.TryGetValue(message.channel, out var handler)) {
+            Debug.Log($"R: {message.channel} {message.payload.ToString()}");
+            if(_handlers.TryGetValue(message.channel.ToLowerInvariant(), out var handler)) {
                 var parameters = handler.Method.GetParameters()
-                    .Select(p => message.payload[p.Name]?.Value<object>())
+                    .Select(p => ToValue(message.payload, p))
                     .ToArray();
 
                 handler.Method.Invoke(handler.Instance, parameters);
             }
+        }
+
+        private static object? ToValue(JObject payload, ParameterInfo p) {
+            var property = payload[p.Name];
+            if(property == null) {
+                return null;
+            }
+
+            if(p.ParameterType == typeof(int)) {
+                return property.Value<int>();
+            }
+            if(p.ParameterType == typeof(long)) {
+                return property.Value<long>();
+            }
+            if(p.ParameterType == typeof(float)) {
+                return property.Value<float>();
+            }
+            if(p.ParameterType == typeof(double)) {
+                return property.Value<double>();
+            }
+            if(p.ParameterType == typeof(string)) {
+                return property.Value<string>();
+            }
+
+            return property.Value<object>();
         }
 
         public void Dispose() {
@@ -112,7 +203,8 @@ namespace DebugMenu {
             }
 
             if(!_channels.TryGetValue(channelPath, out var channel)) {
-                channel = new Channel(_webSocketClient, channelPath, CancellationToken.None); //TODO cancellation token
+                channel = new ClientChannel(_webSocketClient, channelPath,
+                    CancellationToken.None); //TODO cancellation token
                 _channels.Add(channelPath, channel);
             }
 
@@ -140,12 +232,15 @@ namespace DebugMenu {
             foreach(var method in methods) {
                 RegisterHandler(controller, method);
             }
+
+            TryUpdateSchema();
         }
 
         public void RegisterHandler(object instance, MethodInfo methodInfo) {
             var channel = GetChannel(instance, methodInfo);
+            var id = channel.ToLowerInvariant();
 
-            if(_handlers.ContainsKey(channel)) {
+            if(_handlers.ContainsKey(id)) {
                 return;
             }
 
@@ -154,7 +249,7 @@ namespace DebugMenu {
                 Instance = instance,
                 Method = methodInfo
             };
-            _handlers.Add(channel, handler);
+            _handlers.Add(id, handler);
         }
 
         private class HandlerInfo {

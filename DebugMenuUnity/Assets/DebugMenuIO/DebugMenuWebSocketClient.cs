@@ -14,7 +14,7 @@ public class DebugMenuWebSocketClient : ISender, IReceiver, IDisposable {
     private readonly string _token;
     private readonly Dictionary<string, string> _metadata;
     private ClientWebSocket _socket;
-    
+
     private readonly CancellationTokenSource _disposeCancellationTokenSource = new();
     private readonly Func<Task>? _connectedAfterHandshakeCallback;
     private readonly CancellationToken _disposedCancellationToken;
@@ -24,7 +24,7 @@ public class DebugMenuWebSocketClient : ISender, IReceiver, IDisposable {
         public string? channel;
         public object? payload;
     }
-    
+
     public DebugMenuWebSocketClient(string url, string token, Dictionary<string, string> metadata, Func<Task> connectedAfterHandshakeCallback) {
         _url = url;
         _token = token;
@@ -33,18 +33,18 @@ public class DebugMenuWebSocketClient : ISender, IReceiver, IDisposable {
         _socket = new ClientWebSocket();
         _disposedCancellationToken = _disposeCancellationTokenSource.Token;
     }
-    
+
     public Task SendJson(string channel, object payload, CancellationToken cancellationToken) {
         if (!IsSocketAlive()) {
             return Task.CompletedTask;
         }
-        
+
         var jsonString = JsonConvert.SerializeObject(new Message () {
             channel = channel,
             payload = payload
         });
         var bytes = Encoding.UTF8.GetBytes(jsonString);
-       
+
         var cts = CancellationTokenSource.CreateLinkedTokenSource(_disposedCancellationToken, cancellationToken);
         return _socket.SendAsync(bytes, WebSocketMessageType.Text, true, cts.Token);
     }
@@ -53,7 +53,7 @@ public class DebugMenuWebSocketClient : ISender, IReceiver, IDisposable {
         if (!IsSocketAlive()) {
             return Task.CompletedTask;
         }
-        
+
         var channelBytes = Encoding.UTF8.GetBytes(channel);
         if (channelBytes.Length > byte.MaxValue) {
             throw new Exception($"Channel name too long. Length is {channelBytes.Length}, max is {byte.MaxValue}.");
@@ -62,7 +62,7 @@ public class DebugMenuWebSocketClient : ISender, IReceiver, IDisposable {
         var bytes = new byte[payload.Length + 1 + channelBytes.Length];
         var stream = new MemoryStream(bytes);
         var writer = new BinaryWriter(stream);
-        
+
         writer.Write((byte)channelBytes.Length);
         writer.Write(channelBytes);
         writer.Write(payload.Span);
@@ -74,18 +74,18 @@ public class DebugMenuWebSocketClient : ISender, IReceiver, IDisposable {
     public event Action<(string channel, JObject payload)>? ReceivedJson;
     public event Action<(string channel, ReadOnlyMemory<byte> payload)>? ReceivedBytes;
     public event Action<Exception>? ErrorOccurred;
-    
+
     public async Task Run() {
         var buffer = new byte[4096 * 20];
         var stream = new MemoryStream(buffer);
-       
+
         var expandableStream = new MemoryStream();
         var writer = new BinaryWriter(expandableStream);
-        
+
         while (!_disposedCancellationToken.IsCancellationRequested) {
             try {
                 await TryReconnect(_disposedCancellationToken);
-                
+
                 var result = await _socket.ReceiveAsync(new ArraySegment<byte>(buffer), _disposedCancellationToken);
 
                 if (result.EndOfMessage) {
@@ -121,7 +121,7 @@ public class DebugMenuWebSocketClient : ISender, IReceiver, IDisposable {
         if (!IsSocketAlive()) {
             _socket = new ClientWebSocket();
             await _socket.ConnectAsync(new Uri(_url), cancellationToken);
-            
+
             var tokenBytes = Encoding.UTF8.GetBytes(_token);
             await _socket.SendAsync(tokenBytes, WebSocketMessageType.Text, true, cancellationToken);
 
@@ -133,7 +133,7 @@ public class DebugMenuWebSocketClient : ISender, IReceiver, IDisposable {
             if (task != null) {
                 await task;
             }
-            Console.WriteLine($"Connected {_url}");
+            UnityEngine.Debug.Log($"Connected {_url}");
         }
     }
 
