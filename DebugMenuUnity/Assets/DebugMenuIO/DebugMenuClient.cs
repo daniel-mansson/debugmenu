@@ -57,11 +57,31 @@ namespace DebugMenu {
             public int ApplicationId { get; set; }
         }
 
-        public async Task<RunningInstance> Run(CancellationToken cancellationToken) {
+        public async Task<RunningInstance> Run(CancellationToken cancellationToken, RunningInstance? runningInstance = null) {
             if(_clientTask != null) {
                 throw new InvalidOperationException($"{nameof(DebugMenuClient)} is already running.");
             }
 
+            if(!await IsValidInstance(runningInstance)) {
+                runningInstance = await RequestInstance(cancellationToken);
+            }
+
+            _webSocketClient =
+                new DebugMenuWebSocketClient(runningInstance.WebsocketUrl! + "/instance", _token, _metadata, OnConnected);
+
+            _webSocketClient.ReceivedJson += OnReceivedJson;
+            _webSocketClient.ErrorOccurred += OnError;
+
+            _clientTask = _webSocketClient.Run();
+
+            return runningInstance;
+        }
+
+        private async Task<bool> IsValidInstance(RunningInstance? runningInstance) {
+            return runningInstance != null;
+        }
+
+        private async Task<RunningInstance> RequestInstance(CancellationToken cancellationToken) {
             var body = JsonConvert.SerializeObject(new CreateRunningInstanceRequest() {
                 Token = _token,
                 Metadata = _metadata
@@ -71,17 +91,8 @@ namespace DebugMenu {
             var response = await client.PostAsync(_url + "/api/instances", content, cancellationToken);
 
             var responseJson = await response.Content.ReadAsStringAsync();
-            var instance = JsonConvert.DeserializeObject<RunningInstance>(responseJson)!;
-
-            _webSocketClient =
-                new DebugMenuWebSocketClient(instance.WebsocketUrl! + "/instance", _token, _metadata, OnConnected);
-
-            _webSocketClient.ReceivedJson += OnReceivedJson;
-            _webSocketClient.ErrorOccurred += OnError;
-
-            _clientTask = _webSocketClient.Run();
-
-            return instance;
+            var i = JsonConvert.DeserializeObject<RunningInstance>(responseJson)!;
+            return i;
         }
 
         private void OnError(Exception ex) {
@@ -89,7 +100,7 @@ namespace DebugMenu {
         }
 
         private void TryUpdateSchema() {
-            if(_webSocketClient != null) {
+            if(_webSocketClient != null && _webSocketClient.IsConnected) {
                 var api = BuildApi();
 
                 Debug.Log(api);
@@ -156,7 +167,6 @@ namespace DebugMenu {
         }
 
         private void OnReceivedJson((string channel, JObject payload) message) {
-            Debug.Log($"R: {message.channel} {message.payload.ToString()}");
             if(_handlers.TryGetValue(message.channel.ToLowerInvariant(), out var handler)) {
                 var parameters = handler.Method.GetParameters()
                     .Select(p => ToValue(message.payload, p))
