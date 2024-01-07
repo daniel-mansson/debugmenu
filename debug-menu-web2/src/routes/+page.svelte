@@ -1,60 +1,39 @@
 <script lang="ts">
-    import { Button } from "$lib/components/ui/button";
-    import * as Card from "$lib/components/ui/card";
-    import * as Select from "$lib/components/ui/select";
-    import { Input } from "$lib/components/ui/input";
-    import { Label } from "$lib/components/ui/label";
-    const frameworks = [
-      {
-        value: "sveltekit",
-        label: "SvelteKit"
-      },
-      {
-        value: "next",
-        label: "Next.js"
-      },
-      {
-        value: "astro",
-        label: "Astro"
-      },
-      {
-        value: "nuxt",
-        label: "Nuxt.js"
-      }
-    ];
-  </script>
-  <Card.Root class="w-[450px]">
-    <Card.Header>
-      <Card.Title>Create project</Card.Title>
-      <Card.Description>Deploy your new project in one-click.</Card.Description>
-    </Card.Header>
-    <Card.Content>
-      <form>
-        <div class="grid w-full items-center gap-4">
-          <div class="flex flex-col space-y-1.5">
-            <Label for="name">Name</Label>
-            <Input id="name" placeholder="Name of your project" />
-          </div>
-          <div class="flex flex-col space-y-1.5">
-            <Label for="framework">Framework</Label>
-            <Select.Root>
-              <Select.Trigger id="framework">
-                <Select.Value placeholder="Select" />
-              </Select.Trigger>
-              <Select.Content>
-                {#each frameworks as framework}
-                  <Select.Item value={framework.value} label={framework.label}
-                    >{framework.label}</Select.Item
-                  >
-                {/each}
-              </Select.Content>
-            </Select.Root>
-          </div>
-        </div>
-      </form>
-    </Card.Content>
-    <Card.Footer class="flex justify-between">
-      <Button variant="outline">Cancel</Button>
-      <Button>Deploy</Button>
-    </Card.Footer>
-  </Card.Root>
+	import ComapctCard from '$lib/components/test/ComapctCard.svelte';
+	import TestCard from '$lib/components/test/TestCard.svelte';
+	import { Separator } from '$lib/components/ui/separator';
+	import icon from '$lib/assets/up_arrow.svg';
+	import { Button } from '$lib/components/ui/button';
+	import * as Card from '$lib/components/ui/card';
+</script>
+
+<div class="mx-auto my-2 w-10/12 self-center">
+	<nav class="border-gray-200 bg-white dark:bg-gray-900">
+		<div class="mx-auto flex max-w-screen-xl flex-wrap items-center justify-between p-4">
+			<a href="https://flowbite.com/" class="flex items-center space-x-3 rtl:space-x-reverse">
+				<img src={icon} class="h-8" alt="Flowbite Logo" />
+				<span class="self-center whitespace-nowrap text-xl font-semibold dark:text-white"
+					>DEBUGMENU.IO</span
+				>
+			</a>
+
+			<div class=" flex flex-col space-x-reverse md:w-auto" id="navbar-default">
+				<Button variant="outline" class="active:outline active:outline-1">Launch app</Button>
+			</div>
+		</div>
+	</nav>
+	<Separator />
+
+	<div class=" my-48 text-center">
+		<h1 class="mx-auto scroll-m-20 pb-2 text-4xl font-semibold">
+			Hasdf ASdfasdas Dasd fasdfasdas d
+		</h1>
+	</div>
+	<Separator />
+	<!-- <div
+		class="h-8 w-full rounded-bl-full
+  rounded-br-full bg-gradient-to-b from-blue-50 to-transparent"
+	></div> -->
+
+	<Card.Root>asdasd</Card.Root>
+</div>
