@@ -10,7 +10,7 @@
 <div class="mx-auto my-2 w-10/12 self-center">
 	<nav class="border-gray-200 bg-white dark:bg-gray-900">
 		<div class="mx-auto flex max-w-screen-xl flex-wrap items-center justify-between p-4">
-			<a href="https://flowbite.com/" class="flex items-center space-x-3 rtl:space-x-reverse">
+			<a href="/" class="flex items-center space-x-3 rtl:space-x-reverse">
 				<img src={icon} class="h-8" alt="Flowbite Logo" />
 				<span class="self-center whitespace-nowrap text-xl font-semibold dark:text-white"
 					>DEBUGMENU.IO</span
@@ -31,9 +31,7 @@
 	</div>
 	<Separator />
 	<!-- <div
-		class="h-8 w-full rounded-bl-full
-  rounded-br-full bg-gradient-to-b from-blue-50 to-transparent"
+		class="h-80 w-full rounded-bl-sm
+  rounded-br-sm bg-gradient-to-b from-slate-50 to-transparent"
 	></div> -->
-
-	<Card.Root>asdasd</Card.Root>
 </div>
