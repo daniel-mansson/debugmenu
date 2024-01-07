@@ -11,9 +11,18 @@ dependencies:
   clsx:
     specifier: ^2.1.0
     version: 2.1.0
+  cmdk-sv:
+    specifier: ^0.0.12
+    version: 0.0.12(svelte@5.0.0-next.28)
   lucide-svelte:
     specifier: ^0.306.0
     version: 0.306.0(svelte@5.0.0-next.28)
+  mode-watcher:
+    specifier: ^0.1.2
+    version: 0.1.2(svelte@5.0.0-next.28)
+  radix-icons-svelte:
+    specifier: ^1.2.1
+    version: 1.2.1
   tailwind-merge:
     specifier: ^2.2.0
     version: 2.2.0
@@ -433,6 +442,20 @@ packages:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.1
       '@jridgewell/sourcemap-codec': 1.4.15
+
+  /@melt-ui/svelte@0.61.2(svelte@5.0.0-next.28):
+    resolution: {integrity: sha512-BHkD9G31zQBToA4euDRBgTQRvWxT9scufOVCXgDO6HKTvyxFspbWT2bgiSFqAK4BbAGDn9Ao36Q8F9O71KN4OQ==}
+    peerDependencies:
+      svelte: '>=3 <5'
+    dependencies:
+      '@floating-ui/core': 1.5.2
+      '@floating-ui/dom': 1.5.3
+      '@internationalized/date': 3.5.1
+      dequal: 2.0.3
+      focus-trap: 7.5.4
+      nanoid: 4.0.2
+      svelte: 5.0.0-next.28
+    dev: false
 
   /@melt-ui/svelte@0.67.0(svelte@5.0.0-next.28):
     resolution: {integrity: sha512-fd9PsDE6sKbeyExagqH0nOpZEnDqyr2efbkjfmCRRYXVW5vlDEOPaSB+mg4Tjch121102sFH1Od+MlXwmeHy3A==}
@@ -932,6 +955,16 @@ packages:
       svelte: 5.0.0-next.28
     dev: false
 
+  /bits-ui@0.9.9(svelte@5.0.0-next.28):
+    resolution: {integrity: sha512-LkdkyTtpXdkjBzPZJVJgpcre4fut6DONoprMfadHFo82HNUhph+02CxDjYEcZcThb5z4YjSxMlCYvQPZm+YtfQ==}
+    peerDependencies:
+      svelte: ^4.0.0
+    dependencies:
+      '@melt-ui/svelte': 0.61.2(svelte@5.0.0-next.28)
+      nanoid: 5.0.4
+      svelte: 5.0.0-next.28
+    dev: false
+
   /brace-expansion@1.1.11:
     resolution: {integrity: sha512-iCuPHDFgrHX7H2vEI/5xpz07zSHB00TpugqhmYtVmMO6518mCuRMoOYFldEBl0g187ufozdaHgWKcYFb61qGiA==}
     dependencies:
@@ -1003,6 +1036,16 @@ packages:
   /clsx@2.1.0:
     resolution: {integrity: sha512-m3iNNWpd9rl3jvvcBnu70ylMdrXt8Vlq4HYadnU5fwcOtvkSQWPmj7amUcDT2qYI7risszBjI5AUIUox9D16pg==}
     engines: {node: '>=6'}
+    dev: false
+
+  /cmdk-sv@0.0.12(svelte@5.0.0-next.28):
+    resolution: {integrity: sha512-d+eILSOb2W+/3U/j7xGTgGRrZkFB/z4Xlvj0ADrWhf34y9YLzJon3JCGP2hMil5IrVm0P/+IFIeCF5l3//kcjA==}
+    peerDependencies:
+      svelte: ^4.0.0
+    dependencies:
+      bits-ui: 0.9.9(svelte@5.0.0-next.28)
+      nanoid: 5.0.4
+      svelte: 5.0.0-next.28
     dev: false
 
   /color-convert@2.0.1:
@@ -1695,6 +1738,14 @@ packages:
       minimist: 1.2.8
     dev: true
 
+  /mode-watcher@0.1.2(svelte@5.0.0-next.28):
+    resolution: {integrity: sha512-XTdPCdqC3kqSvB+Q262Kor983YJkkB2Z3vj9uqg5IqKQpOdiz+xB99Jihp8sWbyM67drC7KKp0Nt5FzCypZi2g==}
+    peerDependencies:
+      svelte: ^4.0.0
+    dependencies:
+      svelte: 5.0.0-next.28
+    dev: false
+
   /mri@1.2.0:
     resolution: {integrity: sha512-tzzskb3bG8LvYGFF/mDTpq3jpI6Q9wc3LEmBaghu+DdCssd1FakN7Bc0hVNmEyGq1bq3RgfkCb3cmQLpNPOroA==}
     engines: {node: '>=4'}
@@ -2037,6 +2088,10 @@ packages:
 
   /queue-microtask@1.2.3:
     resolution: {integrity: sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==}
+
+  /radix-icons-svelte@1.2.1:
+    resolution: {integrity: sha512-svmiMd0ocpdTm9cvAz0klcZpnh639lVctj6psQiawd4pYalVzOG4cX+JizAgRckyTAsRVdzObP7D2EBrSfdghA==}
+    dev: false
 
   /read-cache@1.0.0:
     resolution: {integrity: sha512-Owdv/Ft7IjOgm/i0xvNDZ1LrRANRfew4b2prF3OWMQLxLfu3bS8FVhCsrSCMK4lR56Y9ya+AThoTpDCTxCmpRA==}

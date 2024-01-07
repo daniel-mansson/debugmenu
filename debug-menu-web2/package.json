@@ -38,7 +38,10 @@
 	"dependencies": {
 		"bits-ui": "^0.13.2",
 		"clsx": "^2.1.0",
+		"cmdk-sv": "^0.0.12",
 		"lucide-svelte": "^0.306.0",
+		"mode-watcher": "^0.1.2",
+		"radix-icons-svelte": "^1.2.1",
 		"tailwind-merge": "^2.2.0",
 		"tailwind-variants": "^0.1.20"
 	}
