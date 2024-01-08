@@ -8,7 +8,13 @@
 		ArrowDownIcon,
 		ChevronDown,
 		AppWindowIcon,
-		Cog
+		Cog,
+		TicketIcon,
+		MoreHorizontal,
+		Trash,
+		Tags,
+		User,
+		Calendar
 	} from 'lucide-svelte';
 	import icon from '$lib/assets/up_arrow.svg';
 
@@ -17,6 +23,9 @@
 	import { toggleMode } from 'mode-watcher';
 	import { Separator } from '$lib/components/ui/separator';
 	import { TeamSwitcher } from '$lib/components/dashboard';
+	import { Circle } from 'radix-icons-svelte';
+	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
+	import * as Avatar from '$lib/components/ui/avatar';
 </script>
 
 <button
@@ -24,7 +33,7 @@
 	data-drawer-toggle="default-sidebar"
 	aria-controls="default-sidebar"
 	type="button"
-	class="ms-3 mt-2 inline-flex items-center rounded-lg p-2 text-sm text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 sm:hidden dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+	class="ms-3 mt-2 inline-flex items-center rounded-lg p-2 text-sm text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600 sm:hidden"
 >
 	<span class="sr-only">Open sidebar</span>
 	<svg
@@ -51,7 +60,7 @@
 	class="fixed left-0 top-0 z-40 h-screen w-64 -translate-x-full transition-transform sm:translate-x-0"
 	aria-label="Sidebar"
 >
-	<div class="h-full overflow-y-auto bg-primary-foreground px-3 py-4">
+	<div class=" h-[calc(100vh-3rem)] overflow-y-auto bg-primary-foreground px-3 py-4">
 		<a href="/app" class="mb-2 flex items-center space-x-2 rtl:space-x-reverse">
 			<img src={icon} class="h-6 dark:invert" alt="Flowbite Logo" />
 			<span class="self-center whitespace-nowrap text-lg font-semibold dark:text-white"
@@ -69,14 +78,152 @@
 						<span class="ms-3">Applications</span>
 					</div>
 				</Button>
+
+				<ul class="space-y-0.5 font-mono">
+					<li>
+						<div class="group flex w-full justify-between">
+							<Button
+								class="float-left h-6 w-full justify-start"
+								variant="ghost"
+								on:click={() => console.log('hej2')}
+							>
+								<span class="ms-1 text-xs">Game Client 1</span>
+							</Button>
+							<DropdownMenu.Root let:ids>
+								<DropdownMenu.Trigger asChild let:builder>
+									<Button
+										class=" invisible h-6 w-8 group-hover:visible "
+										builders={[builder]}
+										variant="ghost"
+										size="sm"
+										aria-label="Open menu"
+										on:click={() => console.log('hej')}
+									>
+										<MoreHorizontal class="h-6 w-6" />
+									</Button>
+								</DropdownMenu.Trigger>
+								<DropdownMenu.Content class="w-[200px]" align="end">
+									<DropdownMenu.Group>
+										<DropdownMenu.Label>Actions</DropdownMenu.Label>
+										<DropdownMenu.Item>
+											<User class="mr-2 h-4 w-4" />
+											Manage users...
+										</DropdownMenu.Item>
+										<DropdownMenu.Item>
+											<Calendar class="mr-2 h-4 w-4" />
+											Set due date...
+										</DropdownMenu.Item>
+										<DropdownMenu.Separator />
+										<DropdownMenu.Sub>
+											<DropdownMenu.SubTrigger>
+												<Tags class="mr-2 h-4 w-4" />
+												Apply label
+											</DropdownMenu.SubTrigger>
+											<DropdownMenu.SubContent class="p-0">asdfasdf</DropdownMenu.SubContent>
+										</DropdownMenu.Sub>
+										<DropdownMenu.Separator />
+										<DropdownMenu.Item class="text-red-600">
+											<Trash class="mr-2 h-4 w-4" />
+											Delete
+											<DropdownMenu.Shortcut>⌘⌫</DropdownMenu.Shortcut>
+										</DropdownMenu.Item>
+									</DropdownMenu.Group>
+								</DropdownMenu.Content>
+							</DropdownMenu.Root>
+						</div>
+					</li>
+					<li>
+						<Button class="h-6 w-full " variant="outline">
+							<div class="flex w-full">
+								<span class="ms-1 text-xs font-semibold">Game Client 2</span>
+							</div>
+						</Button>
+					</li>
+					<li>
+						<Button class=" h-6 w-full " variant="ghost">
+							<div class="flex w-full">
+								<span class="ms-1 text-xs">Server 1</span>
+							</div>
+						</Button>
+					</li>
+				</ul>
 			</li>
 			<li>
 				<Button class="w-full p-2 " variant="ghost">
 					<div class="flex w-full">
-						<Cog />
+						<TicketIcon />
 						<span class="ms-3">Tokens</span>
 					</div>
 				</Button>
+
+				<ul class="space-y-0.5 font-mono">
+					<li>
+						<div class="group flex w-full justify-between">
+							<Button
+								class="float-left h-6 w-full justify-start"
+								variant="ghost"
+								on:click={() => console.log('hej2')}
+							>
+								<span class="ms-1 text-xs">Local</span>
+							</Button>
+							<DropdownMenu.Root let:ids>
+								<DropdownMenu.Trigger asChild let:builder>
+									<Button
+										class=" invisible h-6 w-8 group-hover:visible "
+										builders={[builder]}
+										variant="ghost"
+										size="sm"
+										aria-label="Open menu"
+										on:click={() => console.log('hej')}
+									>
+										<MoreHorizontal class="h-6 w-6" />
+									</Button>
+								</DropdownMenu.Trigger>
+								<DropdownMenu.Content class="w-[200px]" align="end">
+									<DropdownMenu.Group>
+										<DropdownMenu.Label>Actions</DropdownMenu.Label>
+										<DropdownMenu.Item>
+											<User class="mr-2 h-4 w-4" />
+											Manage users...
+										</DropdownMenu.Item>
+										<DropdownMenu.Item>
+											<Calendar class="mr-2 h-4 w-4" />
+											Set due date...
+										</DropdownMenu.Item>
+										<DropdownMenu.Separator />
+										<DropdownMenu.Sub>
+											<DropdownMenu.SubTrigger>
+												<Tags class="mr-2 h-4 w-4" />
+												Apply label
+											</DropdownMenu.SubTrigger>
+											<DropdownMenu.SubContent class="p-0">asdfasdf</DropdownMenu.SubContent>
+										</DropdownMenu.Sub>
+										<DropdownMenu.Separator />
+										<DropdownMenu.Item class="text-red-600">
+											<Trash class="mr-2 h-4 w-4" />
+											Delete
+											<DropdownMenu.Shortcut>⌘⌫</DropdownMenu.Shortcut>
+										</DropdownMenu.Item>
+									</DropdownMenu.Group>
+								</DropdownMenu.Content>
+							</DropdownMenu.Root>
+						</div>
+					</li>
+					<li>
+						<Button class="h-6 w-full " variant="outline">
+							<div class="flex w-full">
+								<span class="ms-1 text-xs font-semibold">Dev Build</span>
+							</div>
+						</Button>
+					</li>
+					<li>
+						<Button class=" h-6 w-full " variant="ghost">
+							<div class="flex w-full">
+								<span class="ms-1 text-xs">Playtest</span>
+							</div>
+						</Button>
+					</li>
+				</ul>
 			</li>
 			<li>
 				<Button class="w-full p-2 " variant="ghost">
@@ -85,115 +232,71 @@
 						<span class="ms-3">Instances</span>
 					</div>
 				</Button>
-			</li>
-			<li>
-				<a
-					href="#"
-					class="group flex items-center rounded-lg p-2 text-gray-900 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
-				>
-					<svg
-						class="h-5 w-5 flex-shrink-0 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white"
-						aria-hidden="true"
-						xmlns="http://www.w3.org/2000/svg"
-						fill="currentColor"
-						viewBox="0 0 20 20"
-					>
-						<path
-							d="m17.418 3.623-.018-.008a6.713 6.713 0 0 0-2.4-.569V2h1a1 1 0 1 0 0-2h-2a1 1 0 0 0-1 1v2H9.89A6.977 6.977 0 0 1 12 8v5h-2V8A5 5 0 1 0 0 8v6a1 1 0 0 0 1 1h8v4a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-4h6a1 1 0 0 0 1-1V8a5 5 0 0 0-2.582-4.377ZM6 12H4a1 1 0 0 1 0-2h2a1 1 0 0 1 0 2Z"
-						/>
-					</svg>
-					<span class="ms-3 flex-1 whitespace-nowrap">Inbox</span>
-					<span
-						class="ms-3 inline-flex h-3 w-3 items-center justify-center rounded-full bg-blue-100 p-3 text-sm font-medium text-blue-800 dark:bg-blue-900 dark:text-blue-300"
-						>3</span
-					>
-				</a>
-			</li>
-			<li>
-				<a
-					href="#"
-					class="group flex items-center rounded-lg p-2 text-gray-900 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
-				>
-					<svg
-						class="h-5 w-5 flex-shrink-0 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white"
-						aria-hidden="true"
-						xmlns="http://www.w3.org/2000/svg"
-						fill="currentColor"
-						viewBox="0 0 20 18"
-					>
-						<path
-							d="M14 2a3.963 3.963 0 0 0-1.4.267 6.439 6.439 0 0 1-1.331 6.638A4 4 0 1 0 14 2Zm1 9h-1.264A6.957 6.957 0 0 1 15 15v2a2.97 2.97 0 0 1-.184 1H19a1 1 0 0 0 1-1v-1a5.006 5.006 0 0 0-5-5ZM6.5 9a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9ZM8 10H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5Z"
-						/>
-					</svg>
-					<span class="ms-3 flex-1 whitespace-nowrap">Users</span>
-				</a>
-			</li>
-			<li>
-				<a
-					href="#"
-					class="group flex items-center rounded-lg p-2 text-gray-900 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
-				>
-					<svg
-						class="h-5 w-5 flex-shrink-0 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white"
-						aria-hidden="true"
-						xmlns="http://www.w3.org/2000/svg"
-						fill="currentColor"
-						viewBox="0 0 18 20"
-					>
-						<path
-							d="M17 5.923A1 1 0 0 0 16 5h-3V4a4 4 0 1 0-8 0v1H2a1 1 0 0 0-1 .923L.086 17.846A2 2 0 0 0 2.08 20h13.84a2 2 0 0 0 1.994-2.153L17 5.923ZM7 9a1 1 0 0 1-2 0V7h2v2Zm0-5a2 2 0 1 1 4 0v1H7V4Zm6 5a1 1 0 1 1-2 0V7h2v2Z"
-						/>
-					</svg>
-					<span class="ms-3 flex-1 whitespace-nowrap">Products</span>
-				</a>
-			</li>
-			<li>
-				<a
-					href="#"
-					class="group flex items-center rounded-lg p-2 text-gray-900 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
-				>
-					<svg
-						class="h-5 w-5 flex-shrink-0 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white"
-						aria-hidden="true"
-						xmlns="http://www.w3.org/2000/svg"
-						fill="none"
-						viewBox="0 0 18 16"
-					>
-						<path
-							stroke="currentColor"
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							stroke-width="2"
-							d="M1 8h11m0 0L8 4m4 4-4 4m4-11h3a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-3"
-						/>
-					</svg>
-					<span class="ms-3 flex-1 whitespace-nowrap">Sign In</span>
-				</a>
-			</li>
-			<li>
-				<a
-					href="#"
-					class="group flex items-center rounded-lg p-2 text-gray-900 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
-				>
-					<svg
-						class="h-5 w-5 flex-shrink-0 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white"
-						aria-hidden="true"
-						xmlns="http://www.w3.org/2000/svg"
-						fill="currentColor"
-						viewBox="0 0 20 20"
-					>
-						<path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.96 2.96 0 0 0 .13 5H5Z" />
-						<path
-							d="M6.737 11.061a2.961 2.961 0 0 1 .81-1.515l6.117-6.116A4.839 4.839 0 0 1 16 2.141V2a1.97 1.97 0 0 0-1.933-2H7v5a2 2 0 0 1-2 2H0v11a1.969 1.969 0 0 0 1.933 2h12.134A1.97 1.97 0 0 0 16 18v-3.093l-1.546 1.546c-.413.413-.94.695-1.513.81l-3.4.679a2.947 2.947 0 0 1-1.85-.227 2.96 2.96 0 0 1-1.635-3.257l.681-3.397Z"
-						/>
-						<path
-							d="M8.961 16a.93.93 0 0 0 .189-.019l3.4-.679a.961.961 0 0 0 .49-.263l6.118-6.117a2.884 2.884 0 0 0-4.079-4.078l-6.117 6.117a.96.96 0 0 0-.263.491l-.679 3.4A.961.961 0 0 0 8.961 16Zm7.477-9.8a.958.958 0 0 1 .68-.281.961.961 0 0 1 .682 1.644l-.315.315-1.36-1.36.313-.318Zm-5.911 5.911 4.236-4.236 1.359 1.359-4.236 4.237-1.7.339.341-1.699Z"
-						/>
-					</svg>
-					<span class="ms-3 flex-1 whitespace-nowrap">Sign Up</span>
-				</a>
+				<ul class="space-y-0.5 font-mono">
+					<li>
+						<Button class=" h-6 w-full " variant="ghost">
+							<div class="flex w-full">
+								<span class="ms-1 text-xs">b5b976f5</span>
+							</div>
+						</Button>
+					</li>
+					<li>
+						<Button class=" h-6 w-full " variant="ghost">
+							<div class="flex w-full">
+								<span class="ms-1 text-xs">3e9d6451</span>
+							</div>
+						</Button>
+					</li>
+					<li>
+						<Button class=" h-6 w-full " variant="ghost">
+							<div class="flex w-full">
+								<span class="ms-1 text-xs">a51c458d</span>
+							</div>
+						</Button>
+					</li>
+					<li>
+						<Button class=" h-6 w-full " variant="ghost">
+							<div class="flex w-full">
+								<span class="ms-1 text-xs">f90678f5</span>
+							</div>
+						</Button>
+					</li>
+					<li>
+						<Button class=" h-6 w-full " variant="ghost">
+							<div class="flex w-full">
+								<span class="ms-1 text-xs">c54ec6d2</span>
+							</div>
+						</Button>
+					</li>
+					<li>
+						<Button class=" h-6 w-full " variant="ghost">
+							<div class="flex w-full">
+								<span class="ms-1 text-xs">5131d63e</span>
+							</div>
+						</Button>
+					</li>
+				</ul>
 			</li>
 		</ul>
+
+		<div class="absolute inset-x-0 bottom-0 h-12 w-full bg-primary-foreground">
+			<Separator class="my-2 mt-auto " />
+			<div class="flex">
+				<Avatar.Root class="mx-2 h-8 w-8">
+					<Avatar.Fallback>AK</Avatar.Fallback>
+				</Avatar.Root>
+				<span class="my-auto text-sm font-semibold"> Alicia Koch </span>
+				<Button on:click={toggleMode} variant="outline" class="ml-4 h-8 w-8">
+					<Sun
+						class="absolute h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0"
+					/>
+					<Moon
+						class="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100"
+					/>
+					<span class="sr-only">Toggle theme</span>
+				</Button>
+			</div>
+		</div>
 	</div>
 </aside>
 
