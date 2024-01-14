@@ -26,6 +26,9 @@
 	import { Circle } from 'radix-icons-svelte';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
 	import * as Avatar from '$lib/components/ui/avatar';
+	import * as Tabs from '$lib/components/ui/tabs';
+	import * as Card from '$lib/components/ui/card';
+	import CardContent from '$lib/components/ui/card/card-content.svelte';
 </script>
 
 <button
@@ -301,6 +304,21 @@
 </aside>
 
 <div class="p-4 sm:ml-64">
+	<div class="my-1 flex items-center justify-between">
+		<h2 class="text-3xl font-bold tracking-tight">Dashboard</h2>
+		<div class="flex items-center space-x-2">Status and Settings</div>
+	</div>
+	<Tabs.Root value="overview" class="my-2 space-y-4">
+		<Tabs.List>
+			<Tabs.Trigger value="overview">Overview</Tabs.Trigger>
+			<Tabs.Trigger value="analytics">Analytics</Tabs.Trigger>
+			<Tabs.Trigger value="reports" disabled>Reports</Tabs.Trigger>
+			<Tabs.Trigger value="notifications" disabled>Notifications</Tabs.Trigger>
+		</Tabs.List>
+	</Tabs.Root>
+	<!-- <Card.Root>
+		<Card.CardContent>asdf</Card.CardContent>
+	</Card.Root> -->
 	<div class="rounded-lg border-2 border-dashed border-gray-200 p-4 dark:border-gray-700">
 		<div class="mb-4 grid grid-cols-3 gap-4">
 			<div class="flex h-24 items-center justify-center rounded bg-gray-50 dark:bg-gray-800">
