@@ -14,7 +14,9 @@
 		Trash,
 		Tags,
 		User,
-		Calendar
+		Calendar,
+		MoveLeft,
+		ChevronsLeftIcon
 	} from 'lucide-svelte';
 	import icon from '$lib/assets/up_arrow.svg';
 
@@ -23,9 +25,14 @@
 	import { toggleMode } from 'mode-watcher';
 	import { Separator } from '$lib/components/ui/separator';
 	import { TeamSwitcher } from '$lib/components/dashboard';
-	import { Circle } from 'radix-icons-svelte';
+	import { Circle, PinLeft } from 'radix-icons-svelte';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
 	import * as Avatar from '$lib/components/ui/avatar';
+
+	let sidebarVisible = false;
+	function toggleSidebar() {
+		sidebarVisible = !sidebarVisible;
+	}
 </script>
 
 <button
@@ -33,7 +40,8 @@
 	data-drawer-toggle="default-sidebar"
 	aria-controls="default-sidebar"
 	type="button"
-	class="ms-3 mt-2 inline-flex items-center rounded-lg p-2 text-sm text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600 sm:hidden"
+	on:click={toggleSidebar}
+	class="ms-3 mt-2 inline-flex items-center rounded-lg p-2 text-sm text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
 >
 	<span class="sr-only">Open sidebar</span>
 	<svg
@@ -57,16 +65,23 @@
 
 <aside
 	id="default-sidebar"
-	class="fixed left-0 top-0 z-40 h-screen w-64 -translate-x-full transition-transform sm:translate-x-0"
+	class="fixed left-0 top-0 z-40 h-screen w-64 {sidebarVisible
+		? ''
+		: '-translate-x-full'} border-r-2 transition-transform"
 	aria-label="Sidebar"
 >
 	<div class=" h-[calc(100vh-3rem)] overflow-y-auto bg-primary-foreground px-3 py-4">
-		<a href="/app" class="mb-2 flex items-center space-x-2 rtl:space-x-reverse">
-			<img src={icon} class="h-6 dark:invert" alt="Flowbite Logo" />
-			<span class="self-center whitespace-nowrap text-lg font-semibold dark:text-white"
-				>DEBUGMENU.IO</span
-			>
-		</a>
+		<div class="flex">
+			<a href="/app" class="mb-2 flex items-center space-x-2 rtl:space-x-reverse">
+				<img src={icon} class="h-6 dark:invert" alt="Flowbite Logo" />
+				<span class="self-center whitespace-nowrap text-lg font-semibold dark:text-white"
+					>DEBUGMENU.IO</span
+				>
+			</a>
+			<Button class="ml-auto h-8 w-8" variant="ghost" on:click={toggleSidebar}>
+				<ChevronsLeftIcon class="absolute h-5 w-5 text-gray-400" />
+			</Button>
+		</div>
 		<TeamSwitcher />
 		<Separator class="my-2" />
 
@@ -300,7 +315,7 @@
 	</div>
 </aside>
 
-<div class="p-4 sm:ml-64">
+<div class="p-4 {sidebarVisible ? 'sm:ml-64' : ''}">
 	<div class="rounded-lg border-2 border-dashed border-gray-200 p-4 dark:border-gray-700">
 		<div class="mb-4 grid grid-cols-3 gap-4">
 			<div class="flex h-24 items-center justify-center rounded bg-gray-50 dark:bg-gray-800">
