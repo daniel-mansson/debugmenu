@@ -16,6 +16,7 @@
 		User,
 		Calendar,
 		MoveLeft,
+		CloudOff,
 		ChevronsLeftIcon
 	} from 'lucide-svelte';
 	import icon from '$lib/assets/up_arrow.svg';
@@ -35,34 +36,50 @@
 	}
 </script>
 
-<button
-	data-drawer-target="default-sidebar"
-	data-drawer-toggle="default-sidebar"
-	aria-controls="default-sidebar"
-	type="button"
-	on:click={toggleSidebar}
-	class="ms-3 mt-2 inline-flex items-center rounded-lg p-2 text-sm text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
->
-	<span class="sr-only">Open sidebar</span>
-	<svg
-		class="h-6 w-6"
-		aria-hidden="true"
-		fill="currentColor"
-		viewBox="0 0 20 20"
-		xmlns="http://www.w3.org/2000/svg"
+<div class="flex w-full flex-col border-b-2 sm:flex-row">
+	<button
+		data-drawer-target="default-sidebar"
+		data-drawer-toggle="default-sidebar"
+		aria-controls="default-sidebar"
+		type="button"
+		on:click={toggleSidebar}
+		class="my-1 ms-3 inline-flex w-52 items-center rounded-lg p-2 text-sm text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
 	>
-		<path
-			clip-rule="evenodd"
-			fill-rule="evenodd"
-			d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"
-		></path>
-	</svg>
-	<img src={icon} class="ml-2 h-6 dark:invert" alt="Flowbite Logo" />
-	<span class="self-center whitespace-nowrap text-lg font-semibold dark:text-white"
-		>DEBUGMENU.IO</span
-	>
-</button>
+		<span class="sr-only">Open sidebar</span>
+		<svg
+			class="h-6 w-6"
+			aria-hidden="true"
+			fill="currentColor"
+			viewBox="0 0 20 20"
+			xmlns="http://www.w3.org/2000/svg"
+		>
+			<path
+				clip-rule="evenodd"
+				fill-rule="evenodd"
+				d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"
+			></path>
+		</svg>
+		<img src={icon} class="ml-2 h-6 dark:invert" alt="Flowbite Logo" />
+		<span class="self-center whitespace-nowrap text-lg font-semibold dark:text-white"
+			>DEBUGMENU.IO</span
+		>
+	</button>
 
+	<div class="absolute right-0 top-0 hidden">
+		<Button class="m-2 h-9 w-9" variant="ghost">
+			<CloudOff class="absolute h-6 w-6"></CloudOff>
+		</Button>
+	</div>
+	<div
+		class="ml-4 flex overflow-auto whitespace-nowrap py-1 font-mono text-sm text-gray-500 sm:my-auto sm:ml-12"
+	>
+		<Button variant="ghost" class="my-auto h-6 px-1 py-0">Game Client 2</Button>
+		<div class="my-auto">/</div>
+		<Button variant="ghost" class="my-auto h-6 px-1 py-0">Dev Build</Button>
+		<div class="my-auto">/</div>
+		<Button variant="ghost" class="my-auto h-6 px-1 py-0">3e9d6451</Button>
+	</div>
+</div>
 <aside
 	id="default-sidebar"
 	class="fixed left-0 top-0 z-40 h-screen w-64 {sidebarVisible
