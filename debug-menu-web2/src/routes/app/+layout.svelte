@@ -25,14 +25,22 @@
 	import * as Tabs from '$lib/components/ui/tabs';
 	import Navbar from '$lib/components/skeleton/navbar/navbar.svelte';
 	import Sidebar from '$lib/components/skeleton/sidebar/sidebar.svelte';
+	import { currentInstance } from '$lib/appstate';
+	import Breadcrumbs from '$lib/components/skeleton/navbar/breadcrumbs.svelte';
 
 	let sidebarVisible = false;
 	function toggleSidebar() {
 		sidebarVisible = !sidebarVisible;
 	}
+
+	export let data;
 </script>
 
-<Navbar on:menuClicked={toggleSidebar} />
+<Navbar on:menuClicked={toggleSidebar}>
+	<Breadcrumbs slot="route" {...data}></Breadcrumbs>
+</Navbar>
+
+{JSON.stringify(data)}
 
 <Sidebar {sidebarVisible} on:hideClicked={toggleSidebar} />
 

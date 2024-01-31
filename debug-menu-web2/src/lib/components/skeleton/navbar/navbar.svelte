@@ -41,13 +41,6 @@
 			<CloudOff class="absolute h-6 w-6" />
 		</Button>
 	</div>
-	<div
-		class="ml-4 flex overflow-auto whitespace-nowrap py-1 font-mono text-sm text-gray-500 sm:my-auto sm:ml-12"
-	>
-		<Button variant="ghost" class="my-auto h-6 px-1 py-0">Game Client 2</Button>
-		<div class="my-auto">/</div>
-		<Button variant="ghost" class="my-auto h-6 px-1 py-0">Dev Build</Button>
-		<div class="my-auto">/</div>
-		<Button variant="ghost" class="my-auto h-6 px-1 py-0">3e9d6451</Button>
-	</div>
+
+	<slot name="route" />
 </div>

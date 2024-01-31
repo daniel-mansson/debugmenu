@@ -1,5 +1,12 @@
 <script lang="ts">
 	import * as Tabs from '$lib/components/ui/tabs';
+	import { onMount } from 'svelte';
+
+	export let data;
+
+	onMount(() => {
+		console.log('connect to instance ' + data.instance);
+	});
 </script>
 
 <div class="my-1 flex items-center justify-between">
