@@ -21,7 +21,7 @@ var id = "8c57f858-7d30-4b34-b32c-df88e677a267";
 //
 // var controller = new Controller($"wss://localhost:8082/ws/room/{producer.SessionId}/controller", "hej");
 
-var token = "24C725DD13CC929E1584D786EBCA790639BF17FFB300FF81";
+var token = "B51052A64F894D4B61C6B6546F0177CE0C1FD10BD71E616D";
 var metadata = new Dictionary<string, string>();
 
 var url = "https://localhost:8082";

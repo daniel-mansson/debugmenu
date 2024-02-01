@@ -23,6 +23,16 @@
 	import * as Avatar from '$lib/components/ui/avatar';
 	import { createEventDispatcher } from 'svelte';
 
+	import {
+		applications,
+		tokens,
+		instances,
+		currentApplication,
+		currentInstance,
+		currentToken
+	} from '$lib/appstate';
+	import { goto } from '$app/navigation';
+
 	export let sidebarVisible: boolean;
 	const dispatch = createEventDispatcher();
 </script>
@@ -51,211 +61,180 @@
 
 		<ul class="space-y-2 font-medium">
 			<li>
-				<Button class="w-full p-2 " variant="ghost">
-					<div class="flex w-full">
-						<AppWindowIcon />
-						<span class="ms-3">Applications</span>
-					</div>
-				</Button>
+				<a class="float-left w-full" href="/app">
+					<Button class="w-full p-2 " variant="ghost">
+						<div class="flex w-full">
+							<AppWindowIcon />
+							<span class="ms-3">Applications</span>
+						</div>
+					</Button>
+				</a>
 
 				<ul class="space-y-0.5 font-mono">
-					<li>
-						<div class="group flex w-full justify-between">
-							<Button
-								class="float-left h-6 w-full justify-start"
-								variant="ghost"
-								on:click={() => console.log('hej2')}
-							>
-								<span class="ms-1 text-xs">Game Client 1</span>
-							</Button>
-							<DropdownMenu.Root let:ids>
-								<DropdownMenu.Trigger asChild let:builder>
+					{#each $applications as app}
+						<li>
+							<div class="group flex w-full justify-between">
+								<a class="float-left w-full" href="/app/{app.id}">
 									<Button
-										class=" invisible h-6 w-8 group-hover:visible "
-										builders={[builder]}
-										variant="ghost"
-										size="sm"
-										aria-label="Open menu"
-										on:click={() => console.log('hej')}
+										class="h-6 w-full justify-start"
+										variant={$currentApplication === app.id ? 'outline' : 'ghost'}
 									>
-										<MoreHorizontal class="h-6 w-6" />
+										<span
+											class="ms-1 text-xs {$currentApplication === app.id ? 'font-semibold' : ''}"
+											>{app.name}</span
+										>
 									</Button>
-								</DropdownMenu.Trigger>
-								<DropdownMenu.Content class="w-[200px]" align="end">
-									<DropdownMenu.Group>
-										<DropdownMenu.Label>Actions</DropdownMenu.Label>
-										<DropdownMenu.Item>
-											<User class="mr-2 h-4 w-4" />
-											Manage users...
-										</DropdownMenu.Item>
-										<DropdownMenu.Item>
-											<Calendar class="mr-2 h-4 w-4" />
-											Set due date...
-										</DropdownMenu.Item>
-										<DropdownMenu.Separator />
-										<DropdownMenu.Sub>
-											<DropdownMenu.SubTrigger>
-												<Tags class="mr-2 h-4 w-4" />
-												Apply label
-											</DropdownMenu.SubTrigger>
-											<DropdownMenu.SubContent class="p-0">asdfasdf</DropdownMenu.SubContent>
-										</DropdownMenu.Sub>
-										<DropdownMenu.Separator />
-										<DropdownMenu.Item class="text-red-600">
-											<Trash class="mr-2 h-4 w-4" />
-											Delete
-											<DropdownMenu.Shortcut>⌘⌫</DropdownMenu.Shortcut>
-										</DropdownMenu.Item>
-									</DropdownMenu.Group>
-								</DropdownMenu.Content>
-							</DropdownMenu.Root>
-						</div>
-					</li>
-					<li>
-						<Button class="h-6 w-full " variant="outline">
-							<div class="flex w-full">
-								<span class="ms-1 text-xs font-semibold">Game Client 2</span>
+								</a>
+								<DropdownMenu.Root let:ids>
+									<DropdownMenu.Trigger asChild let:builder>
+										<Button
+											class=" invisible h-6 w-8 group-hover:visible "
+											builders={[builder]}
+											variant="ghost"
+											size="sm"
+											aria-label="Open menu"
+											on:click={() => console.log('hej')}
+										>
+											<MoreHorizontal class="h-6 w-6" />
+										</Button>
+									</DropdownMenu.Trigger>
+									<DropdownMenu.Content class="w-[200px]" align="end">
+										<DropdownMenu.Group>
+											<DropdownMenu.Label>Actions</DropdownMenu.Label>
+											<DropdownMenu.Item>
+												<User class="mr-2 h-4 w-4" />
+												Manage users...
+											</DropdownMenu.Item>
+											<DropdownMenu.Item>
+												<Calendar class="mr-2 h-4 w-4" />
+												Set due date...
+											</DropdownMenu.Item>
+											<DropdownMenu.Separator />
+											<DropdownMenu.Sub>
+												<DropdownMenu.SubTrigger>
+													<Tags class="mr-2 h-4 w-4" />
+													Apply label
+												</DropdownMenu.SubTrigger>
+												<DropdownMenu.SubContent class="p-0">asdfasdf</DropdownMenu.SubContent>
+											</DropdownMenu.Sub>
+											<DropdownMenu.Separator />
+											<DropdownMenu.Item class="text-red-600">
+												<Trash class="mr-2 h-4 w-4" />
+												Delete
+												<DropdownMenu.Shortcut>⌘⌫</DropdownMenu.Shortcut>
+											</DropdownMenu.Item>
+										</DropdownMenu.Group>
+									</DropdownMenu.Content>
+								</DropdownMenu.Root>
 							</div>
-						</Button>
-					</li>
-					<li>
-						<Button class=" h-6 w-full " variant="ghost">
-							<div class="flex w-full">
-								<span class="ms-1 text-xs">Server 1</span>
-							</div>
-						</Button>
-					</li>
+						</li>
+					{/each}
 				</ul>
 			</li>
-			<li>
-				<Button class="w-full p-2 " variant="ghost">
-					<div class="flex w-full">
-						<TicketIcon />
-						<span class="ms-3">Tokens</span>
-					</div>
-				</Button>
+			{#if $currentApplication}
+				<li>
+					<a href="/app/{$currentApplication}">
+						<Button class="w-full p-2 " variant="ghost">
+							<div class="flex w-full">
+								<TicketIcon />
+								<span class="ms-3">Tokens</span>
+							</div>
+						</Button>
+					</a>
 
-				<ul class="space-y-0.5 font-mono">
-					<li>
-						<div class="group flex w-full justify-between">
-							<Button
-								class="float-left h-6 w-full justify-start"
-								variant="ghost"
-								on:click={() => console.log('hej2')}
-							>
-								<span class="ms-1 text-xs">Local</span>
-							</Button>
-							<DropdownMenu.Root let:ids>
-								<DropdownMenu.Trigger asChild let:builder>
-									<Button
-										class=" invisible h-6 w-8 group-hover:visible "
-										builders={[builder]}
-										variant="ghost"
-										size="sm"
-										aria-label="Open menu"
-										on:click={() => console.log('hej')}
-									>
-										<MoreHorizontal class="h-6 w-6" />
-									</Button>
-								</DropdownMenu.Trigger>
-								<DropdownMenu.Content class="w-[200px]" align="end">
-									<DropdownMenu.Group>
-										<DropdownMenu.Label>Actions</DropdownMenu.Label>
-										<DropdownMenu.Item>
-											<User class="mr-2 h-4 w-4" />
-											Manage users...
-										</DropdownMenu.Item>
-										<DropdownMenu.Item>
-											<Calendar class="mr-2 h-4 w-4" />
-											Set due date...
-										</DropdownMenu.Item>
-										<DropdownMenu.Separator />
-										<DropdownMenu.Sub>
-											<DropdownMenu.SubTrigger>
-												<Tags class="mr-2 h-4 w-4" />
-												Apply label
-											</DropdownMenu.SubTrigger>
-											<DropdownMenu.SubContent class="p-0">asdfasdf</DropdownMenu.SubContent>
-										</DropdownMenu.Sub>
-										<DropdownMenu.Separator />
-										<DropdownMenu.Item class="text-red-600">
-											<Trash class="mr-2 h-4 w-4" />
-											Delete
-											<DropdownMenu.Shortcut>⌘⌫</DropdownMenu.Shortcut>
-										</DropdownMenu.Item>
-									</DropdownMenu.Group>
-								</DropdownMenu.Content>
-							</DropdownMenu.Root>
+					<ul class="space-y-0.5 font-mono">
+						{#each $tokens as token}
+							<li>
+								<div class="group flex w-full justify-between">
+									<a class="float-left w-full" href="/app/{$currentApplication}/{token.id}">
+										<Button
+											class="h-6 w-full justify-start"
+											variant={$currentToken === token.id ? 'outline' : 'ghost'}
+										>
+											<span class="ms-1 text-xs {$currentToken === token.id ? 'font-semibold' : ''}"
+												>{token.name}</span
+											>
+										</Button>
+									</a>
+									<DropdownMenu.Root let:ids>
+										<DropdownMenu.Trigger asChild let:builder>
+											<Button
+												class=" invisible h-6 w-8 group-hover:visible "
+												builders={[builder]}
+												variant="ghost"
+												size="sm"
+												aria-label="Open menu"
+											>
+												<MoreHorizontal class="h-6 w-6" />
+											</Button>
+										</DropdownMenu.Trigger>
+										<DropdownMenu.Content class="w-[200px]" align="end">
+											<DropdownMenu.Group>
+												<DropdownMenu.Label>Actions</DropdownMenu.Label>
+												<DropdownMenu.Item>
+													<User class="mr-2 h-4 w-4" />
+													Manage users...
+												</DropdownMenu.Item>
+												<DropdownMenu.Item>
+													<Calendar class="mr-2 h-4 w-4" />
+													Set due date...
+												</DropdownMenu.Item>
+												<DropdownMenu.Separator />
+												<DropdownMenu.Sub>
+													<DropdownMenu.SubTrigger>
+														<Tags class="mr-2 h-4 w-4" />
+														Apply label
+													</DropdownMenu.SubTrigger>
+													<DropdownMenu.SubContent class="p-0">asdfasdf</DropdownMenu.SubContent>
+												</DropdownMenu.Sub>
+												<DropdownMenu.Separator />
+												<DropdownMenu.Item class="text-red-600">
+													<Trash class="mr-2 h-4 w-4" />
+													Delete
+													<DropdownMenu.Shortcut>⌘⌫</DropdownMenu.Shortcut>
+												</DropdownMenu.Item>
+											</DropdownMenu.Group>
+										</DropdownMenu.Content>
+									</DropdownMenu.Root>
+								</div>
+							</li>
+						{/each}
+					</ul>
+				</li>
+			{/if}
+			{#if $currentToken}
+				<li>
+					<Button class="w-full p-2 " variant="ghost">
+						<div class="flex w-full">
+							<Cog />
+							<span class="ms-3">Instances</span>
 						</div>
-					</li>
-					<li>
-						<Button class="h-6 w-full " variant="outline">
-							<div class="flex w-full">
-								<span class="ms-1 text-xs font-semibold">Dev Build</span>
-							</div>
-						</Button>
-					</li>
-					<li>
-						<Button class=" h-6 w-full " variant="ghost">
-							<div class="flex w-full">
-								<span class="ms-1 text-xs">Playtest</span>
-							</div>
-						</Button>
-					</li>
-				</ul>
-			</li>
-			<li>
-				<Button class="w-full p-2 " variant="ghost">
-					<div class="flex w-full">
-						<Cog />
-						<span class="ms-3">Instances</span>
-					</div>
-				</Button>
-				<ul class="space-y-0.5 font-mono">
-					<li>
-						<Button class=" h-6 w-full " variant="ghost">
-							<div class="flex w-full">
-								<span class="ms-1 text-xs">b5b976f5</span>
-							</div>
-						</Button>
-					</li>
-					<li>
-						<Button class=" h-6 w-full " variant="ghost">
-							<div class="flex w-full">
-								<span class="ms-1 text-xs">3e9d6451</span>
-							</div>
-						</Button>
-					</li>
-					<li>
-						<Button class=" h-6 w-full " variant="ghost">
-							<div class="flex w-full">
-								<span class="ms-1 text-xs">a51c458d</span>
-							</div>
-						</Button>
-					</li>
-					<li>
-						<Button class=" h-6 w-full " variant="ghost">
-							<div class="flex w-full">
-								<span class="ms-1 text-xs">f90678f5</span>
-							</div>
-						</Button>
-					</li>
-					<li>
-						<Button class=" h-6 w-full " variant="ghost">
-							<div class="flex w-full">
-								<span class="ms-1 text-xs">c54ec6d2</span>
-							</div>
-						</Button>
-					</li>
-					<li>
-						<Button class=" h-6 w-full " variant="ghost">
-							<div class="flex w-full">
-								<span class="ms-1 text-xs">5131d63e</span>
-							</div>
-						</Button>
-					</li>
-				</ul>
-			</li>
+					</Button>
+					<ul class="space-y-0.5 font-mono">
+						{#each $instances as instance}
+							<li>
+								<div class="group flex w-full justify-between">
+									<a
+										class="float-left w-full"
+										href="/app/{$currentApplication}/{$currentToken}/{instance.id}"
+									>
+										<Button
+											class="h-6 w-full justify-start"
+											variant={$currentInstance === instance.id ? 'outline' : 'ghost'}
+										>
+											<span
+												class="ms-1 text-xs {$currentInstance === instance.id
+													? 'font-semibold'
+													: ''}">{instance.name}</span
+											>
+										</Button>
+									</a>
+								</div>
+							</li>
+						{/each}
+					</ul>
+				</li>
+			{/if}
 		</ul>
 
 		<div class="absolute inset-x-0 bottom-0 h-12 w-full bg-primary-foreground">
