@@ -10,6 +10,8 @@
 	import * as Popover from '$lib/components/ui/popover';
 	import * as Select from '$lib/components/ui/select';
 	import { tick } from 'svelte';
+	import { teams } from '$lib/appstate';
+	import { goto } from '$app/navigation';
 
 	let className: string | undefined | null = undefined;
 	export { className as class };
@@ -17,25 +19,7 @@
 	const groups = [
 		{
 			label: 'Personal Account',
-			teams: [
-				{
-					label: 'Alicia Koch',
-					value: 'personal'
-				}
-			]
-		},
-		{
-			label: 'Teams',
-			teams: [
-				{
-					label: 'Acme Inc.',
-					value: 'acme-inc'
-				},
-				{
-					label: 'Monsters Inc.',
-					value: 'monsters'
-				}
-			]
+			teams: $teams
 		}
 	];
 
@@ -49,6 +33,7 @@
 	function closeAndRefocusTrigger(triggerId: string) {
 		open = false;
 
+		console.log('close ' + triggerId);
 		tick().then(() => document.getElementById(triggerId)?.focus());
 	}
 </script>
@@ -66,12 +51,12 @@
 			>
 				<Avatar.Root class="mr-2 h-5 w-5">
 					<Avatar.Image
-						src="https://avatar.vercel.sh/${selectedTeam.value}.png"
-						alt={selectedTeam.label}
+						src="https://avatar.vercel.sh/${selectedTeam.name}.png"
+						alt={selectedTeam.name}
 					/>
 					<Avatar.Fallback>SC</Avatar.Fallback>
 				</Avatar.Root>
-				{selectedTeam.label}
+				{selectedTeam.name}
 				<CaretSort class="ml-auto h-4 w-4 shrink-0 opacity-50" />
 			</Button>
 		</Popover.Trigger>
@@ -86,24 +71,22 @@
 									onSelect={() => {
 										selectedTeam = team;
 										closeAndRefocusTrigger(ids.trigger);
+										goto(`/app/${selectedTeam.id}`);
 									}}
-									value={team.label}
+									value={team.name}
 									class="text-sm"
 								>
 									<Avatar.Root class="mr-2 h-5 w-5">
 										<Avatar.Image
 											src="https://avatar.vercel.sh/${team.value}.png"
-											alt={team.label}
+											alt={team.name}
 											class="grayscale"
 										/>
 										<Avatar.Fallback>SC</Avatar.Fallback>
 									</Avatar.Root>
-									{team.label}
+									{team.name}
 									<Check
-										class={cn(
-											'ml-auto h-4 w-4',
-											selectedTeam.value !== team.value && 'text-transparent'
-										)}
+										class={cn('ml-auto h-4 w-4', selectedTeam.id !== team.id && 'text-transparent')}
 									/>
 								</Command.Item>
 							{/each}
