@@ -19,21 +19,21 @@
 		{#if application}
 			<div class="my-auto">/</div>
 			<a
-				href="/app/{application}"
+				href="/app/{team}/{application}"
 				class="mx-1 my-auto rounded-sm p-1 hover:bg-accent hover:text-accent-foreground active:outline active:outline-1"
 				>{$applications.find((a) => a.id == application)?.name ?? application}</a
 			>
 			{#if token}
 				<div class="my-auto">/</div>
 				<a
-					href="/app/{application}/{token}"
+					href="/app/{team}/{application}/{token}"
 					class="mx-1 my-auto rounded-sm p-1 hover:bg-accent hover:text-accent-foreground active:outline active:outline-1"
 					>{$tokens.find((t) => t.id == token)?.name ?? token}
 				</a>
 				{#if instance}
 					<div class="my-auto">/</div>
 					<a
-						href="/app/{application}/{token}/{instance}"
+						href="/app/{team}/{application}/{token}/{instance}"
 						class="mx-1 my-auto rounded-sm p-1 hover:bg-accent hover:text-accent-foreground active:outline active:outline-1"
 						>{$instances.find((i) => i.id == instance)?.name ?? instance}
 					</a>
