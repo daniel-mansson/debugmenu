@@ -3,6 +3,7 @@ using System;
 using DebugMenu.Silo.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DebugMenu.Silo.Migrations
 {
     [DbContext(typeof(DebugMenuDbContext))]
-    partial class DebugMenuDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240202212942_DebugMenuDbContext_AddTeams")]
+    partial class DebugMenuDbContext_AddTeams
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
