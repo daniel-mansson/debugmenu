@@ -4,7 +4,7 @@ using DebugMenu.Silo.Web.Users.Persistence;
 using MediatR;
 using Microsoft.AspNetCore.Http.HttpResults;
 
-namespace DebugMenu.Silo.Web.Applications.Requests.CreateApplication; 
+namespace DebugMenu.Silo.Web.Applications.Requests.CreateApplication;
 
 public class CreateApplicationHandler : IRequestHandler<CreateApplicationRequest, ApplicationDto> {
     private readonly IApplicationsRepository _applicationsRepository;
@@ -16,8 +16,8 @@ public class CreateApplicationHandler : IRequestHandler<CreateApplicationRequest
     }
 
     public async Task<ApplicationDto> Handle(CreateApplicationRequest request, CancellationToken cancellationToken) {
-        //Validate current user is set as owner OR is super admin
-        
+        //TODO: Validate current user is set as owner OR is super admin
+
         var application = _applicationsRepository.Create(new ApplicationEntity() {
             Name = request.Item.Name
         });
@@ -27,7 +27,7 @@ public class CreateApplicationHandler : IRequestHandler<CreateApplicationRequest
             var owner = await _userRepository.GetByIdAsync(request.OwnerUserId.GetValueOrDefault());
             if (owner != null) {
                 application.Users.Add(owner);
-                application.ApplicationUsers.Add(new() { 
+                application.ApplicationUsers.Add(new() {
                     ApplicationId = application.Id,
                     Application = application,
                     UserId = owner.Id,
