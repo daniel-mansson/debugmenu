@@ -14,6 +14,9 @@ using DebugMenu.Silo.Web.RunningInstances;
 using DebugMenu.Silo.Web.RuntimeTokens;
 using DebugMenu.Silo.Web.RuntimeTokens.Persistence;
 using DebugMenu.Silo.Web.RuntimeTokens.Persistence.EntityFramework;
+using DebugMenu.Silo.Web.Teams;
+using DebugMenu.Silo.Web.Teams.Persistence;
+using DebugMenu.Silo.Web.Teams.Persistence.EntityFramework;
 using DebugMenu.Silo.Web.Users;
 using DebugMenu.Silo.Web.Users.Persistence;
 using DebugMenu.Silo.Web.Users.Persistence.EntityFramework;
@@ -103,6 +106,7 @@ builder.Services.AddScoped<IJwtService, DebugMenuIoJwtService>();
 
 builder.Services.AddScoped<IApplicationsRepository, ApplicationsRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<ITeamsRepository, TeamsRepository>();
 builder.Services.AddScoped<IRuntimeTokenRepository, RuntimeTokenRepository>();
 
 builder.Services.AddAutoMapper(_ => { }, typeof(Program).Assembly);
@@ -156,6 +160,7 @@ app.MapApplicationsEndpoints();
 app.MapUsersEndpoints();
 app.MapRuntimeTokensEndpoints();
 app.MapRunningInstancesEndpoints();
+app.MapTeamsEndpoints();
 
 app.MapPost("/instance/start", async (StartInstanceRequestDto request, IClusterClient clusterClient) =>
     await clusterClient.GetGrain<IDebugInstanceGrain>(Guid.NewGuid().ToString())
