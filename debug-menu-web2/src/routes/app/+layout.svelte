@@ -5,6 +5,7 @@
 	import Sidebar from '$lib/components/skeleton/sidebar/sidebar.svelte';
 	import { currentApplication, currentInstance } from '$lib/appstate';
 	import Breadcrumbs from '$lib/components/skeleton/navbar/breadcrumbs.svelte';
+	import { signIn, signOut } from '@auth/sveltekit/client';
 
 	let sidebarVisible = false;
 	function toggleSidebar() {
@@ -27,4 +28,11 @@
 <div class="absolute bottom-0 right-0">
 	{JSON.stringify(data)}
 	{$currentApplication}
+
+	{#if data.session}
+		<div>{data.session.user?.name}</div>
+		<button class="btn btn-sm border" on:click={() => signOut()}>Sign out</button>
+	{:else}
+		<button class="btn btn-sm border" on:click={() => signIn('google')}>Sign in</button>
+	{/if}
 </div>
