@@ -1,7 +1,7 @@
 import { currentApplication, currentInstance, currentTeam, currentToken } from '$lib/appstate.js';
 
 /** @type {import('./$types').LayoutLoad} */
-export function load({ params }) {
+export async function load({ params, parent }) {
 
     currentTeam.set(params.team);
     currentApplication.set(params.application);
@@ -9,6 +9,7 @@ export function load({ params }) {
     currentInstance.set(params.instance);
 
     return {
+        session: parent().then(p => p.session),
         team: params.team,
         application: params.application,
         token: params.token,

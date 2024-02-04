@@ -9,7 +9,7 @@ const { sign, verify } = jwt
 
 const pool = new Pool({
     host: "localhost",
-    database: "debugmenu",
+    database: "debugmenu2",
     user: "postgres",
     password: "postgres",
     max: 20,
@@ -20,7 +20,30 @@ const pool = new Pool({
 export const handle = SvelteKitAuth({
     adapter: PostgresAdapter(pool),
     providers: [
-        Google({ clientId: GOOGLE_ID, clientSecret: GOOGLE_SECRET })
+        Google({
+            id: "google",
+            name: "Google",
+            clientId: GOOGLE_ID,
+            clientSecret: GOOGLE_SECRET,
+            authorization: {
+                params: {
+                    prompt: "consent",
+                    access_type: "offline",
+                    response_type: "code"
+                }
+            },
+            profile(profile) {
+                console.log('================= p ===================')
+                console.log(JSON.stringify(profile))
+                console.log(JSON.stringify(profile.id))
+                return {
+                    id: profile.sub,
+                    name: profile.name,
+                    email: profile.email,
+                    image: profile.picture,
+                };
+            },
+        })
     ],
     session: {
         strategy: "jwt",
@@ -44,17 +67,9 @@ export const handle = SvelteKitAuth({
             session.userId = token.sub;
             session.jti = token.sub;
 
-            // let buf = Buffer.from(JWT_SECRET, 'base64');
             let buf = JWT_SECRET;
-            //console.log(buf)
             let jwt = sign(session, buf, signOptions);
-            // user.backendJwt = jwt;
-
             session.jwt = jwt;
-
-            let asdf = verify(jwt, buf);
-
-            //console.log(JSON.stringify(asdf))
 
             return session;
         }

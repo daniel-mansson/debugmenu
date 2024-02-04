@@ -3,8 +3,15 @@
 	import { AppShell, AppBar, Modal, LightSwitch } from '@skeletonlabs/skeleton';
 	import type { LayoutData } from './$types';
 	import { signIn, signOut } from '@auth/sveltekit/client';
+	import type { LayoutServerData } from '../$types';
+	import { onMount } from 'svelte';
 
-	export let data: LayoutData;
+	export let data: LayoutServerData;
+
+	onMount(() => {
+		console.log('layout');
+		console.log(JSON.stringify(data));
+	});
 
 	$: msg = $instanceConnection?.latestMessage;
 </script>

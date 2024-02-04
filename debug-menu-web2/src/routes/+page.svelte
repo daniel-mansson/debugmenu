@@ -1,9 +1,11 @@
 <script lang="ts">
-	import ComapctCard from '$lib/components/test/ComapctCard.svelte';
-	import TestCard from '$lib/components/test/TestCard.svelte';
 	import { Separator } from '$lib/components/ui/separator';
 	import icon from '$lib/assets/up_arrow.svg';
 	import { Button } from '$lib/components/ui/button';
+	import type { LayoutData } from './$types';
+	import { signIn, signOut } from '@auth/sveltekit/client';
+
+	export let data: LayoutData;
 </script>
 
 <div class="mx-auto my-2 w-10/12 self-center">
@@ -30,4 +32,13 @@
 		<Button href="/app">Get started</Button>
 	</div>
 	<Separator />
+
+	<div class="">
+		{#if data.session}
+			<div>{data.session.user?.name}</div>
+			<button class="btn btn-sm border" on:click={() => signOut()}>Sign out</button>
+		{:else}
+			<button class="btn btn-sm border" on:click={() => signIn()}>Sign in</button>
+		{/if}
+	</div>
 </div>

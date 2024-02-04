@@ -7,13 +7,13 @@ settings:
 dependencies:
   '@auth/core':
     specifier: ^0.25.0
-    version: 0.25.0
+    version: 0.25.1
   '@auth/pg-adapter':
     specifier: ^0.4.0
-    version: 0.4.0(pg@8.11.3)
+    version: 0.4.1(pg@8.11.3)
   '@auth/sveltekit':
     specifier: ^0.11.0
-    version: 0.11.0(@sveltejs/kit@2.0.7)(svelte@4.2.8)
+    version: 0.11.1(@sveltejs/kit@2.0.7)(svelte@4.2.8)
   bits-ui:
     specifier: ^0.13.5
     version: 0.13.5(svelte@4.2.8)
@@ -134,8 +134,8 @@ packages:
       '@jridgewell/gen-mapping': 0.3.3
       '@jridgewell/trace-mapping': 0.3.20
 
-  /@auth/core@0.25.0:
-    resolution: {integrity: sha512-UxENsD+WNlY1NOFsr3Ygc7F1Ypbia8VCd9NU8cbAhSJ0Z8dtyZ0xmssRo1G3ZW50QnW0AaAMuYzY5oumnPMQzA==}
+  /@auth/core@0.25.1:
+    resolution: {integrity: sha512-Xt/0oV0ItS38BUeqc98LVYspoXSUifWS48BeEzWXkkdQgLcXEFnF008+CDLyZvnyv/zF4vahwJHeR/J5SK9RaA==}
     peerDependencies:
       nodemailer: ^6.8.0
     peerDependenciesMeta:
@@ -151,24 +151,24 @@ packages:
       preact-render-to-string: 5.2.3(preact@10.11.3)
     dev: false
 
-  /@auth/pg-adapter@0.4.0(pg@8.11.3):
-    resolution: {integrity: sha512-S6UIPqtg+sIPT0ve6Vw+eK+hxr1IB7QGLQsq6LrGHeaq2O/pLkmE8cuaWGhPCzrp/xSHjAbmWPCwb9RyBAPHzg==}
+  /@auth/pg-adapter@0.4.1(pg@8.11.3):
+    resolution: {integrity: sha512-Syh/AQOcUMi03WRvwJB2itvrrEAw3nJ+Z32MhQeA1PVevcrvUrWZZBT8GXGuslOuZABqSpQa0Qgt20x2KajCpA==}
     peerDependencies:
       pg: ^8
     dependencies:
-      '@auth/core': 0.25.0
+      '@auth/core': 0.25.1
       pg: 8.11.3
     transitivePeerDependencies:
       - nodemailer
     dev: false
 
-  /@auth/sveltekit@0.11.0(@sveltejs/kit@2.0.7)(svelte@4.2.8):
-    resolution: {integrity: sha512-vw/mtzmOksGn/Y89kxboSKMdglLypFB5ePrLkq9UejK0K/JL0tevyASmEgYauJrxjeBZpG+k7FEniw1q1K/zhg==}
+  /@auth/sveltekit@0.11.1(@sveltejs/kit@2.0.7)(svelte@4.2.8):
+    resolution: {integrity: sha512-ZRgsSCWkBiswbbNdV0FCOunrtVoSkqc+XKX3aNSZQvxeWQ0YgN26BYH5G99BM2DK+FKUAmsKiNdp3PdouGrIcA==}
     peerDependencies:
       '@sveltejs/kit': ^1.0.0 || ^2.0.0
       svelte: ^3.54.0 || ^4.0.0 || ^5
     dependencies:
-      '@auth/core': 0.25.0
+      '@auth/core': 0.25.1
       '@sveltejs/kit': 2.0.7(@sveltejs/vite-plugin-svelte@3.0.1)(svelte@4.2.8)(vite@5.0.11)
       set-cookie-parser: 2.6.0
       svelte: 4.2.8
