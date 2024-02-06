@@ -74,7 +74,7 @@ builder.Services
     .AddDbContext<DebugMenuDbContext>(options => {
         options.UseNpgsql(
             builder.Configuration.GetConnectionString(
-                "Host=localhost;Port=5432;Database=debugmenu2;Username=postgres;Password=postgres;Include Error Detail=true;")
+                "Host=localhost;Port=5432;Database=debugmenu;Username=postgres;Password=postgres;Include Error Detail=true;")
             !,
             serverOptions => serverOptions
                 .EnableRetryOnFailure(5, TimeSpan.FromSeconds(30), null)

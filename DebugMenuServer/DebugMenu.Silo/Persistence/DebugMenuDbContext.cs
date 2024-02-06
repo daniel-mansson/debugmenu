@@ -28,7 +28,7 @@ public class DebugMenuDbContext : DbContext {
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseNpgsql(
-            "Host=localhost;Database=debugmenu2;Username=postgres;Password=postgres;Include Error Detail=true;");
+            "Host=localhost;Database=debugmenu;Username=postgres;Password=postgres;Include Error Detail=true;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
         modelBuilder.Entity<AccountEntity>(entity => {
