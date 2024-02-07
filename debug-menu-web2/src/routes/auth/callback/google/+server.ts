@@ -44,7 +44,7 @@ export async function GET(event: RequestEvent): Promise<Response> {
 			db.prepare("INSERT INTO user (id, google_id, username) VALUES (?, ?, ?)").run(
 				userId,
 				user.id,
-				user.name 
+				user.name
 			);
 			const session = await lucia.createSession(userId, {});
 			const sessionCookie = lucia.createSessionCookie(session.id);

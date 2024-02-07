@@ -4,6 +4,8 @@
 	import { Separator } from '$lib/components/ui/separator';
 	import icon from '$lib/assets/up_arrow.svg';
 	import { Button } from '$lib/components/ui/button';
+
+	export let data;
 </script>
 
 <div class="mx-auto my-2 w-10/12 self-center">
@@ -27,6 +29,7 @@
 		<h1 class="mx-auto scroll-m-20 pb-2 text-4xl font-semibold">
 			Control your application from anywhere
 		</h1>
+		{JSON.stringify(data.user)}
 		<Button href="/app">Get started</Button>
 	</div>
 	<Separator />

@@ -3,6 +3,12 @@
 	import UserAuthForm from '$lib/components/auth/user-auth-form.svelte';
 	import Separator from '$lib/components/ui/separator/separator.svelte';
 	import icon from '$lib/assets/up_arrow.svg';
+	import { goto } from '$app/navigation';
+
+	function signInClicked(provider: string) {
+		console.log(provider);
+		goto(`/auth/${provider}/signin`);
+	}
 </script>
 
 <div class="h-screen w-full">
@@ -29,7 +35,7 @@
 						<h1 class="text-2xl font-semibold tracking-tight">Sign in</h1>
 						<p class="text-sm text-muted-foreground">Continue with</p>
 					</div>
-					<UserAuthForm />
+					<UserAuthForm on:click={(evt) => signInClicked(evt.detail)} />
 					<p class="px-8 text-center text-sm text-muted-foreground">
 						By clicking continue, you agree to our{' '}
 						<a href="/terms" class="underline underline-offset-4 hover:text-primary">

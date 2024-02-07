@@ -4,6 +4,7 @@
 	import Label from '../ui/label/label.svelte';
 	import { cn } from '$lib/utils';
 	import { SplineIcon } from 'lucide-svelte';
+	import { createEventDispatcher } from 'svelte';
 
 	let className: string | undefined | null = undefined;
 	export { className as class };
@@ -13,14 +14,17 @@
 	async function onSubmit(provider: string) {
 		isLoading = true;
 		target = provider;
+		dispatch('click', provider);
 		setTimeout(() => {
 			isLoading = false;
 		}, 3000);
 	}
+
+	let dispatch = createEventDispatcher();
 </script>
 
 <div class={cn('grid gap-6', className)} {...$$restProps}>
-	<Button
+	<!-- <Button
 		variant="secondary"
 		type="button"
 		disabled={isLoading}
@@ -33,7 +37,7 @@
 		{/if}
 		{' '}
 		GitHub
-	</Button>
+	</Button> -->
 	<Button
 		variant="secondary"
 		type="button"
