@@ -2,9 +2,9 @@ using DebugMenu.Silo.Persistence;
 using DebugMenu.Silo.Web.Applications.Persistence.EntityFramework;
 using Microsoft.EntityFrameworkCore;
 
-namespace DebugMenu.Silo.Web.RuntimeTokens.Persistence.EntityFramework; 
+namespace DebugMenu.Silo.Web.RuntimeTokens.Persistence.EntityFramework;
 
-public class RuntimeTokenRepository : CrudRepositoryBase<RuntimeTokenEntity>, IRuntimeTokenRepository {
+public class RuntimeTokenRepository : CrudRepositoryBase<RuntimeTokenEntity, int>, IRuntimeTokenRepository {
     private readonly DebugMenuDbContext _context;
 
     public RuntimeTokenRepository(DebugMenuDbContext context) : base(context) {
@@ -12,7 +12,7 @@ public class RuntimeTokenRepository : CrudRepositoryBase<RuntimeTokenEntity>, IR
     }
 
     protected override DbSet<RuntimeTokenEntity> DbSet => _context.RuntimeTokens;
-    
+
     public async Task<IReadOnlyList<RuntimeTokenEntity>> GetByApplicationAsync(int applicationId) {
         return await DbSet.Where(token => token.Application.Id == applicationId)
             .ToListAsync();

@@ -25,8 +25,8 @@ public class CreateTeamHandler : IRequestHandler<CreateTeamRequest, TeamDto> {
         });
         await _teamsRepository.SaveAsync();
 
-        if (request.OwnerUserId.HasValue) {
-            var owner = await _userRepository.GetByIdAsync(request.OwnerUserId.GetValueOrDefault());
+        if (request.OwnerUserId != null) {
+            var owner = await _userRepository.GetByIdAsync(request.OwnerUserId);
             if (owner != null) {
                 team.Users.Add(owner);
                 team.TeamUsers.Add(new() {

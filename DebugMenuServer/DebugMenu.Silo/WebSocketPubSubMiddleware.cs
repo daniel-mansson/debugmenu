@@ -41,10 +41,10 @@ public class WebSocketPubSubMiddleware {
         }
 
         //JWT if platform websocket
-        //secret if debug instance / controller 
-        
+        //secret if debug instance / controller
+
         // if (context.Request.Headers.TryGetValue("SessionEntity", out var token)) {
-        //     
+        //
         // }
         // else {
         //     var result = await context.AuthenticateAsync();
@@ -64,7 +64,7 @@ public class WebSocketPubSubMiddleware {
             context.Response.StatusCode = (int)HttpStatusCode.NotFound;
             return;
         }
-        
+
         string id = path[2].ToString();
         string role = path[3].ToString();
 
@@ -77,7 +77,7 @@ public class WebSocketPubSubMiddleware {
             }
         }
         finally {
-            
+
         }
         //
         // var subscription = default(StreamSubscriptionHandle<WebSocketMessage>);
@@ -131,21 +131,21 @@ public class WebSocketPubSubMiddleware {
             room.AddController(webSocket);
 
             _logger.LogInformation("[Websocket] opened connection for {id}", id);
-        
+
             while (webSocket.CloseStatus.HasValue == false) {
                 var result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
 
                 if (webSocket.CloseStatus.HasValue)
                     break;
-                
+
                 Console.WriteLine($"[Websocket] received {result.Count} bytes");
                 await room.SendToInstance(buffer, result.Count, result.MessageType, result.EndOfMessage, CancellationToken.None);
             }
-        
+
             await webSocket.CloseAsync(
                 webSocket.CloseStatus.Value,
                 webSocket.CloseStatusDescription, CancellationToken.None);
-        
+
             _logger.LogInformation("[Websocket] closed connection for TraceId: {traceId}", id);
         }
         finally {
@@ -158,28 +158,27 @@ public class WebSocketPubSubMiddleware {
         var buffer = new byte[1024];
 
         var result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), cts.Token);
-        if(result.MessageType != WebSocketMessageType.Text 
+        if(result.MessageType != WebSocketMessageType.Text
            || !result.EndOfMessage
            || result.CloseStatus.HasValue
            || result.Count > 1000) {
             return false;
         }
-        
+
         var userJwt = Encoding.UTF8.GetString(new ReadOnlySpan<byte>(buffer, 0, result.Count));
         var decoded = _jwtService.Decode(userJwt);
         if (decoded == null) {
             return false;
         }
-        var userId = int.Parse(decoded.Id);
 
         var instanceGrain = _clusterClient.GetGrain<IRunningInstanceGrain>(instanceId);
         var metadata = await instanceGrain.GetMetadata();
         if (!metadata.IsInitialized) {
             return false;
         }
-        
+
         var userHasAccess = await _mediator.Send(new ValidateUserAccessRequest() {
-            UserId = userId,
+            UserId = decoded.Id,
             InstanceId = instanceId
         }, cts.Token);
         if (!userHasAccess) {
@@ -199,7 +198,7 @@ public class WebSocketPubSubMiddleware {
             var bytes = stream.ToArray();
             await webSocket.SendAsync(bytes, WebSocketMessageType.Binary, true, cts.Token);
         }
-        
+
         return true;
     }
     private async Task<bool> PerformHandshakeAndValidateInstanceConnection(string instanceId, WebSocket webSocket) {
@@ -207,25 +206,25 @@ public class WebSocketPubSubMiddleware {
 
         var buffer = new byte[2 * 1024];
         var tokenResult = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), cts.Token);
-        if(tokenResult.MessageType != WebSocketMessageType.Text 
+        if(tokenResult.MessageType != WebSocketMessageType.Text
            || !tokenResult.EndOfMessage
            || tokenResult.CloseStatus.HasValue
            || tokenResult.Count > 1000) {
             return false;
         }
         var token = Encoding.UTF8.GetString(new ReadOnlySpan<byte>(buffer, 0, tokenResult.Count));
-        
+
         var metadataResult = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer),  cts.Token);
-        if(metadataResult.MessageType != WebSocketMessageType.Text 
+        if(metadataResult.MessageType != WebSocketMessageType.Text
            || !metadataResult.EndOfMessage
            || metadataResult.CloseStatus.HasValue
            || metadataResult.Count > 1000) {
             return false;
         }
-        
+
         var metadataJson = Encoding.UTF8.GetString(new ReadOnlySpan<byte>(buffer, 0, metadataResult.Count));
         var metadata = JsonSerializer.Deserialize<Dictionary<string, string>>(metadataJson);
-        
+
         return true;
     }
 
@@ -236,28 +235,28 @@ public class WebSocketPubSubMiddleware {
             await webSocket.CloseAsync(WebSocketCloseStatus.PolicyViolation, "Failed handshake", new CancellationTokenSource(TimeSpan.FromSeconds(1)).Token);
             return;
         }
-        
+
         var room = _websocketManager.GetRoom(id);
         try {
             room.SetInstance(webSocket);
 
             _logger.LogInformation("[Websocket] opened connection for UserId: {userId}", id);
-        
+
             var buffer = new byte[1024 * 4];
             while (webSocket.CloseStatus.HasValue == false) {
                 var result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
 
                 if (webSocket.CloseStatus.HasValue)
                     break;
-                
+
                 Console.WriteLine($"[Websocket] received {result.Count} bytes");
                 await room.BroadcastToControllersAsync(buffer, result.Count, result.MessageType, result.EndOfMessage, CancellationToken.None);
             }
-        
+
             await webSocket.CloseAsync(
                 webSocket.CloseStatus.Value,
                 webSocket.CloseStatusDescription, CancellationToken.None);
-        
+
             _logger.LogInformation("[Websocket] closed connection for TraceId: {traceId}", id);
         }
         finally {

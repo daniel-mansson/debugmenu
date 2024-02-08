@@ -6,7 +6,7 @@ namespace DebugMenu.Silo.Web.Applications;
 
 [AutoMap(typeof(ApplicationUserEntity), ReverseMap = true)]
 public class ApplicationUserDto {
-    public int UserId { get; set; }
+    public string UserId { get; set; }
     public UserDto? User { get; set; }
     public ApplicationMemberRole Role { get; set; }
 }

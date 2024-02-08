@@ -59,7 +59,7 @@ public static class TeamsEndpoints {
         return Results.Ok(await mediator.Send(new GetAllTeamsRequest()));
     }
 
-    private static async Task<IResult> GetByUser(int id, IMediator mediator) {
+    private static async Task<IResult> GetByUser(string id, IMediator mediator) {
         return Results.Ok(await mediator.Send(new GetTeamsByUserRequest() {
             UserId = id
         }));

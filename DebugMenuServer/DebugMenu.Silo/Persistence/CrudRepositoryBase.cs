@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace DebugMenu.Silo.Persistence;
 
-public abstract class CrudRepositoryBase<TEntity> : ICrudRepository<TEntity> where TEntity : EntityWithIntId {
+public abstract class CrudRepositoryBase<TEntity, TKey> : ICrudRepository<TEntity, TKey> where TEntity : EntityWithId<TKey> {
     private readonly DbContext _context;
 
     protected abstract DbSet<TEntity> DbSet { get; }
@@ -47,7 +47,7 @@ public abstract class CrudRepositoryBase<TEntity> : ICrudRepository<TEntity> whe
         return await query.ToListAsync();
     }
 
-    public Task<TEntity?> GetByIdAsync(int id) {
+    public Task<TEntity?> GetByIdAsync(TKey id) {
         return HydratedQueryable.FirstOrDefaultAsync(e => e.Id.Equals(id));
     }
 
@@ -60,12 +60,12 @@ public abstract class CrudRepositoryBase<TEntity> : ICrudRepository<TEntity> whe
         entry.State = EntityState.Deleted;
     }
 
-    public async Task DeleteAsync(int id) {
+    public async Task DeleteAsync(TKey id) {
         var entity = await DbSet.FindAsync(id);
         if (entity == null) {
             return;
         }
-        
+
         var entry = DbSet.Entry(entity);
         if (entry.State == EntityState.Detached) {
             DbSet.Attach(entity);

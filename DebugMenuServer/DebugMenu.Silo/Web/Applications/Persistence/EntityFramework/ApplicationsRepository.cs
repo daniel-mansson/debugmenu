@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DebugMenu.Silo.Web.Applications.Persistence.EntityFramework;
 
-public class ApplicationsRepository : CrudRepositoryBase<ApplicationEntity>, IApplicationsRepository {
+public class ApplicationsRepository : CrudRepositoryBase<ApplicationEntity, int>, IApplicationsRepository {
     private readonly DebugMenuDbContext _context;
 
     public ApplicationsRepository(DebugMenuDbContext context) : base(context) {
@@ -13,7 +13,7 @@ public class ApplicationsRepository : CrudRepositoryBase<ApplicationEntity>, IAp
     protected override DbSet<ApplicationEntity> DbSet => _context.Applications;
     protected override IQueryable<ApplicationEntity> HydratedQueryable => DbSet.Include(u => u.Users);
 
-    public async Task<IReadOnlyList<ApplicationEntity>> GetByUserIdAsync(int userId) {
+    public async Task<IReadOnlyList<ApplicationEntity>> GetByUserIdAsync(string userId) {
         return await DbSet
             .Where(application => application.Users
                 .Any(user => user.Id == userId))

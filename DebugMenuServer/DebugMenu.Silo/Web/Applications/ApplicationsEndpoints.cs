@@ -10,7 +10,7 @@ using DebugMenu.Silo.Web.RuntimeTokens.Requests.GetRuntimeTokensByApplication;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DebugMenu.Silo.Web.Applications; 
+namespace DebugMenu.Silo.Web.Applications;
 
 public static class ApplicationsEndpoints {
 
@@ -22,16 +22,16 @@ public static class ApplicationsEndpoints {
         root.MapGet("/{id}", Get);
         root.MapGet("/by-user/{id}", GetByUser);
         root.MapGet("/{id}/users", GetUsers);
-        
+
         root.MapGet("/{id}/tokens", GetTokens);
         root.MapPost("/{id}/tokens", CreateToken);
 
         root.MapPost("/", Create);
-      
+
         root.MapPut("/", Update);
-        
+
         root.MapDelete("/{id}", Delete);
-        
+
         return app;
     }
 
@@ -72,13 +72,13 @@ public static class ApplicationsEndpoints {
     private static async Task<IResult> GetAll(IMediator mediator) {
         return Results.Ok(await mediator.Send(new GetAllApplicationsRequest()));
     }
-    
-    private static async Task<IResult> GetByUser(int id, IMediator mediator) {
+
+    private static async Task<IResult> GetByUser(string id, IMediator mediator) {
         return Results.Ok(await mediator.Send(new GetApplicationsByUserRequest() {
             UserId = id
         }));
     }
-    
+
     private static async Task<IResult> GetUsers(int id, IMediator mediator) {
         return Results.Ok(await mediator.Send(new GetUsersInApplicationRequest() {
             ApplicationId = id

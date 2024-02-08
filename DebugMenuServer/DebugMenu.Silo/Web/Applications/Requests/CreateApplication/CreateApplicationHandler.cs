@@ -23,8 +23,8 @@ public class CreateApplicationHandler : IRequestHandler<CreateApplicationRequest
         });
         await _applicationsRepository.SaveAsync();
 
-        if (request.OwnerUserId.HasValue) {
-            var owner = await _userRepository.GetByIdAsync(request.OwnerUserId.GetValueOrDefault());
+        if (request.OwnerUserId != null) {
+            var owner = await _userRepository.GetByIdAsync(request.OwnerUserId);
             if (owner != null) {
                 application.Users.Add(owner);
                 application.ApplicationUsers.Add(new() {
