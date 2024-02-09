@@ -6,14 +6,10 @@ import type { RequestEvent } from "@sveltejs/kit";
 
 export async function GET(event: RequestEvent): Promise<Response> {
 	const state = generateState();
-	console.log('google: ' + state)
 	const url = await google.createAuthorizationURL(state, "hej", {
 		scopes: ["profile", "email"],
 	});
 	url.searchParams.set("prompt", "consent");
-
-	console.log('google: ' + url)
-	console.log('google: ' + state)
 
 	event.cookies.set("google_oauth_state", state, {
 		path: "/",

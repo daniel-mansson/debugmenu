@@ -30,6 +30,7 @@
 	</nav>
 	<Separator />
 
+	{JSON.stringify(data)}
 	<div class=" my-48 text-center">
 		<h1 class="mx-auto scroll-m-20 pb-2 text-4xl font-semibold">
 			Control your application from anywhere

@@ -1,9 +1,12 @@
+import type { User } from "lucia";
 import { writable } from "svelte/store";
 
 export const currentTeam = writable<string | undefined>(undefined);
 export const currentApplication = writable<string | undefined>(undefined);
 export const currentToken = writable<string | undefined>(undefined);
 export const currentInstance = writable<string | undefined>(undefined);
+export const currentUser = writable<User | undefined>(undefined);
+export const currentBackendToken = writable<string | undefined>(undefined);
 
 type NameIdPair = {
     name: string;

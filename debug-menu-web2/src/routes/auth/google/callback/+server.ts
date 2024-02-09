@@ -7,7 +7,6 @@ import type { DatabaseUser } from "$lib/server/db";
 
 export async function GET(event: RequestEvent): Promise<Response> {
 
-	console.log("HEEJ")
 	const code = event.url.searchParams.get("code");
 	const state = event.url.searchParams.get("state");
 	const storedState = event.cookies.get("google_oauth_state") ?? null;
@@ -25,11 +24,7 @@ export async function GET(event: RequestEvent): Promise<Response> {
 			}
 		});
 
-		console.log("RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR")
-		console.log(response)
-
 		const user = await response.json();
-		console.log(user)
 
 		if (!user.email_verified) {
 			return new Response(null, {
@@ -37,13 +32,15 @@ export async function GET(event: RequestEvent): Promise<Response> {
 			});
 		}
 
-		const existingUserResult = await pool.query('SELECT * FROM users WHERE "Provider" = $1 AND "ProviderAccountId" = $2', ['google', user.id])
+		const existingUserResult = await pool.query('SELECT * FROM users WHERE "Provider" = $1 AND "ProviderAccountId" = $2', ['google', user.sub])
 		const existingUser = existingUserResult.rows[0] as
 			| DatabaseUser
 			| undefined;
 
 		if (existingUser) {
-			const session = await lucia.createSession(existingUser.id, {});
+			const session = await lucia.createSession(existingUser.id, {
+
+			});
 			const sessionCookie = lucia.createSessionCookie(session.id);
 			event.cookies.set(sessionCookie.name, sessionCookie.value, {
 				path: ".",
@@ -62,12 +59,10 @@ export async function GET(event: RequestEvent): Promise<Response> {
 				new Date().toISOString()
 			]);
 
-			const session = await lucia.createSession(userId, {});
-			const sessionCookie = lucia.createSessionCookie(session.id);
+			const session = await lucia.createSession(userId, {
 
-			console.log(userId)
-			console.log(session)
-			console.log(sessionCookie)
+			});
+			const sessionCookie = lucia.createSessionCookie(session.id);
 
 			event.cookies.set(sessionCookie.name, sessionCookie.value, {
 				path: ".",

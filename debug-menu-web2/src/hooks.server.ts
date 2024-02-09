@@ -41,7 +41,6 @@ export const handle: Handle = async ({ event, resolve }) => {
 			algorithm: "HS256",
 			expiresIn: "7d",
 		};
-		console.log("jwt: " + JSON.stringify(session))
 		event.locals.jwt = sign(session, JWT_SECRET, signOptions);
 	}
 	return resolve(event);
