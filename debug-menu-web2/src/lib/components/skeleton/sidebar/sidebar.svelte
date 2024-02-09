@@ -30,7 +30,8 @@
 		currentApplication,
 		currentInstance,
 		currentToken,
-		currentTeam
+		currentTeam,
+		currentUser
 	} from '$lib/appstate';
 
 	export let sidebarVisible: boolean;
@@ -247,10 +248,11 @@
 			<Separator class="my-2 mt-auto " />
 			<div class="flex">
 				<Avatar.Root class="mx-2 h-8 w-8">
-					<Avatar.Fallback>AK</Avatar.Fallback>
+					<Avatar.Image src={$currentUser?.image}></Avatar.Image>
+					<Avatar.Fallback>{$currentUser?.name[0]}</Avatar.Fallback>
 				</Avatar.Root>
-				<span class="my-auto text-sm font-semibold"> Alicia Koch </span>
-				<Button on:click={toggleMode} variant="outline" class="ml-4 h-8 w-8">
+				<span class="my-auto text-sm font-semibold"> {$currentUser?.name} </span>
+				<Button on:click={toggleMode} variant="outline" class="ml-auto mr-1 h-8 w-8">
 					<Sun
 						class="absolute h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0"
 					/>

@@ -3,7 +3,7 @@
 
 	import Navbar from '$lib/components/skeleton/navbar/navbar.svelte';
 	import Sidebar from '$lib/components/skeleton/sidebar/sidebar.svelte';
-	import { currentApplication, currentInstance } from '$lib/appstate';
+	import { currentApplication, currentInstance, currentUser } from '$lib/appstate';
 	import Breadcrumbs from '$lib/components/skeleton/navbar/breadcrumbs.svelte';
 
 	let sidebarVisible = false;
@@ -25,6 +25,6 @@
 </div>
 
 <div class="absolute bottom-0 right-0">
-	{JSON.stringify(data)}
-	{$currentApplication}
+	{data.user.name}
+	{$currentUser?.id}
 </div>

@@ -2,6 +2,13 @@ import { PUBLIC_BACKEND_URL } from "$env/static/public";
 
 type SvelteFetch = (input: RequestInfo | URL, init?: RequestInit | undefined) => Promise<Response>;
 
+export type TeamDto = {
+    name: string;
+    id: string;
+    type: string;
+    icon: string;
+};
+
 export function DebugMenuBackend(fetch: SvelteFetch, token: string) {
     return {
         getVersion: () => fetch(`${PUBLIC_BACKEND_URL}/version`, {
@@ -11,7 +18,14 @@ export function DebugMenuBackend(fetch: SvelteFetch, token: string) {
                 "Content-Type": "application/json",
             }
         }),
-        getApplicationsByUser: (userId: number) => fetch(`${PUBLIC_BACKEND_URL}/api/applications/by-user/${userId}`, {
+        getTeamsByUser: (userId: string) => fetch(`${PUBLIC_BACKEND_URL}/api/teams/by-user/${userId}`, {
+            method: 'GET',
+            headers: {
+                authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+            }
+        }),
+        getApplicationsByUser: (userId: string) => fetch(`${PUBLIC_BACKEND_URL}/api/applications/by-user/${userId}`, {
             method: 'GET',
             headers: {
                 authorization: `Bearer ${token}`,
@@ -25,7 +39,20 @@ export function DebugMenuBackend(fetch: SvelteFetch, token: string) {
                 "Content-Type": "application/json",
             }
         }),
-        createApplication: (name: string, userId: number) => fetch(`${PUBLIC_BACKEND_URL}/api/applications`, {
+        createApplication: (name: string, userId: string) => fetch(`${PUBLIC_BACKEND_URL}/api/applications`, {
+            method: 'POST',
+            headers: {
+                authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                ownerUserId: userId,
+                item: {
+                    name: name
+                }
+            })
+        }),
+        createTeam: (name: string, userId: string) => fetch(`${PUBLIC_BACKEND_URL}/api/teams`, {
             method: 'POST',
             headers: {
                 authorization: `Bearer ${token}`,

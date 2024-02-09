@@ -45,6 +45,7 @@
 		"bits-ui": "^0.13.5",
 		"clsx": "^2.1.0",
 		"cmdk-sv": "^0.0.12",
+		"formsnap": "^0.4.3",
 		"jsonwebtoken": "^9.0.2",
 		"lucia": "^3.0.1",
 		"lucide-svelte": "^0.307.0",
@@ -53,7 +54,9 @@
 		"pg": "^8.11.3",
 		"radix-icons-svelte": "^1.2.1",
 		"svelte-sonner": "^0.3.11",
+		"sveltekit-superforms": "^1.13.4",
 		"tailwind-merge": "^2.2.0",
-		"tailwind-variants": "^0.1.20"
+		"tailwind-variants": "^0.1.20",
+		"zod": "^3.22.4"
 	}
 }

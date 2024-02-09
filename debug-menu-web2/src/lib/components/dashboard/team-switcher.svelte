@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { CaretSort, Check, PlusCircled } from 'radix-icons-svelte';
+	import { CaretSort, Check, Enter, PlusCircled } from 'radix-icons-svelte';
 	import { cn } from '$lib/utils';
 	import * as Avatar from '$lib/components/ui/avatar';
 	import { Button } from '$lib/components/ui/button';
@@ -10,25 +10,14 @@
 	import * as Popover from '$lib/components/ui/popover';
 	import * as Select from '$lib/components/ui/select';
 	import { tick } from 'svelte';
-	import { teams } from '$lib/appstate';
+	import { teams, currentTeam } from '$lib/appstate';
 	import { goto } from '$app/navigation';
 
 	let className: string | undefined | null = undefined;
 	export { className as class };
 
-	const groups = [
-		{
-			label: 'Personal Account',
-			teams: $teams
-		}
-	];
-
-	type Team = (typeof groups)[number]['teams'][number];
-
 	let open = false;
 	let showTeamDialog = false;
-
-	let selectedTeam: Team = groups[0].teams[0];
 
 	function closeAndRefocusTrigger(triggerId: string) {
 		open = false;
@@ -50,13 +39,10 @@
 				class={cn('w-[200px] justify-between', className)}
 			>
 				<Avatar.Root class="mr-2 h-5 w-5">
-					<Avatar.Image
-						src="https://avatar.vercel.sh/${selectedTeam.name}.png"
-						alt={selectedTeam.name}
-					/>
-					<Avatar.Fallback>SC</Avatar.Fallback>
+					<Avatar.Image src={$currentTeam?.icon} alt={$currentTeam?.name} />
+					<Avatar.Fallback>{($currentTeam?.name ?? '?')[0]}</Avatar.Fallback>
 				</Avatar.Root>
-				{selectedTeam.name}
+				{$currentTeam ? $currentTeam.name : 'No Team'}
 				<CaretSort class="ml-auto h-4 w-4 shrink-0 opacity-50" />
 			</Button>
 		</Popover.Trigger>
@@ -64,33 +50,29 @@
 			<Command.Root>
 				<Command.List>
 					<Command.Empty>No team found.</Command.Empty>
-					{#each groups as group}
-						<Command.Group heading={group.label}>
-							{#each group.teams as team}
-								<Command.Item
-									onSelect={() => {
-										selectedTeam = team;
-										closeAndRefocusTrigger(ids.trigger);
-										goto(`/app/${selectedTeam.id}`);
-									}}
-									value={team.name}
-									class="text-sm"
-								>
-									<Avatar.Root class="mr-2 h-5 w-5">
-										<Avatar.Image
-											src="https://avatar.vercel.sh/${team.value}.png"
-											alt={team.name}
-											class="grayscale"
-										/>
-										<Avatar.Fallback>SC</Avatar.Fallback>
-									</Avatar.Root>
-									{team.name}
-									<Check
-										class={cn('ml-auto h-4 w-4', selectedTeam.id !== team.id && 'text-transparent')}
-									/>
-								</Command.Item>
-							{/each}
-						</Command.Group>
+					{#each $teams as team}
+						<Command.Item
+							onSelect={() => {
+								$currentTeam = team;
+								closeAndRefocusTrigger(ids.trigger);
+								goto(`/app/${$currentTeam.id}`);
+							}}
+							value={team.name}
+							class="text-sm"
+						>
+							<Avatar.Root class="mr-2 h-5 w-5">
+								<Avatar.Image
+									src="https://avatar.vercel.sh/${team.value}.png"
+									alt={team.name}
+									class="grayscale"
+								/>
+								<Avatar.Fallback>SC</Avatar.Fallback>
+							</Avatar.Root>
+							{team.name}
+							<Check
+								class={cn('ml-auto h-4 w-4', $currentTeam?.id !== team.id && 'text-transparent')}
+							/>
+						</Command.Item>
 					{/each}
 				</Command.List>
 				<Command.Separator />
@@ -98,12 +80,13 @@
 					<Command.Group>
 						<Command.Item
 							onSelect={() => {
-								open = false;
-								showTeamDialog = true;
+								closeAndRefocusTrigger(ids.trigger);
 							}}
 						>
-							<PlusCircled class="mr-2 h-5 w-5" />
-							Create Team
+							<a href="/app" class="flex">
+								<Enter class="my-auto mr-1 h-4 w-4" />
+								Manage Teams
+							</a>
 						</Command.Item>
 					</Command.Group>
 				</Command.List>
