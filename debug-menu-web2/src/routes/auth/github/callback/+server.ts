@@ -1,7 +1,6 @@
-import { github, lucia } from "$lib/server/auth";
+import { github, lucia, pool } from "$lib/server/auth";
 import { OAuth2RequestError } from "arctic";
 import { generateId } from "lucia";
-import { db } from "$lib/server/db";
 
 import type { RequestEvent } from "@sveltejs/kit";
 import type { DatabaseUser } from "$lib/server/db";
@@ -24,7 +23,8 @@ export async function GET(event: RequestEvent): Promise<Response> {
 			}
 		});
 		const githubUser: GitHubUser = await githubUserResponse.json();
-		const existingUser = db.prepare("SELECT * FROM user WHERE github_id = ?").get(githubUser.id) as
+		const existingUserResult = await pool.query('SELECT * FROM users WHERE "Provider" = $1 AND "ProviderAccountId" = $2', ['github', githubUser.id])
+		const existingUser = existingUserResult.rows[0] as
 			| DatabaseUser
 			| undefined;
 
@@ -54,11 +54,15 @@ export async function GET(event: RequestEvent): Promise<Response> {
 			});
 		} else {
 			const userId = generateId(15);
-			db.prepare("INSERT INTO user (id, github_id, username) VALUES (?, ?, ?)").run(
+			await pool.query('INSERT INTO users ("id", "ProviderAccountId", "Name", "Provider", "Email", "Image", "EmailVerified") VALUES ($1, $2, $3, $4, $5, $6, $7)', [
 				userId,
 				githubUser.id,
-				githubUser.login
-			);
+				githubUser.name,
+				'github',
+				primaryEmail.email,
+				githubUser.avatar_url,
+				new Date().toISOString()
+			]);
 			const session = await lucia.createSession(userId, {});
 			const sessionCookie = lucia.createSessionCookie(session.id);
 			event.cookies.set(sessionCookie.name, sessionCookie.value, {
@@ -92,6 +96,8 @@ function handleGithubUser(): boolean {
 interface GitHubUser {
 	id: string;
 	login: string;
+	name: string;
+	avatar_url: string;
 }
 
 interface GitHubUserEmail {

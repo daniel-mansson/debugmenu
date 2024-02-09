@@ -49,4 +49,4 @@ declare module "lucia" {
 }
 
 export const github = new GitHub(GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET);
-export const google = new Google(GOOGLE_ID, GOOGLE_SECRET, "http://localhost:5173/auth/callback/google");
+export const google = new Google(GOOGLE_ID, GOOGLE_SECRET, "http://localhost:5173/auth/google/callback");

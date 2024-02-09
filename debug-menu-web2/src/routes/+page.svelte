@@ -18,8 +18,13 @@
 				>
 			</a>
 
-			<div class=" flex flex-col space-x-reverse md:w-auto" id="navbar-default">
-				<Button href="/app" variant="outline" class="">Launch app</Button>
+			<div class=" flex flex-row space-x-reverse md:w-auto" id="navbar-default">
+				{#if data.user}
+					<Button href="/app" variant="outline" class="">Launch app</Button>
+					<Button href="/auth/signout" variant="outline" class="ml-2">Sign out</Button>
+				{:else}
+					<Button href="/auth/signin" variant="outline" class="">Sign in</Button>
+				{/if}
 			</div>
 		</div>
 	</nav>
@@ -29,8 +34,11 @@
 		<h1 class="mx-auto scroll-m-20 pb-2 text-4xl font-semibold">
 			Control your application from anywhere
 		</h1>
-		{JSON.stringify(data.user)}
-		<Button href="/app">Get started</Button>
+		{#if data.user}
+			<Button href="/app">Get started</Button>
+		{:else}
+			<Button href="/auth/signin">Get started</Button>
+		{/if}
 	</div>
 	<Separator />
 </div>

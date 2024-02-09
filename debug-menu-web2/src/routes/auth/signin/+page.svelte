@@ -21,10 +21,6 @@
 						>DEBUGMENU.IO</span
 					>
 				</a>
-
-				<div class=" flex flex-col space-x-reverse md:w-auto" id="navbar-default">
-					<Button href="/app" variant="outline" class="">Launch app</Button>
-				</div>
 			</div>
 		</nav>
 		<Separator />

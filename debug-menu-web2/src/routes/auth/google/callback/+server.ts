@@ -30,8 +30,14 @@ export async function GET(event: RequestEvent): Promise<Response> {
 
 		const user = await response.json();
 		console.log(user)
-		const existingUserResult = await pool.query('SELECT * FROM users WHERE "Provider" = $1 AND "ProviderAccountId" = $2', ['google', user.id])
 
+		if (!user.email_verified) {
+			return new Response(null, {
+				status: 400
+			});
+		}
+
+		const existingUserResult = await pool.query('SELECT * FROM users WHERE "Provider" = $1 AND "ProviderAccountId" = $2', ['google', user.id])
 		const existingUser = existingUserResult.rows[0] as
 			| DatabaseUser
 			| undefined;
@@ -45,12 +51,17 @@ export async function GET(event: RequestEvent): Promise<Response> {
 			});
 		} else {
 			const userId = generateId(15);
-			await pool.query('INSERT INTO users ("id", "ProviderAccountId", "Name", "Provider") VALUES ($1, $2, $3, $4)', [
+
+			await pool.query('INSERT INTO users ("id", "ProviderAccountId", "Name", "Provider", "Email", "Image", "EmailVerified") VALUES ($1, $2, $3, $4, $5, $6, $7)', [
 				userId,
 				user.sub,
 				user.name,
-				'google'
+				'google',
+				user.email,
+				user.picture,
+				new Date().toISOString()
 			]);
+
 			const session = await lucia.createSession(userId, {});
 			const sessionCookie = lucia.createSessionCookie(session.id);
 
