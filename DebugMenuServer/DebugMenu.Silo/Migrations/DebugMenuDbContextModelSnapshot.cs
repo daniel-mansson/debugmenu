@@ -3,7 +3,6 @@ using System;
 using DebugMenu.Silo.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -12,11 +11,9 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DebugMenu.Silo.Migrations
 {
     [DbContext(typeof(DebugMenuDbContext))]
-    [Migration("20240208221521_DebugMenuDbContext_Initial")]
-    partial class DebugMenuDbContext_Initial
+    partial class DebugMenuDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -28,14 +25,17 @@ namespace DebugMenu.Silo.Migrations
             modelBuilder.Entity("DebugMenu.Silo.Persistence.AuthJs.SessionEntity", b =>
                 {
                     b.Property<string>("Id")
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("id");
 
                     b.Property<DateTime>("ExpiresAt")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("expires_at");
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("user_id");
 
                     b.HasKey("Id");
 
@@ -45,7 +45,8 @@ namespace DebugMenu.Silo.Migrations
             modelBuilder.Entity("DebugMenu.Silo.Persistence.AuthJs.UserEntity", b =>
                 {
                     b.Property<string>("Id")
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("id");
 
                     b.Property<string>("Email")
                         .HasColumnType("text");

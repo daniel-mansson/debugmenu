@@ -29,13 +29,13 @@ namespace DebugMenu.Silo.Migrations
                 name: "sessions",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "text", nullable: false),
-                    UserId = table.Column<string>(type: "text", nullable: false),
-                    ExpiresAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    id = table.Column<string>(type: "text", nullable: false),
+                    user_id = table.Column<string>(type: "text", nullable: false),
+                    expires_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_sessions", x => x.Id);
+                    table.PrimaryKey("PK_sessions", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
@@ -57,7 +57,7 @@ namespace DebugMenu.Silo.Migrations
                 name: "users",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "text", nullable: false),
+                    id = table.Column<string>(type: "text", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: true),
                     Email = table.Column<string>(type: "text", nullable: true),
                     EmailVerified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
@@ -67,7 +67,7 @@ namespace DebugMenu.Silo.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_users", x => x.Id);
+                    table.PrimaryKey("PK_users", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
@@ -119,7 +119,7 @@ namespace DebugMenu.Silo.Migrations
                         name: "FK_applications_users_users_UserId",
                         column: x => x.UserId,
                         principalTable: "users",
-                        principalColumn: "Id",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -144,7 +144,7 @@ namespace DebugMenu.Silo.Migrations
                         name: "FK_teams_users_users_UserId",
                         column: x => x.UserId,
                         principalTable: "users",
-                        principalColumn: "Id",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
 

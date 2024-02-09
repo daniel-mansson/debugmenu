@@ -11,7 +11,7 @@ import type { DatabaseUser } from "./db";
 import { BetterSqlite3Adapter } from "@lucia-auth/adapter-sqlite";
 
 
-const pool = new Pool({
+export const pool = new Pool({
 	host: "localhost",
 	database: "debugmenu2",
 	user: "postgres",

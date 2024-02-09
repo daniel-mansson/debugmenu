@@ -29,9 +29,15 @@ public class DebugMenuDbContext : DbContext {
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
         modelBuilder.Entity<SessionEntity>(entity => {
             entity.ToTable("sessions");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.ExpiresAt).HasColumnName("expires_at");
+            entity.Property(e => e.UserId).HasColumnName("user_id");
         });
 
         modelBuilder.Entity<UserEntity>(entity => {
+            entity.Property(e => e.Id).HasColumnName("id");
+
             entity.ToTable("users");
         });
 

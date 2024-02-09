@@ -1,7 +1,6 @@
-import { google, lucia } from "$lib/server/auth";
+import { google, lucia, pool } from "$lib/server/auth";
 import { OAuth2RequestError } from "arctic";
 import { generateId } from "lucia";
-import { db } from "$lib/server/db";
 
 import type { RequestEvent } from "@sveltejs/kit";
 import type { DatabaseUser } from "$lib/server/db";
@@ -25,10 +24,15 @@ export async function GET(event: RequestEvent): Promise<Response> {
 				Authorization: `Bearer ${tokens.accessToken}`
 			}
 		});
+
+		console.log("RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR")
+		console.log(response)
+
 		const user = await response.json();
 		console.log(user)
+		const existingUserResult = await pool.query('SELECT * FROM users WHERE "Provider" = $1 AND "ProviderAccountId" = $2', ['google', user.id])
 
-		const existingUser = db.prepare("SELECT * FROM user WHERE google_id = ?").get(user.id) as
+		const existingUser = existingUserResult.rows[0] as
 			| DatabaseUser
 			| undefined;
 
@@ -41,11 +45,12 @@ export async function GET(event: RequestEvent): Promise<Response> {
 			});
 		} else {
 			const userId = generateId(15);
-			db.prepare("INSERT INTO user (id, google_id, username) VALUES (?, ?, ?)").run(
+			await pool.query('INSERT INTO users ("id", "ProviderAccountId", "Name", "Provider") VALUES ($1, $2, $3, $4)', [
 				userId,
-				user.id,
-				user.name
-			);
+				user.sub,
+				user.name,
+				'google'
+			]);
 			const session = await lucia.createSession(userId, {});
 			const sessionCookie = lucia.createSessionCookie(session.id);
 
