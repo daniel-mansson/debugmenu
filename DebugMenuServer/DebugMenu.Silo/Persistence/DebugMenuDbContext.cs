@@ -24,33 +24,15 @@ public class DebugMenuDbContext : DbContext {
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseNpgsql(
-            "Host=localhost;Database=debugmenu;Username=postgres;Password=postgres;Include Error Detail=true;");
+            "Host=localhost;Database=debugmenu2;Username=postgres;Password=postgres;Include Error Detail=true;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
         modelBuilder.Entity<SessionEntity>(entity => {
-            entity.HasKey(e => e.Id).HasName("sessions_pkey");
-
             entity.ToTable("sessions");
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.Expires).HasColumnName("expires");
-            entity.Property(e => e.UserId).HasColumnName("userId");
         });
 
         modelBuilder.Entity<UserEntity>(entity => {
-            entity.HasKey(e => e.Id).HasName("users_pkey");
-
             entity.ToTable("users");
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.Email)
-                .HasMaxLength(255)
-                .HasColumnName("email");
-            entity.Property(e => e.EmailVerified).HasColumnName("emailVerified");
-            entity.Property(e => e.Image).HasColumnName("image");
-            entity.Property(e => e.Name)
-                .HasMaxLength(255)
-                .HasColumnName("name");
         });
 
         modelBuilder.Entity<ApplicationEntity>(entity => {

@@ -72,14 +72,14 @@ builder.Services
 
 builder.Services
     .AddDbContext<DebugMenuDbContext>(options => {
-        options.UseNpgsql(
-            builder.Configuration.GetConnectionString(
-                "Host=localhost;Port=5432;Database=debugmenu;Username=postgres;Password=postgres;Include Error Detail=true;")
-            !,
-            serverOptions => serverOptions
-                .EnableRetryOnFailure(5, TimeSpan.FromSeconds(30), null)
-                .MigrationsAssembly("DebugMenu.Silo")
-        );
+        // options.UseNpgsql(
+        //     builder.Configuration.GetConnectionString(
+        //         "Host=localhost;Port=5432;Database=debugmenue;Username=postgres;Password=postgres;Include Error Detail=true;")
+        //     !,
+        //     serverOptions => serverOptions
+        //         .EnableRetryOnFailure(5, TimeSpan.FromSeconds(30), null)
+        //         .MigrationsAssembly("DebugMenu.Silo")
+        // );
     });
 
 string jwtSecretKey = "ed5b824bd6f6a2db592c0273d9fb176decae1c5f6b86e6ab03df741815827e90";

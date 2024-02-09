@@ -24,7 +24,7 @@
 </script>
 
 <div class={cn('grid gap-6', className)} {...$$restProps}>
-	<!-- <Button
+	<Button
 		variant="secondary"
 		type="button"
 		disabled={isLoading}
@@ -37,7 +37,7 @@
 		{/if}
 		{' '}
 		GitHub
-	</Button> -->
+	</Button>
 	<Button
 		variant="secondary"
 		type="button"

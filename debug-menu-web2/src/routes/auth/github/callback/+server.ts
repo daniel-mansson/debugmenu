@@ -1,4 +1,4 @@
-import { google, lucia } from "$lib/server/auth";
+import { github, lucia } from "$lib/server/auth";
 import { OAuth2RequestError } from "arctic";
 import { generateId } from "lucia";
 import { db } from "$lib/server/db";
@@ -7,11 +7,9 @@ import type { RequestEvent } from "@sveltejs/kit";
 import type { DatabaseUser } from "$lib/server/db";
 
 export async function GET(event: RequestEvent): Promise<Response> {
-
-	console.log("HEEJ")
 	const code = event.url.searchParams.get("code");
 	const state = event.url.searchParams.get("state");
-	const storedState = event.cookies.get("google_oauth_state") ?? null;
+	const storedState = event.cookies.get("github_oauth_state") ?? null;
 	if (!code || !state || !storedState || state !== storedState) {
 		return new Response(null, {
 			status: 400
@@ -19,18 +17,33 @@ export async function GET(event: RequestEvent): Promise<Response> {
 	}
 
 	try {
-		const tokens = await google.validateAuthorizationCode(code, "hej");
-		const response = await fetch("https://openidconnect.googleapis.com/v1/userinfo", {
+		const tokens = await github.validateAuthorizationCode(code);
+		const githubUserResponse = await fetch("https://api.github.com/user", {
 			headers: {
 				Authorization: `Bearer ${tokens.accessToken}`
 			}
 		});
-		const user = await response.json();
-		console.log(user)
-
-		const existingUser = db.prepare("SELECT * FROM user WHERE google_id = ?").get(user.id) as
+		const githubUser: GitHubUser = await githubUserResponse.json();
+		const existingUser = db.prepare("SELECT * FROM user WHERE github_id = ?").get(githubUser.id) as
 			| DatabaseUser
 			| undefined;
+
+		console.log(githubUser)
+		const emailsResponse = await fetch("https://api.github.com/user/emails", {
+			headers: {
+				Authorization: `Bearer ${tokens.accessToken}`
+			}
+		});
+		const emails: GitHubUserEmail[] = await emailsResponse.json();
+		console.log(emails)
+		const primaryEmail = emails.find(e => e.primary);
+		console.log(primaryEmail)
+
+		if (!primaryEmail?.verified) {
+			return new Response(null, {
+				status: 400
+			});
+		}
 
 		if (existingUser) {
 			const session = await lucia.createSession(existingUser.id, {});
@@ -41,18 +54,13 @@ export async function GET(event: RequestEvent): Promise<Response> {
 			});
 		} else {
 			const userId = generateId(15);
-			db.prepare("INSERT INTO user (id, google_id, username) VALUES (?, ?, ?)").run(
+			db.prepare("INSERT INTO user (id, github_id, username) VALUES (?, ?, ?)").run(
 				userId,
-				user.id,
-				user.name
+				githubUser.id,
+				githubUser.login
 			);
 			const session = await lucia.createSession(userId, {});
 			const sessionCookie = lucia.createSessionCookie(session.id);
-
-			console.log(userId)
-			console.log(session)
-			console.log(sessionCookie)
-
 			event.cookies.set(sessionCookie.name, sessionCookie.value, {
 				path: ".",
 				...sessionCookie.attributes
@@ -65,7 +73,6 @@ export async function GET(event: RequestEvent): Promise<Response> {
 			}
 		});
 	} catch (e) {
-		console.log(e)
 		if (e instanceof OAuth2RequestError && e.message === "bad_verification_code") {
 			// invalid code
 			return new Response(null, {
@@ -78,7 +85,18 @@ export async function GET(event: RequestEvent): Promise<Response> {
 	}
 }
 
-interface GoogleUser {
+function handleGithubUser(): boolean {
+	return false;
+}
+
+interface GitHubUser {
 	id: string;
 	login: string;
+}
+
+interface GitHubUserEmail {
+	email: string;
+	primary: boolean;
+	verified: boolean;
+	visibility: string;
 }

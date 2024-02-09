@@ -1,5 +1,9 @@
+import { JWT_SECRET } from "$env/static/private";
 import { lucia } from "$lib/server/auth";
 import type { Handle } from "@sveltejs/kit";
+import pkg from 'jsonwebtoken';
+const { sign } = pkg;
+import { type SignOptions } from "jsonwebtoken";
 
 export const handle: Handle = async ({ event, resolve }) => {
 	const sessionId = event.cookies.get(lucia.sessionCookieName);
@@ -28,5 +32,17 @@ export const handle: Handle = async ({ event, resolve }) => {
 	}
 	event.locals.user = user;
 	event.locals.session = session;
+
+	if (session) {
+		var signOptions: SignOptions = {
+			issuer: "debugmenu.io",
+			subject: user?.id,
+			audience: "http://debugmenu.io",
+			algorithm: "HS256",
+			expiresIn: "7d",
+		};
+		console.log("jwt: " + JSON.stringify(session))
+		event.locals.jwt = sign(session, JWT_SECRET, signOptions);
+	}
 	return resolve(event);
 };

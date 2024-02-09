@@ -1,7 +1,6 @@
 ﻿namespace DebugMenu.Silo.Persistence.AuthJs;
 
-public class SessionEntity : EntityWithIntId {
-    public string AccountId { get; set; }
+public class SessionEntity : EntityWithId<string> {
     public string UserId { get; set; }
-    public DateTime Expires { get; set; }
+    public DateTime ExpiresAt { get; set; }
 }

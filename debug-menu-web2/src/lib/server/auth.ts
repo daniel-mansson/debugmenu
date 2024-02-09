@@ -11,26 +11,26 @@ import type { DatabaseUser } from "./db";
 import { BetterSqlite3Adapter } from "@lucia-auth/adapter-sqlite";
 
 
-// const pool = new Pool({
-// 	host: "localhost",
-// 	database: "debugmenu",
-// 	user: "postgres",
-// 	password: "postgres",
-// 	max: 20,
-// 	idleTimeoutMillis: 30000,
-// 	connectionTimeoutMillis: 2000
-// });
-
-// const adapter = new NodePostgresAdapter(pool, {
-// 	user: "auth_user",
-// 	session: "user_session"
-// });
-import { db } from "./db";
-
-const adapter = new BetterSqlite3Adapter(db, {
-	user: "user",
-	session: "session"
+const pool = new Pool({
+	host: "localhost",
+	database: "debugmenu2",
+	user: "postgres",
+	password: "postgres",
+	max: 20,
+	idleTimeoutMillis: 30000,
+	connectionTimeoutMillis: 2000
 });
+
+const adapter = new NodePostgresAdapter(pool, {
+	user: "users",
+	session: "sessions"
+});
+// import { db } from "./db";
+
+// const adapter = new BetterSqlite3Adapter(db, {
+// 	user: "user",
+// 	session: "session"
+// });
 
 
 export const lucia = new Lucia(adapter, {
@@ -39,7 +39,7 @@ export const lucia = new Lucia(adapter, {
 			// set to `true` when using HTTPS
 			secure: !dev
 		}
-	}
+	},
 });
 
 declare module "lucia" {
