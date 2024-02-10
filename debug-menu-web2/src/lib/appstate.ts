@@ -1,38 +1,151 @@
 import type { User } from "lucia";
 import { get, writable } from "svelte/store";
-import { DebugMenuBackend, type TeamDto } from "./backend/backend";
+import { DebugMenuBackend, type ApplicationDto, type TeamDto, type RuntimeTokenDto, type RunningInstanceDto } from "./backend/backend";
 
-export const currentTeam = writable<TeamDto | undefined>(undefined);
-export const currentApplication = writable<string | undefined>(undefined);
-export const currentToken = writable<string | undefined>(undefined);
-export const currentInstance = writable<string | undefined>(undefined);
+export const currentTeam = writable<number | undefined>(undefined);
+export const currentApplication = writable<number | undefined>(undefined);
+export const currentToken = writable<number | undefined>(undefined);
+export const currentInstance = writable<number | undefined>(undefined);
 export const currentUser = writable<User | undefined>(undefined);
 export const currentBackendToken = writable<string | undefined>(undefined);
 
-type NameIdPair = {
-    name: string;
-    id: string;
-};
-
 export const teams = writable<TeamDto[]>([]);
-export const applications = writable<NameIdPair[]>([{ name: 'Game Client 1', id: '1' }, { name: 'Game Client 2', id: '2' }, { name: 'Server', id: '3' }]);
-export const tokens = writable<NameIdPair[]>([{ name: 'Dev', id: '1' }, { name: 'QA', id: '2' },]);
-export const instances = writable<NameIdPair[]>([{ name: '34ccd0', id: '2' }, { name: '7fb609', id: '3' }, { name: 'fb029a', id: '1' }]);
+export const applications = writable<ApplicationDto[]>([]);
+export const tokens = writable<RuntimeTokenDto[]>([]);
+export const instances = writable<RunningInstanceDto[]>([]);
 
-if (typeof window !== 'undefined') {
-    currentUser.subscribe(async (user) => {
-        console.log('uuuser');
+type SvelteFetch = (input: RequestInfo | URL, init?: RequestInit | undefined) => Promise<Response>;
+
+export async function updateUser(user: User | undefined, fetch: SvelteFetch) {
+    if (typeof window !== 'undefined') {
+        if (get(currentUser) === user) {
+            return;
+        }
+        currentUser.set(user);
+        await fetchTeams(fetch);
+    }
+}
+
+export async function updateTeam(teamId: number | undefined, fetch: SvelteFetch) {
+    if (typeof window !== 'undefined') {
+        console.log(`update team from ${get(currentTeam)} to ${teamId}`)
+        if (get(currentTeam) === teamId) {
+            return;
+        }
+        if (!get(teams).find(t => t.id === teamId)) {
+            return;
+        }
+        currentTeam.set(teamId);
+
+        await fetchApplications(fetch);
+    }
+}
+
+export async function updateApplication(applicationId: number | undefined, fetch: SvelteFetch) {
+    if (typeof window !== 'undefined') {
+        if (get(currentApplication) === applicationId) {
+            return;
+        }
+        if (!get(applications).find(t => t.id === applicationId)) {
+            return;
+        }
+        currentApplication.set(applicationId);
+
+        await fetchTokens(fetch);
+    }
+}
+
+export async function updateToken(tokenId: number | undefined, fetch: SvelteFetch) {
+    if (typeof window !== 'undefined') {
+        if (get(currentToken) === tokenId) {
+            return;
+        }
+        if (!get(tokens).find(t => t.id === tokenId)) {
+            return;
+        }
+        currentToken.set(tokenId);
+
+        await fetchInstances(fetch);
+    }
+}
+
+export async function updateInstance(instanceId: number | undefined, fetch: SvelteFetch) {
+    if (typeof window !== 'undefined') {
+        if (get(currentInstance) === instanceId) {
+            return;
+        }
+        if (!get(tokens).find(t => t.id === instanceId)) {
+            return;
+        }
+        currentInstance.set(instanceId);
+
+        await fetchInstances(fetch);
+    }
+}
+
+export async function fetchTeams(fetch: SvelteFetch) {
+    if (typeof window !== 'undefined') {
+        console.log('fetchTeams')
+        let user = get(currentUser);
         if (user) {
             let response = await DebugMenuBackend(fetch, get(currentBackendToken)!).getTeamsByUser(user!.id);
             let data = await response.json();
-            console.log(data);
             teams.set(data);
+            if (!get(currentTeam) && data.length > 0) {
+                await updateTeam(data[0].id, fetch)
+            }
         }
         else {
+            applications.set([])
+            tokens.set([])
+            instances.set([])
             teams.set([])
+            currentTeam.set(undefined);
         }
-    });
-
+    }
 }
 
+export async function fetchApplications(fetch: SvelteFetch) {
+    if (typeof window !== 'undefined') {
+        console.log('fetchApplications')
+        let teamId = get(currentTeam);
+        if (teamId) {
+            let response = await DebugMenuBackend(fetch, get(currentBackendToken)!).getApplicationsByTeam(teamId);
+            let data = await response.json();
+            applications.set(data);
+        }
+        else {
+            applications.set([])
+        }
+    }
+}
 
+export async function fetchTokens(fetch: SvelteFetch) {
+    if (typeof window !== 'undefined') {
+        console.log('fetchTokens')
+        let applicationId = get(currentApplication);
+        if (applicationId) {
+            let response = await DebugMenuBackend(fetch, get(currentBackendToken)!).getTokensByApplication(applicationId);
+            let data = await response.json();
+            tokens.set(data);
+        }
+        else {
+            tokens.set([])
+        }
+    }
+}
+
+export async function fetchInstances(fetch: SvelteFetch) {
+    if (typeof window !== 'undefined') {
+        console.log('fetchInstances')
+        let tokenId = get(currentToken);
+        if (tokenId) {
+            let response = await DebugMenuBackend(fetch, get(currentBackendToken)!).getInstancesByToken(tokenId);
+            let data = await response.json();
+            instances.set(data);
+        }
+        else {
+            instances.set([])
+        }
+    }
+}

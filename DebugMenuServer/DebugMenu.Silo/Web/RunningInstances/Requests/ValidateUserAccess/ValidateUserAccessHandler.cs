@@ -12,7 +12,7 @@ public class ValidateUserAccessHandler : IRequestHandler<ValidateUserAccessReque
         _clusterClient = clusterClient;
         _applicationsRepository = applicationsRepository;
     }
-    
+
     public async Task<bool> Handle(ValidateUserAccessRequest request, CancellationToken cancellationToken) {
         var grain = _clusterClient.GetGrain<IRunningInstanceGrain>(request.InstanceId);
 
@@ -23,7 +23,7 @@ public class ValidateUserAccessHandler : IRequestHandler<ValidateUserAccessReque
             throw new Exception("Application not found");
         }
 
-        var userFound = applicationEntity.Users.Any(u => u.Id == request.UserId);
+        var userFound = applicationEntity.Team.Users.Any(u => u.Id == request.UserId);
         return userFound;
     }
 }

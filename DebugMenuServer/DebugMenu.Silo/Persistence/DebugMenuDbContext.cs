@@ -43,16 +43,7 @@ public class DebugMenuDbContext : DbContext {
 
         modelBuilder.Entity<ApplicationEntity>(entity => {
             entity.ToTable("applications");
-
-            modelBuilder.Entity<ApplicationEntity>()
-                .HasMany(e => e.Users)
-                .WithMany(e => e.Applications)
-                .UsingEntity<ApplicationUserEntity>(
-                    j => j.Property(e => e.Role).HasDefaultValue(ApplicationMemberRole.Member));
-        });
-
-        modelBuilder.Entity<ApplicationUserEntity>(entity => {
-            entity.ToTable("applications_users");
+            entity.HasOne<TeamEntity>();
         });
 
         modelBuilder.Entity<TeamEntity>(entity => {

@@ -3,7 +3,6 @@ using DebugMenu.Silo.Web.Applications.Requests.DeleteApplication;
 using DebugMenu.Silo.Web.Applications.Requests.GetAllApplications;
 using DebugMenu.Silo.Web.Applications.Requests.GetApplication;
 using DebugMenu.Silo.Web.Applications.Requests.GetApplicationsByUser;
-using DebugMenu.Silo.Web.Applications.Requests.GetUsersInApplication;
 using DebugMenu.Silo.Web.RuntimeTokens;
 using DebugMenu.Silo.Web.RuntimeTokens.Requests.CreateRuntimeToken;
 using DebugMenu.Silo.Web.RuntimeTokens.Requests.GetRuntimeTokensByApplication;
@@ -20,8 +19,7 @@ public static class ApplicationsEndpoints {
 
         root.MapGet("/", GetAll);
         root.MapGet("/{id}", Get);
-        root.MapGet("/by-user/{id}", GetByUser);
-        root.MapGet("/{id}/users", GetUsers);
+        root.MapGet("/by-team/{id}", GetByTeam);
 
         root.MapGet("/{id}/tokens", GetTokens);
         root.MapPost("/{id}/tokens", CreateToken);
@@ -73,15 +71,10 @@ public static class ApplicationsEndpoints {
         return Results.Ok(await mediator.Send(new GetAllApplicationsRequest()));
     }
 
-    private static async Task<IResult> GetByUser(string id, IMediator mediator) {
+    private static async Task<IResult> GetByTeam(int id, IMediator mediator) {
         return Results.Ok(await mediator.Send(new GetApplicationsByUserRequest() {
-            UserId = id
+            TeamId = id
         }));
     }
 
-    private static async Task<IResult> GetUsers(int id, IMediator mediator) {
-        return Results.Ok(await mediator.Send(new GetUsersInApplicationRequest() {
-            ApplicationId = id
-        }));
-    }
 }

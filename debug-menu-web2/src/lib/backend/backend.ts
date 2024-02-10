@@ -4,9 +4,30 @@ type SvelteFetch = (input: RequestInfo | URL, init?: RequestInit | undefined) =>
 
 export type TeamDto = {
     name: string;
-    id: string;
+    id: number;
     type: string;
     icon: string;
+};
+
+export type ApplicationDto = {
+    id: number;
+    name: string;
+};
+
+export type RuntimeTokenDto = {
+    id: number;
+    name: string;
+    description: string;
+    token: string;
+};
+
+export type RunningInstanceDto = {
+    id: number;
+    deviceId: string | undefined;
+    websocketUrl: string | undefined;
+    connectedViewers: number;
+    hasConnectedInstance: boolean;
+    applicationId: number;
 };
 
 export function DebugMenuBackend(fetch: SvelteFetch, token: string) {
@@ -25,7 +46,7 @@ export function DebugMenuBackend(fetch: SvelteFetch, token: string) {
                 "Content-Type": "application/json",
             }
         }),
-        getApplicationsByUser: (userId: string) => fetch(`${PUBLIC_BACKEND_URL}/api/applications/by-user/${userId}`, {
+        getApplicationsByTeam: (teamId: number) => fetch(`${PUBLIC_BACKEND_URL}/api/applications/by-team/${teamId}`, {
             method: 'GET',
             headers: {
                 authorization: `Bearer ${token}`,

@@ -3,7 +3,7 @@
 
 	import Navbar from '$lib/components/skeleton/navbar/navbar.svelte';
 	import Sidebar from '$lib/components/skeleton/sidebar/sidebar.svelte';
-	import { currentApplication, currentInstance, currentUser } from '$lib/appstate';
+	import { currentApplication, currentInstance, currentUser, currentTeam } from '$lib/appstate';
 	import Breadcrumbs from '$lib/components/skeleton/navbar/breadcrumbs.svelte';
 
 	let sidebarVisible = false;
@@ -24,7 +24,8 @@
 	<slot />
 </div>
 
-<div class="absolute bottom-0 right-0">
+<div class="absolute bottom-0 right-0 font-mono">
 	{data.user.name}
-	{$currentUser?.id}
+	u:{$currentUser?.id}
+	t:{$currentTeam}
 </div>

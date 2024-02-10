@@ -10,7 +10,7 @@
 	import * as Popover from '$lib/components/ui/popover';
 	import * as Select from '$lib/components/ui/select';
 	import { tick } from 'svelte';
-	import { teams, currentTeam } from '$lib/appstate';
+	import { teams, currentTeam, updateTeam } from '$lib/appstate';
 	import { goto } from '$app/navigation';
 
 	let className: string | undefined | null = undefined;
@@ -25,6 +25,8 @@
 		console.log('close ' + triggerId);
 		tick().then(() => document.getElementById(triggerId)?.focus());
 	}
+
+	$: selectedTeam = $teams.find((t) => t.id == $currentTeam);
 </script>
 
 <Dialog.Root bind:open={showTeamDialog}>
@@ -39,10 +41,10 @@
 				class={cn('w-[200px] justify-between', className)}
 			>
 				<Avatar.Root class="mr-2 h-5 w-5">
-					<Avatar.Image src={$currentTeam?.icon} alt={$currentTeam?.name} />
-					<Avatar.Fallback>{($currentTeam?.name ?? '?')[0]}</Avatar.Fallback>
+					<Avatar.Image src={selectedTeam?.icon} alt={selectedTeam?.name} />
+					<Avatar.Fallback>{(selectedTeam?.name ?? '?')[0]}</Avatar.Fallback>
 				</Avatar.Root>
-				{$currentTeam ? $currentTeam.name : 'No Team'}
+				{selectedTeam ? selectedTeam.name : 'No Team'}
 				<CaretSort class="ml-auto h-4 w-4 shrink-0 opacity-50" />
 			</Button>
 		</Popover.Trigger>
@@ -53,16 +55,16 @@
 					{#each $teams as team}
 						<Command.Item
 							onSelect={() => {
-								$currentTeam = team;
+								selectedTeam = team;
 								closeAndRefocusTrigger(ids.trigger);
-								goto(`/app/${$currentTeam.id}`);
+								goto(`/app/${team.id}`);
 							}}
 							value={team.name}
 							class="text-sm"
 						>
 							<Avatar.Root class="mr-2 h-5 w-5">
 								<Avatar.Image
-									src="https://avatar.vercel.sh/${team.value}.png"
+									src="https://avatar.vercel.sh/${team.icon}.png"
 									alt={team.name}
 									class="grayscale"
 								/>
@@ -70,7 +72,7 @@
 							</Avatar.Root>
 							{team.name}
 							<Check
-								class={cn('ml-auto h-4 w-4', $currentTeam?.id !== team.id && 'text-transparent')}
+								class={cn('ml-auto h-4 w-4', selectedTeam?.id !== team.id && 'text-transparent')}
 							/>
 						</Command.Item>
 					{/each}

@@ -3,6 +3,7 @@ using System;
 using DebugMenu.Silo.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DebugMenu.Silo.Migrations
 {
     [DbContext(typeof(DebugMenuDbContext))]
-    partial class DebugMenuDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240210182112_DebugMenuDbContext_Initial")]
+    partial class DebugMenuDbContext_Initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -85,29 +88,19 @@ namespace DebugMenu.Silo.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.HasKey("Id");
-
-                    b.ToTable("applications", (string)null);
-                });
-
-            modelBuilder.Entity("DebugMenu.Silo.Web.Applications.Persistence.EntityFramework.ApplicationUserEntity", b =>
-                {
-                    b.Property<int>("ApplicationId")
+                    b.Property<int?>("TeamEntityId")
                         .HasColumnType("integer");
 
-                    b.Property<string>("UserId")
-                        .HasColumnType("text");
+                    b.Property<int>("TeamId")
+                        .HasColumnType("integer");
 
-                    b.Property<int>("Role")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasDefaultValue(0);
+                    b.HasKey("Id");
 
-                    b.HasKey("ApplicationId", "UserId");
+                    b.HasIndex("TeamEntityId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("TeamId");
 
-                    b.ToTable("applications_users", (string)null);
+                    b.ToTable("applications", (string)null);
                 });
 
             modelBuilder.Entity("DebugMenu.Silo.Web.RuntimeTokens.Persistence.EntityFramework.RuntimeTokenEntity", b =>
@@ -188,23 +181,19 @@ namespace DebugMenu.Silo.Migrations
                     b.ToTable("teams_users", (string)null);
                 });
 
-            modelBuilder.Entity("DebugMenu.Silo.Web.Applications.Persistence.EntityFramework.ApplicationUserEntity", b =>
+            modelBuilder.Entity("DebugMenu.Silo.Web.Applications.Persistence.EntityFramework.ApplicationEntity", b =>
                 {
-                    b.HasOne("DebugMenu.Silo.Web.Applications.Persistence.EntityFramework.ApplicationEntity", "Application")
-                        .WithMany("ApplicationUsers")
-                        .HasForeignKey("ApplicationId")
+                    b.HasOne("DebugMenu.Silo.Web.Teams.Persistence.EntityFramework.TeamEntity", null)
+                        .WithMany()
+                        .HasForeignKey("TeamEntityId");
+
+                    b.HasOne("DebugMenu.Silo.Web.Teams.Persistence.EntityFramework.TeamEntity", "Team")
+                        .WithMany("Applications")
+                        .HasForeignKey("TeamId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("DebugMenu.Silo.Persistence.AuthJs.UserEntity", "User")
-                        .WithMany("ApplicationUsers")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Application");
-
-                    b.Navigation("User");
+                    b.Navigation("Team");
                 });
 
             modelBuilder.Entity("DebugMenu.Silo.Web.RuntimeTokens.Persistence.EntityFramework.RuntimeTokenEntity", b =>
@@ -243,18 +232,13 @@ namespace DebugMenu.Silo.Migrations
 
             modelBuilder.Entity("DebugMenu.Silo.Persistence.AuthJs.UserEntity", b =>
                 {
-                    b.Navigation("ApplicationUsers");
-
                     b.Navigation("TeamUsers");
-                });
-
-            modelBuilder.Entity("DebugMenu.Silo.Web.Applications.Persistence.EntityFramework.ApplicationEntity", b =>
-                {
-                    b.Navigation("ApplicationUsers");
                 });
 
             modelBuilder.Entity("DebugMenu.Silo.Web.Teams.Persistence.EntityFramework.TeamEntity", b =>
                 {
+                    b.Navigation("Applications");
+
                     b.Navigation("TeamUsers");
                 });
 #pragma warning restore 612, 618

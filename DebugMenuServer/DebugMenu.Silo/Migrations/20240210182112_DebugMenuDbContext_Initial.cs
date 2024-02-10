@@ -13,19 +13,6 @@ namespace DebugMenu.Silo.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "applications",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "text", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_applications", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "sessions",
                 columns: table => new
                 {
@@ -71,55 +58,28 @@ namespace DebugMenu.Silo.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "runtime_tokens",
+                name: "applications",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "text", nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: false),
-                    Token = table.Column<string>(type: "text", nullable: false),
-                    ApplicationId = table.Column<int>(type: "integer", nullable: false),
-                    ApplicationEntityId = table.Column<int>(type: "integer", nullable: true)
+                    TeamId = table.Column<int>(type: "integer", nullable: false),
+                    TeamEntityId = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_runtime_tokens", x => x.Id);
+                    table.PrimaryKey("PK_applications", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_runtime_tokens_applications_ApplicationEntityId",
-                        column: x => x.ApplicationEntityId,
-                        principalTable: "applications",
+                        name: "FK_applications_teams_TeamEntityId",
+                        column: x => x.TeamEntityId,
+                        principalTable: "teams",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_runtime_tokens_applications_ApplicationId",
-                        column: x => x.ApplicationId,
-                        principalTable: "applications",
+                        name: "FK_applications_teams_TeamId",
+                        column: x => x.TeamId,
+                        principalTable: "teams",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "applications_users",
-                columns: table => new
-                {
-                    ApplicationId = table.Column<int>(type: "integer", nullable: false),
-                    UserId = table.Column<string>(type: "text", nullable: false),
-                    Role = table.Column<int>(type: "integer", nullable: false, defaultValue: 0)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_applications_users", x => new { x.ApplicationId, x.UserId });
-                    table.ForeignKey(
-                        name: "FK_applications_users_applications_ApplicationId",
-                        column: x => x.ApplicationId,
-                        principalTable: "applications",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_applications_users_users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "users",
-                        principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -148,10 +108,43 @@ namespace DebugMenu.Silo.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "runtime_tokens",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: false),
+                    Token = table.Column<string>(type: "text", nullable: false),
+                    ApplicationId = table.Column<int>(type: "integer", nullable: false),
+                    ApplicationEntityId = table.Column<int>(type: "integer", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_runtime_tokens", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_runtime_tokens_applications_ApplicationEntityId",
+                        column: x => x.ApplicationEntityId,
+                        principalTable: "applications",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_runtime_tokens_applications_ApplicationId",
+                        column: x => x.ApplicationId,
+                        principalTable: "applications",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
-                name: "IX_applications_users_UserId",
-                table: "applications_users",
-                column: "UserId");
+                name: "IX_applications_TeamEntityId",
+                table: "applications",
+                column: "TeamEntityId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_applications_TeamId",
+                table: "applications",
+                column: "TeamId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_runtime_tokens_ApplicationEntityId",
@@ -173,9 +166,6 @@ namespace DebugMenu.Silo.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "applications_users");
-
-            migrationBuilder.DropTable(
                 name: "runtime_tokens");
 
             migrationBuilder.DropTable(
@@ -188,10 +178,10 @@ namespace DebugMenu.Silo.Migrations
                 name: "applications");
 
             migrationBuilder.DropTable(
-                name: "teams");
+                name: "users");
 
             migrationBuilder.DropTable(
-                name: "users");
+                name: "teams");
         }
     }
 }

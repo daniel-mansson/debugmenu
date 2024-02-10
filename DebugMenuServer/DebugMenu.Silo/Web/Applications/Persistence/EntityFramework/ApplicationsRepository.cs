@@ -11,22 +11,14 @@ public class ApplicationsRepository : CrudRepositoryBase<ApplicationEntity, int>
     }
 
     protected override DbSet<ApplicationEntity> DbSet => _context.Applications;
-    protected override IQueryable<ApplicationEntity> HydratedQueryable => DbSet.Include(u => u.Users);
+    protected override IQueryable<ApplicationEntity> HydratedQueryable => DbSet
+        .Include(u => u.Team)
+        .Include(u => u.Team.Users);
 
-    public async Task<IReadOnlyList<ApplicationEntity>> GetByUserIdAsync(string userId) {
+    public async Task<IReadOnlyList<ApplicationEntity>> GetByTeamIdAsync(int teamId) {
         return await DbSet
-            .Where(application => application.Users
-                .Any(user => user.Id == userId))
+            .Where(application => application.TeamId == teamId)
             .ToListAsync();
-    }
-
-    public async Task<IReadOnlyList<ApplicationUserEntity>> GetUsersInApplicationAsync(int applicationId) {
-        var application = await DbSet
-            .Include(application => application.ApplicationUsers)
-            .Include(application => application.Users)
-            .FirstAsync(application => application.Id == applicationId);
-
-        return application.ApplicationUsers.ToList();
     }
 }
 
