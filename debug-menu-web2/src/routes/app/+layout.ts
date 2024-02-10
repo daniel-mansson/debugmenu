@@ -10,7 +10,7 @@ export async function load({ params, data, fetch }) {
     await updateTeam(params.team ? +params.team : undefined, fetch)
     await updateApplication(params.application ? +params.application : undefined, fetch)
     await updateToken(params.token ? +params.token : undefined, fetch)
-    await updateInstance(params.instance ? +params.instance : undefined, fetch)
+    await updateInstance(params.instance, fetch)
 
     return {
         team: params.team,

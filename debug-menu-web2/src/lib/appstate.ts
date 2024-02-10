@@ -5,7 +5,7 @@ import { DebugMenuBackend, type ApplicationDto, type TeamDto, type RuntimeTokenD
 export const currentTeam = writable<number | undefined>(undefined);
 export const currentApplication = writable<number | undefined>(undefined);
 export const currentToken = writable<number | undefined>(undefined);
-export const currentInstance = writable<number | undefined>(undefined);
+export const currentInstance = writable<string | undefined>(undefined);
 export const currentUser = writable<User | undefined>(undefined);
 export const currentBackendToken = writable<string | undefined>(undefined);
 
@@ -28,7 +28,6 @@ export async function updateUser(user: User | undefined, fetch: SvelteFetch) {
 
 export async function updateTeam(teamId: number | undefined, fetch: SvelteFetch) {
     if (typeof window !== 'undefined') {
-        console.log(`update team from ${get(currentTeam)} to ${teamId}`)
         if (get(currentTeam) === teamId) {
             return;
         }
@@ -81,17 +80,15 @@ export async function updateToken(tokenId: number | undefined, fetch: SvelteFetc
     }
 }
 
-export async function updateInstance(instanceId: number | undefined, fetch: SvelteFetch) {
+export async function updateInstance(instanceId: string | undefined, fetch: SvelteFetch) {
     if (typeof window !== 'undefined') {
         if (get(currentInstance) === instanceId) {
             return;
         }
-        if (!get(tokens).find(t => t.id === instanceId)) {
+        if (!get(instances).find(t => t.id === instanceId)) {
             return;
         }
         currentInstance.set(instanceId);
-
-        await fetchInstances(fetch);
     }
 }
 

@@ -12,7 +12,9 @@
 		User,
 		Calendar,
 		CloudOff,
-		ChevronsLeftIcon
+		ChevronsLeftIcon,
+		SatelliteDishIcon,
+		SatelliteDish
 	} from 'lucide-svelte';
 	import icon from '$lib/assets/up_arrow.svg';
 
@@ -33,6 +35,7 @@
 		currentTeam,
 		currentUser
 	} from '$lib/appstate';
+	import { Target } from 'radix-icons-svelte';
 
 	export let sidebarVisible: boolean;
 	const dispatch = createEventDispatcher();
@@ -212,10 +215,14 @@
 												variant={$currentInstance === instance.id ? 'outline' : 'ghost'}
 											>
 												<span
-													class="ms-1 text-xs {$currentInstance === instance.id
+													class="ms-1 flex text-xs {$currentInstance === instance.id
 														? 'font-semibold'
-														: ''}">{instance.id}</span
-												>
+														: ''}"
+													>{instance.id.split('-')[0]}
+													{#if instance.hasConnectedInstance}
+														<SatelliteDish class="mx-2 h-4 w-4 stroke-gray-500" />
+													{/if}
+												</span>
 											</Button>
 										</a>
 									</div>
