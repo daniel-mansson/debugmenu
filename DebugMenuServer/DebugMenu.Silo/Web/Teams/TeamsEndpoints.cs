@@ -2,7 +2,6 @@
 using DebugMenu.Silo.Web.Applications.Requests.DeleteApplication;
 using DebugMenu.Silo.Web.Applications.Requests.GetAllApplications;
 using DebugMenu.Silo.Web.Applications.Requests.GetApplication;
-using DebugMenu.Silo.Web.Applications.Requests.GetApplicationsByUser;
 using DebugMenu.Silo.Web.Teams.Requests.CreateTeam;
 using DebugMenu.Silo.Web.Teams.Requests.DeleteTeam;
 using DebugMenu.Silo.Web.Teams.Requests.GetAllTeams;

@@ -1,11 +1,10 @@
 using AutoMapper;
 using DebugMenu.Silo.Web.Applications.Persistence;
-using DebugMenu.Silo.Web.Applications.Requests.GetApplicationsByUser;
 using MediatR;
 
 namespace DebugMenu.Silo.Web.Applications.Requests.GetApplicationsByTeam;
 
-public class GetApplicationsByTeamHandler : IRequestHandler<GetApplicationsByUserRequest, IReadOnlyList<ApplicationDto>> {
+public class GetApplicationsByTeamHandler : IRequestHandler<GetApplicationsByTeamRequest, IReadOnlyList<ApplicationDto>> {
     private readonly IApplicationsRepository _applicationsRepository;
     private readonly IMapper _mapper;
 
@@ -14,7 +13,7 @@ public class GetApplicationsByTeamHandler : IRequestHandler<GetApplicationsByUse
         _mapper = mapper;
     }
 
-    public async Task<IReadOnlyList<ApplicationDto>> Handle(GetApplicationsByUserRequest request, CancellationToken cancellationToken) {
+    public async Task<IReadOnlyList<ApplicationDto>> Handle(GetApplicationsByTeamRequest request, CancellationToken cancellationToken) {
         var applications =  await _applicationsRepository.GetByTeamIdAsync(request.TeamId);
         return _mapper.Map<IReadOnlyList<ApplicationDto>>(applications);
     }

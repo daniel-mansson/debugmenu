@@ -103,23 +103,6 @@
 										<DropdownMenu.Content class="w-[200px]" align="end">
 											<DropdownMenu.Group>
 												<DropdownMenu.Label>Actions</DropdownMenu.Label>
-												<DropdownMenu.Item>
-													<User class="mr-2 h-4 w-4" />
-													Manage users...
-												</DropdownMenu.Item>
-												<DropdownMenu.Item>
-													<Calendar class="mr-2 h-4 w-4" />
-													Set due date...
-												</DropdownMenu.Item>
-												<DropdownMenu.Separator />
-												<DropdownMenu.Sub>
-													<DropdownMenu.SubTrigger>
-														<Tags class="mr-2 h-4 w-4" />
-														Apply label
-													</DropdownMenu.SubTrigger>
-													<DropdownMenu.SubContent class="p-0">asdfasdf</DropdownMenu.SubContent>
-												</DropdownMenu.Sub>
-												<DropdownMenu.Separator />
 												<DropdownMenu.Item class="text-red-600">
 													<Trash class="mr-2 h-4 w-4" />
 													Delete
@@ -231,7 +214,7 @@
 												<span
 													class="ms-1 text-xs {$currentInstance === instance.id
 														? 'font-semibold'
-														: ''}">{instance.name}</span
+														: ''}">{instance.id}</span
 												>
 											</Button>
 										</a>

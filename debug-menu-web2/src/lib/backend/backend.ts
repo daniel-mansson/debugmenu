@@ -22,7 +22,7 @@ export type RuntimeTokenDto = {
 };
 
 export type RunningInstanceDto = {
-    id: number;
+    id: string;
     deviceId: string | undefined;
     websocketUrl: string | undefined;
     connectedViewers: number;
@@ -60,14 +60,14 @@ export function DebugMenuBackend(fetch: SvelteFetch, token: string) {
                 "Content-Type": "application/json",
             }
         }),
-        createApplication: (name: string, userId: string) => fetch(`${PUBLIC_BACKEND_URL}/api/applications`, {
+        createApplication: (name: string, teamId: number) => fetch(`${PUBLIC_BACKEND_URL}/api/applications`, {
             method: 'POST',
             headers: {
                 authorization: `Bearer ${token}`,
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                ownerUserId: userId,
+                ownerTeamId: teamId,
                 item: {
                     name: name
                 }

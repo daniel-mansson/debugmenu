@@ -36,6 +36,12 @@ export async function updateTeam(teamId: number | undefined, fetch: SvelteFetch)
             return;
         }
         currentTeam.set(teamId);
+        currentApplication.set(undefined);
+        currentToken.set(undefined);
+        currentInstance.set(undefined);
+        applications.set([]);
+        tokens.set([]);
+        instances.set([]);
 
         await fetchApplications(fetch);
     }
@@ -50,6 +56,10 @@ export async function updateApplication(applicationId: number | undefined, fetch
             return;
         }
         currentApplication.set(applicationId);
+        currentToken.set(undefined);
+        currentInstance.set(undefined);
+        tokens.set([]);
+        instances.set([]);
 
         await fetchTokens(fetch);
     }
@@ -64,6 +74,8 @@ export async function updateToken(tokenId: number | undefined, fetch: SvelteFetc
             return;
         }
         currentToken.set(tokenId);
+        currentInstance.set(undefined);
+        instances.set([]);
 
         await fetchInstances(fetch);
     }
@@ -107,11 +119,12 @@ export async function fetchTeams(fetch: SvelteFetch) {
 
 export async function fetchApplications(fetch: SvelteFetch) {
     if (typeof window !== 'undefined') {
-        console.log('fetchApplications')
         let teamId = get(currentTeam);
+        console.log('fetchApplications t:' + teamId)
         if (teamId) {
             let response = await DebugMenuBackend(fetch, get(currentBackendToken)!).getApplicationsByTeam(teamId);
             let data = await response.json();
+            console.log('fetchApplications r:' + JSON.stringify(data))
             applications.set(data);
         }
         else {
@@ -149,3 +162,17 @@ export async function fetchInstances(fetch: SvelteFetch) {
         }
     }
 }
+
+export async function createApplication(fetch: SvelteFetch, name: string, teamId: number): Promise<ApplicationDto> {
+    let response = await DebugMenuBackend(fetch, get(currentBackendToken)!).createApplication(name, teamId);
+    let data = await response.json();
+    applications.update(v => [...v, data])
+    return data;
+}
+
+export async function createToken(fetch: SvelteFetch, applicationId: number, name: string, description: string): Promise<ApplicationDto> {
+    let response = await DebugMenuBackend(fetch, get(currentBackendToken)!).createToken(applicationId, name, description);
+    let data = await response.json();
+    tokens.update(v => [...v, data])
+    return data;
+} 

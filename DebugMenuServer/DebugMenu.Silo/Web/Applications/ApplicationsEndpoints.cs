@@ -2,7 +2,7 @@ using DebugMenu.Silo.Web.Applications.Requests.CreateApplication;
 using DebugMenu.Silo.Web.Applications.Requests.DeleteApplication;
 using DebugMenu.Silo.Web.Applications.Requests.GetAllApplications;
 using DebugMenu.Silo.Web.Applications.Requests.GetApplication;
-using DebugMenu.Silo.Web.Applications.Requests.GetApplicationsByUser;
+using DebugMenu.Silo.Web.Applications.Requests.GetApplicationsByTeam;
 using DebugMenu.Silo.Web.RuntimeTokens;
 using DebugMenu.Silo.Web.RuntimeTokens.Requests.CreateRuntimeToken;
 using DebugMenu.Silo.Web.RuntimeTokens.Requests.GetRuntimeTokensByApplication;
@@ -72,7 +72,7 @@ public static class ApplicationsEndpoints {
     }
 
     private static async Task<IResult> GetByTeam(int id, IMediator mediator) {
-        return Results.Ok(await mediator.Send(new GetApplicationsByUserRequest() {
+        return Results.Ok(await mediator.Send(new GetApplicationsByTeamRequest() {
             TeamId = id
         }));
     }
