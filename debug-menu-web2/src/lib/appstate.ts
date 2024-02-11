@@ -15,6 +15,22 @@ export const tokens = writable<RuntimeTokenDto[]>([]);
 export const instances = writable<RunningInstanceDto[]>([]);
 
 type SvelteFetch = (input: RequestInfo | URL, init?: RequestInit | undefined) => Promise<Response>;
+let pollInstancesInterval: any = undefined;
+
+if (typeof window !== 'undefined') {
+    currentToken.subscribe(token => {
+        if (pollInstancesInterval) {
+            clearInterval(pollInstancesInterval)
+            pollInstancesInterval = undefined;
+        }
+
+        if (token) {
+            pollInstancesInterval = setInterval(function () {
+                fetchInstances(fetch)
+            }, 15000);
+        }
+    })
+}
 
 export async function updateUser(user: User | undefined, fetch: SvelteFetch) {
     if (typeof window !== 'undefined') {
@@ -31,10 +47,7 @@ export async function updateTeam(teamId: number | undefined, fetch: SvelteFetch)
         if (get(currentTeam) === teamId) {
             return;
         }
-        if (!get(teams).find(t => t.id === teamId)) {
-            return;
-        }
-        currentTeam.set(teamId);
+
         currentApplication.set(undefined);
         currentToken.set(undefined);
         currentInstance.set(undefined);
@@ -42,6 +55,13 @@ export async function updateTeam(teamId: number | undefined, fetch: SvelteFetch)
         tokens.set([]);
         instances.set([]);
 
+        if (!get(teams).find(t => t.id === teamId)) {
+            if (teamId) {
+                currentTeam.set(undefined);
+            }
+            return;
+        }
+        currentTeam.set(teamId);
         await fetchApplications(fetch);
     }
 }
@@ -51,14 +71,17 @@ export async function updateApplication(applicationId: number | undefined, fetch
         if (get(currentApplication) === applicationId) {
             return;
         }
-        if (!get(applications).find(t => t.id === applicationId)) {
-            return;
-        }
-        currentApplication.set(applicationId);
+
         currentToken.set(undefined);
         currentInstance.set(undefined);
         tokens.set([]);
         instances.set([]);
+
+        if (!get(applications).find(t => t.id === applicationId)) {
+            currentApplication.set(undefined);
+            return;
+        }
+        currentApplication.set(applicationId);
 
         await fetchTokens(fetch);
     }
@@ -69,12 +92,15 @@ export async function updateToken(tokenId: number | undefined, fetch: SvelteFetc
         if (get(currentToken) === tokenId) {
             return;
         }
+
+        currentInstance.set(undefined);
+        instances.set([]);
+
         if (!get(tokens).find(t => t.id === tokenId)) {
+            currentToken.set(undefined);
             return;
         }
         currentToken.set(tokenId);
-        currentInstance.set(undefined);
-        instances.set([]);
 
         await fetchInstances(fetch);
     }
@@ -86,6 +112,7 @@ export async function updateInstance(instanceId: string | undefined, fetch: Svel
             return;
         }
         if (!get(instances).find(t => t.id === instanceId)) {
+            currentInstance.set(undefined);
             return;
         }
         currentInstance.set(instanceId);
