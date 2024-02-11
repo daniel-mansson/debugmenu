@@ -5,6 +5,7 @@
 	import Sidebar from '$lib/components/skeleton/sidebar/sidebar.svelte';
 	import { currentApplication, currentInstance, currentUser, currentTeam } from '$lib/appstate';
 	import Breadcrumbs from '$lib/components/skeleton/navbar/breadcrumbs.svelte';
+	import ConnectionStatus from '$lib/components/skeleton/navbar/connection-status.svelte';
 
 	let sidebarVisible = false;
 	function toggleSidebar() {
@@ -16,6 +17,7 @@
 
 <Navbar on:menuClicked={toggleSidebar}>
 	<Breadcrumbs slot="route" {...data}></Breadcrumbs>
+	<ConnectionStatus slot="right"></ConnectionStatus>
 </Navbar>
 
 <Sidebar {sidebarVisible} on:hideClicked={toggleSidebar} />

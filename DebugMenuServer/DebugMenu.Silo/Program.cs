@@ -82,7 +82,9 @@ builder.Services
         // );
     });
 
-string jwtSecretKey = "ed5b824bd6f6a2db592c0273d9fb176decae1c5f6b86e6ab03df741815827e90";
+string jwtSecretKey = "ed5b824bd6f6a2db591c0273d9fb176decae1c5f6b86e6ab03df741815827e90";
+var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecretKey));
+key.KeyId = "dm";
 
 builder
     .Services
@@ -97,7 +99,7 @@ builder
         ValidIssuer = "debugmenu",
         ValidateAudience = true,
         ValidAudience = "http://debugmenu.io",
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecretKey)),
+        IssuerSigningKey = key,
         ValidateIssuerSigningKey = true,
         ValidateLifetime = false
     });

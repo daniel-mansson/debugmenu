@@ -36,10 +36,8 @@
 		>
 	</button>
 
-	<div class="absolute right-0 top-0 hidden">
-		<Button class="m-2 h-9 w-9" variant="ghost">
-			<CloudOff class="absolute h-6 w-6" />
-		</Button>
+	<div class="absolute right-3 top-3">
+		<slot name="right" />
 	</div>
 
 	<slot name="route" />

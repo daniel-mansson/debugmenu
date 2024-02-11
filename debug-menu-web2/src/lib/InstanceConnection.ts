@@ -1,9 +1,10 @@
 import { derived, get, writable, type Writable } from "svelte/store";
 import { ArrayQueue, ConstantBackoff, Websocket, WebsocketBuilder, WebsocketEvent } from "websocket-ts";
 import { parseAsyncApi } from "./asyncApiHelpers";
+import type { RunningInstanceDto } from "./backend/backend";
 
 export class InstanceConnection {
-  readonly url: string;
+  readonly instance: RunningInstanceDto;
   readonly token: string;
 
   public status: Writable<'open' | 'closed'> = writable('closed');
@@ -18,11 +19,15 @@ export class InstanceConnection {
   public latestMessage = derived(this.messages, (m) => m[m.length - 1]);
   socket: Websocket;
 
-  constructor(url: string, token: string) {
-    this.url = url;
+  constructor(instance: RunningInstanceDto, token: string) {
+    this.instance = instance;
     this.token = token;
 
-    let builder = new WebsocketBuilder(url)
+    if (!instance.websocketUrl) {
+      throw "No url"
+    }
+
+    let builder = new WebsocketBuilder(instance.websocketUrl + '/controller')
       .withBuffer(new ArrayQueue())
       .withBackoff(new ConstantBackoff(5000));
 
@@ -42,6 +47,7 @@ export class InstanceConnection {
     });
 
     this.socket.addEventListener(WebsocketEvent.message, (ws, ev) => this.handleMessage(ws, ev));
+
   }
 
   async handleMessage(_: Websocket, ev: MessageEvent) {

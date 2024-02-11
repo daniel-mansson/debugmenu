@@ -1,6 +1,7 @@
 import type { User } from "lucia";
 import { get, writable } from "svelte/store";
 import { DebugMenuBackend, type ApplicationDto, type TeamDto, type RuntimeTokenDto, type RunningInstanceDto } from "./backend/backend";
+import { InstanceConnection } from "./InstanceConnection";
 
 export const currentTeam = writable<number | undefined>(undefined);
 export const currentApplication = writable<number | undefined>(undefined);
@@ -13,6 +14,8 @@ export const teams = writable<TeamDto[]>([]);
 export const applications = writable<ApplicationDto[]>([]);
 export const tokens = writable<RuntimeTokenDto[]>([]);
 export const instances = writable<RunningInstanceDto[]>([]);
+
+export const currentConnection = writable<InstanceConnection | undefined>(undefined);
 
 type SvelteFetch = (input: RequestInfo | URL, init?: RequestInit | undefined) => Promise<Response>;
 let pollInstancesInterval: any = undefined;
@@ -28,6 +31,31 @@ if (typeof window !== 'undefined') {
             pollInstancesInterval = setInterval(function () {
                 fetchInstances(fetch)
             }, 15000);
+        }
+    })
+}
+
+if (typeof window !== 'undefined') {
+    currentInstance.subscribe(instanceId => {
+        let connection = get(currentConnection);
+        let instance = get(instances).find(i => i.id == instanceId);
+
+        //Disconnect if needed
+        if (connection && connection.instance !== instance) {
+            connection.stop();
+            connection = undefined;
+            currentConnection.set(undefined);
+        }
+
+        //Connect if needed
+        if (!connection && instance?.websocketUrl) {
+            //let token = get(tokens).find(t => t.id === get(currentToken))?.token;
+            let token = get(currentBackendToken)
+            console.log(token)
+            if (token) {
+                connection = new InstanceConnection(instance, token);
+                currentConnection.set(connection);
+            }
         }
     })
 }

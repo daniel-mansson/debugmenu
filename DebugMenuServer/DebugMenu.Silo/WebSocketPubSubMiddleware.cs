@@ -178,7 +178,7 @@ public class WebSocketPubSubMiddleware {
         }
 
         var userHasAccess = await _mediator.Send(new ValidateUserAccessRequest() {
-            UserId = decoded.Id,
+            UserId = decoded.Subject,
             InstanceId = instanceId
         }, cts.Token);
         if (!userHasAccess) {
