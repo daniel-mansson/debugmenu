@@ -72,6 +72,10 @@ export async function updateUser(user: User | undefined, fetch: SvelteFetch) {
 
 export async function updateTeam(teamId: number | undefined, fetch: SvelteFetch) {
     if (typeof window !== 'undefined') {
+        if (!teamId) {
+            return;
+        }
+
         if (get(currentTeam) === teamId) {
             return;
         }
@@ -83,11 +87,11 @@ export async function updateTeam(teamId: number | undefined, fetch: SvelteFetch)
         tokens.set([]);
         instances.set([]);
 
-        if (!get(teams).find(t => t.id === teamId)) {
-            if (teamId) {
-                currentTeam.set(undefined);
+        let currentTeams = get(teams);
+        if (!currentTeams.find(t => t.id === teamId)) {
+            if (currentTeams.length > 0) {
+                teamId = currentTeams[0].id;
             }
-            return;
         }
         currentTeam.set(teamId);
         await fetchApplications(fetch);
