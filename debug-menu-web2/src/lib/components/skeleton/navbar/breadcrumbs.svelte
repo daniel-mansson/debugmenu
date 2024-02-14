@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { teams, applications, instances, tokens } from '$lib/appstate';
 
-	export let team: string | undefined;
-	export let application: string | undefined;
-	export let token: string | undefined;
-	export let instance: string | undefined;
+	export let team: string | undefined = undefined;
+	export let application: string | undefined = undefined;
+	export let token: string | undefined = undefined;
+	export let instance: string | undefined = undefined;
 </script>
 
 <div
