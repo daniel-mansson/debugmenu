@@ -3,6 +3,7 @@
 	import * as Card from '$lib/components/ui/card';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import Group from '$lib/components/controller/group.svelte';
+	import SimpleButton from '$lib/components/controller/simple-button.svelte';
 </script>
 
 <div class="my-1 flex items-center justify-between">
@@ -17,7 +18,9 @@
 		<Tabs.Trigger value="notifications">Notifications</Tabs.Trigger>
 	</Tabs.List>
 </Tabs.Root>
-<div class="space-y-4 rounded-lg border-2 border-dashed border-gray-200 p-4 dark:border-gray-700">
+<div
+	class="space-y-8 rounded-lg border-2 border-dashed border-gray-200 p-4 pt-6 dark:border-gray-700"
+>
 	<Group title="gameplay">
 		<div slot="content">
 			<div class="grid grid-cols-3 gap-4 md:grid-cols-4 lg:grid-cols-6">
@@ -62,6 +65,157 @@
 					>Restart game</Button
 				>
 			</div>
+		</div>
+	</Group>
+	<Group title="settings" color="red">
+		<div slot="content">
+			<div class="grid grid-cols-3 gap-4 md:grid-cols-4 lg:grid-cols-6">
+				<Button
+					variant="empty"
+					class="bg-yellow-50 outline outline-1 outline-yellow-400 hover:bg-yellow-100 active:border-2 active:bg-yellow-200 dark:bg-neutral-900 dark:active:bg-neutral-800 dark:active:outline-2"
+					>Restart game</Button
+				>
+				<Button
+					variant="ghost"
+					class="bg-blue-50 outline outline-1 outline-blue-400 dark:bg-neutral-900"
+					>Restart game</Button
+				>
+				<Button
+					variant="ghost"
+					class="bg-blue-50 outline outline-1 outline-blue-400 dark:bg-neutral-900"
+					>Restart game</Button
+				>
+				<Button
+					variant="ghost"
+					class="bg-blue-50 outline outline-1 outline-blue-400 dark:bg-neutral-900"
+					>Restart game</Button
+				>
+				<Button
+					variant="ghost"
+					class="bg-blue-50 outline outline-1 outline-blue-400 dark:bg-neutral-900"
+					>Restart game</Button
+				>
+				<Button
+					variant="ghost"
+					class="bg-blue-50 outline outline-1 outline-blue-400 dark:bg-neutral-900"
+					>Restart game</Button
+				>
+				<Button
+					variant="ghost"
+					class="bg-red-50 outline outline-1 outline-red-400 dark:bg-neutral-900"
+					>Restart game</Button
+				>
+				<Button
+					variant="ghost"
+					class="bg-blue-50 outline outline-1 outline-blue-400 dark:bg-neutral-900"
+					>Restart game</Button
+				>
+			</div>
+		</div>
+	</Group>
+	<Group title="settings" color="gray">
+		<div slot="content">
+			<div class="grid grid-cols-3 gap-4 md:grid-cols-4 lg:grid-cols-6">
+				<Button
+					variant="empty"
+					class="bg-yellow-50 outline outline-1 outline-yellow-400 hover:bg-yellow-100 active:border-2 active:bg-yellow-200 dark:bg-neutral-900 dark:active:bg-neutral-800 dark:active:outline-2"
+					>Restart game</Button
+				>
+				<Button
+					variant="ghost"
+					class="bg-blue-50 outline outline-1 outline-blue-400 dark:bg-neutral-900"
+					>Restart game</Button
+				>
+				<Button
+					variant="ghost"
+					class="bg-blue-50 outline outline-1 outline-blue-400 dark:bg-neutral-900"
+					>Restart game</Button
+				>
+				<Button
+					variant="ghost"
+					class="bg-blue-50 outline outline-1 outline-blue-400 dark:bg-neutral-900"
+					>Restart game</Button
+				>
+				<Button
+					variant="ghost"
+					class="bg-blue-50 outline outline-1 outline-blue-400 dark:bg-neutral-900"
+					>Restart game</Button
+				>
+				<Button
+					variant="ghost"
+					class="bg-blue-50 outline outline-1 outline-blue-400 dark:bg-neutral-900"
+					>Restart game</Button
+				>
+				<Button
+					variant="ghost"
+					class="bg-red-50 outline outline-1 outline-red-400 dark:bg-neutral-900"
+					>Restart game</Button
+				>
+				<Button
+					variant="ghost"
+					class="bg-blue-50 outline outline-1 outline-blue-400 dark:bg-neutral-900"
+					>Restart game</Button
+				>
+			</div>
+		</div>
+	</Group>
+	<Group title="cqwcqc" color="gray">
+		<div slot="content" class="mt-2 space-y-6">
+			<Group title="erger" color="blue">
+				<div slot="content">
+					<div class="grid grid-cols-3 gap-4 md:grid-cols-4 lg:grid-cols-6">
+						<SimpleButton label="Restart game 1" color="yellow" />
+						<SimpleButton label="Restart game 2" color="red" />
+						<SimpleButton label="Restart game 3" color="blue" />
+					</div>
+				</div>
+			</Group>
+			<Group title="asdf" color="green">
+				<div slot="content">
+					<div class="grid grid-cols-3 gap-4 md:grid-cols-4 lg:grid-cols-6">
+						<Button
+							variant="empty"
+							class="bg-yellow-50 outline outline-1 outline-yellow-400 hover:bg-yellow-100 active:border-2 active:bg-yellow-200 dark:bg-neutral-900 dark:active:bg-neutral-800 dark:active:outline-2"
+							>Restart game</Button
+						>
+						<Button
+							variant="ghost"
+							class="bg-blue-50 outline outline-1 outline-blue-400 dark:bg-neutral-900"
+							>Restart game</Button
+						>
+						<Button
+							variant="ghost"
+							class="bg-blue-50 outline outline-1 outline-blue-400 dark:bg-neutral-900"
+							>Restart game</Button
+						>
+						<Button
+							variant="ghost"
+							class="bg-blue-50 outline outline-1 outline-blue-400 dark:bg-neutral-900"
+							>Restart game</Button
+						>
+						<Button
+							variant="ghost"
+							class="bg-blue-50 outline outline-1 outline-blue-400 dark:bg-neutral-900"
+							>Restart game</Button
+						>
+						<Button
+							variant="ghost"
+							class="bg-blue-50 outline outline-1 outline-blue-400 dark:bg-neutral-900"
+							>Restart game</Button
+						>
+						<Button
+							variant="ghost"
+							class="bg-red-50 outline outline-1 outline-red-400 dark:bg-neutral-900"
+							>Restart game</Button
+						>
+						<Button
+							variant="ghost"
+							class="bg-blue-50 outline outline-1 outline-blue-400 dark:bg-neutral-900"
+							>Restart game</Button
+						>
+					</div>
+				</div>
+			</Group>
 		</div>
 	</Group>
 	<div
