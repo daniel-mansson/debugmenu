@@ -40,7 +40,8 @@ export const handle: Handle = async ({ event, resolve }) => {
 			audience: "http://debugmenu.io",
 			algorithm: "HS256",
 			expiresIn: "7d",
-			keyid: "dm"
+			keyid: "dm",
+
 		};
 		event.locals.jwt = sign(session, JWT_SECRET, signOptions);
 	}

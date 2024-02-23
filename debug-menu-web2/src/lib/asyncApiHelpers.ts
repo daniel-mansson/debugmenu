@@ -15,7 +15,6 @@ export async function parseAsyncApi(asyncApiYaml: string) {
     let buttons = getByTagAndOp(document, "publish", "button");
     let logs = getByTagAndOp(document, "subscribe", "log");
 
-
     let all = buttons.concat(logs);
 
     return {
@@ -26,11 +25,11 @@ export async function parseAsyncApi(asyncApiYaml: string) {
 }
 
 function getByTagAndOp(document: AsyncAPIDocumentInterface, operationName: "publish" | "subscribe", tagName: string) {
-    let buttons = [];
+    let commands = [];
     for (let operation of document.allOperations()) {
         if (operation.id() === operationName) {
-            let hasButtonTag = operation.tags().filterBy((t) => t.name() === tagName).length == 1;
-            if (hasButtonTag) {
+            let hasOpTag = operation.tags().filterBy((t) => t.name() === tagName).length == 1;
+            if (hasOpTag) {
                 let fields = [];
                 for (let message of operation.messages()) {
                     let properties = message.payload()!.properties()!;
@@ -47,12 +46,16 @@ function getByTagAndOp(document: AsyncAPIDocumentInterface, operationName: "publ
 
                 let channelParts = operation.channels()[0].id().split('/');
 
-                let category = "/" + channelParts.slice(0, -1).join("/");
+                let category = '';
+                if (channelParts.length > 1) {
+                    category = channelParts[0];
+                }
 
-                buttons.push({
+                commands.push({
+                    type: tagName,
                     operation: operation,
                     channel: operation.channels()[0].id(),
-                    channelParts: channelParts,
+                    groups: channelParts,
                     category: category,
                     fields: fields,
                     description: operation.description() ?? '',
@@ -61,5 +64,5 @@ function getByTagAndOp(document: AsyncAPIDocumentInterface, operationName: "publ
             }
         }
     }
-    return buttons;
+    return commands;
 }
