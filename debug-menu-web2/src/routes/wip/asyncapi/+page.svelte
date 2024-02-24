@@ -13,11 +13,15 @@
 	});
 
 	async function update() {
-		let doc = await parseAsyncApi(asyncapiMockData);
+		doc = await parseAsyncApi(asyncapiMockData);
 
 		console.log(doc.categories);
+		stuff = '';
+
 		stuff = JSON.stringify(doc.categories);
 	}
+
+	let doc: any = undefined;
 
 	let stuff: any;
 </script>
@@ -26,7 +30,22 @@
 	<h2 class="text-3xl font-bold tracking-tight">Instance Dashboard (asyncapi)</h2>
 	<div class="flex items-center space-x-2">Status and Settings</div>
 </div>
-{stuff}
+
+{#if doc?.categories}
+	{#each doc.categories as category}
+		<div>{category.id}</div>
+		{#each category.groups as group}
+			<div>{group.id}</div>
+			{#each group.groups as group2}
+				<div class="ml-2">{group2.id}</div>
+			{/each}
+
+			{#each group.elements as group3}
+				<div class="ml-4">{group3.id}</div>
+			{/each}
+		{/each}
+	{/each}
+{/if}
 <Tabs.Root value="overview" class="my-2 space-y-1">
 	<Tabs.List class=" ">
 		<Tabs.Trigger value="commands">Commands</Tabs.Trigger>

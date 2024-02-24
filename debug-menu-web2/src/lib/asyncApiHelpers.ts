@@ -20,25 +20,35 @@ export async function parseAsyncApi(asyncApiYaml: string) {
     let categories: any = [];
 
     for (let element of all) {
-        let category = categories[element.category] ?? {};
+        let category = categories.find(c => c.id == element.category);
 
-        // category.id = element.category;
-        // category.groups ??= {};
-        // category.elements ??= [];
-
-        // a/b/c
-        let target = category;
-        for (const [i, value] of element.groups.entries()) {
-            if (i === element.groups.length - 1) {
-                target[value] = element;
+        if (!category) {
+            category = {
+                id: element.category,
+                groups: [],
+                elements: []
             }
-            else if (!target[value]) {
-                target[value] = {}
-            }
-            target = target[value]
+            categories.push(category)
         }
 
-        categories[element.category] = category;
+        let target = category;
+        for (const [i, value] of element.groups.entries()) {
+            let next = target.groups.find(g => g.id == value);
+            if (!next) {
+                next = {
+                    id: value,
+                    groups: [],
+                    elements: []
+                };
+                target.groups.push(next);
+            }
+
+            target = next;
+
+            if (i === element.groups.length - 1) {
+                target.elements.push(element)
+            }
+        }
     };
 
     return {
