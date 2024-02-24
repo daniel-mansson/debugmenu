@@ -13,7 +13,7 @@ export class InstanceConnection {
   public messages2: any[] = [];
 
   public schema: Writable<string> = writable("");
-  public api: Writable<any> = writable({ buttons: [], logs: [] });
+  public api: Writable<any> = writable({ buttons: [], logs: [], all: [], categories: [] });
   public metadata: Writable<any> = writable({});
 
   public latestMessage = derived(this.messages, (m) => m[m.length - 1]);
