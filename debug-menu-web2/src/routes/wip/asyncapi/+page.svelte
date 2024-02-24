@@ -7,6 +7,7 @@
 	import { onMount } from 'svelte';
 	import { asyncapiMockData } from './mockdata';
 	import { parseAsyncApi } from '$lib/asyncApiHelpers';
+	import GroupTree from '$lib/components/controller/group-tree.svelte';
 
 	onMount(() => {
 		update();
@@ -34,16 +35,14 @@
 {#if doc?.categories}
 	{#each doc.categories as category}
 		<div>{category.id}</div>
-		{#each category.groups as group}
-			<div>{group.id}</div>
-			{#each group.groups as group2}
-				<div class="ml-2">{group2.id}</div>
-			{/each}
 
-			{#each group.elements as group3}
-				<div class="ml-4">{group3.id}</div>
+		<div
+			class="space-y-8 rounded-lg border-2 border-dashed border-gray-200 p-4 pt-6 dark:border-gray-700"
+		>
+			{#each category.groups as group}
+				<GroupTree {group}></GroupTree>
 			{/each}
-		{/each}
+		</div>
 	{/each}
 {/if}
 <Tabs.Root value="overview" class="my-2 space-y-1">

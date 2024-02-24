@@ -33,20 +33,20 @@ export async function parseAsyncApi(asyncApiYaml: string) {
 
         let target = category;
         for (const [i, value] of element.groups.entries()) {
-            let next = target.groups.find(g => g.id == value);
-            if (!next) {
-                next = {
-                    id: value,
-                    groups: [],
-                    elements: []
-                };
-                target.groups.push(next);
-            }
-
-            target = next;
-
             if (i === element.groups.length - 1) {
                 target.elements.push(element)
+            }
+            else {
+                let next = target.groups.find(g => g.id == value);
+                if (!next) {
+                    next = {
+                        id: value,
+                        groups: [],
+                        elements: []
+                    };
+                    target.groups.push(next);
+                }
+                target = next;
             }
         }
     };
@@ -88,7 +88,7 @@ function getByTagAndOp(document: AsyncAPIDocumentInterface, operationName: "publ
                 }
 
                 commands.push({
-                    __id: operation.channels()[0].id(),
+                    id: channelParts[channelParts.length - 1],
                     type: tagName,
                     operation: operation,
                     channel: operation.channels()[0].id(),

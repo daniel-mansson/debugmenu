@@ -61,9 +61,9 @@ export let asyncapiMockData = ` {
     "gameplay/restart": {
       "publish": {
         "tags": [
-        {
-          "name": "button"
-        }
+          {
+            "name": "button"
+          }
         ]
       }
     },
@@ -86,6 +86,33 @@ export let asyncapiMockData = ` {
       }
     },
     "progression/add-xp": {
+      "publish": {
+        "tags": [
+        {
+          "name": "button"
+        }
+        ]
+      }
+    },
+    "progression/economy/add-gold": {
+      "publish": {
+        "tags": [
+        {
+          "name": "button"
+        }
+        ]
+      }
+    },
+    "progression/economy/add-hc": {
+      "publish": {
+        "tags": [
+        {
+          "name": "button"
+        }
+        ]
+      }
+    },
+    "progression/economy/reset": {
       "publish": {
         "tags": [
         {
