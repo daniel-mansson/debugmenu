@@ -15,14 +15,18 @@
 	async function update() {
 		let doc = await parseAsyncApi(asyncapiMockData);
 
-		console.log(doc);
+		console.log(doc.categories);
+		stuff = JSON.stringify(doc.categories);
 	}
+
+	let stuff: any;
 </script>
 
 <div class="my-1 flex items-center justify-between">
 	<h2 class="text-3xl font-bold tracking-tight">Instance Dashboard (asyncapi)</h2>
 	<div class="flex items-center space-x-2">Status and Settings</div>
 </div>
+{stuff}
 <Tabs.Root value="overview" class="my-2 space-y-1">
 	<Tabs.List class=" ">
 		<Tabs.Trigger value="commands">Commands</Tabs.Trigger>

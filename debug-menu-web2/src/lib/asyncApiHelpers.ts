@@ -17,10 +17,35 @@ export async function parseAsyncApi(asyncApiYaml: string) {
 
     let all = buttons.concat(logs);
 
+    let categories: any = [];
+
+    for (let element of all) {
+        let category = categories[element.category] ?? {};
+
+        // category.id = element.category;
+        // category.groups ??= {};
+        // category.elements ??= [];
+
+        // a/b/c
+        let target = category;
+        for (const [i, value] of element.groups.entries()) {
+            if (i === element.groups.length - 1) {
+                target[value] = element;
+            }
+            else if (!target[value]) {
+                target[value] = {}
+            }
+            target = target[value]
+        }
+
+        categories[element.category] = category;
+    };
+
     return {
         buttons,
         logs,
-        all
+        all,
+        categories
     }
 }
 
@@ -48,10 +73,12 @@ function getByTagAndOp(document: AsyncAPIDocumentInterface, operationName: "publ
 
                 let category = '';
                 if (channelParts.length > 1) {
-                    category = channelParts[0];
+                    // category = channelParts[0];
+                    //  channelParts.shift();
                 }
 
                 commands.push({
+                    __id: operation.channels()[0].id(),
                     type: tagName,
                     operation: operation,
                     channel: operation.channels()[0].id(),
