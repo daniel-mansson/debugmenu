@@ -2,6 +2,7 @@ import { derived, get, writable, type Writable } from "svelte/store";
 import { ArrayQueue, ConstantBackoff, Websocket, WebsocketBuilder, WebsocketEvent } from "websocket-ts";
 import { parseAsyncApi } from "./asyncApiHelpers";
 import type { RunningInstanceDto } from "./backend/backend";
+import { buildDebugmenuElements } from "./debugmenuApi";
 
 export class InstanceConnection {
   readonly instance: RunningInstanceDto;
@@ -105,7 +106,7 @@ export class InstanceConnection {
   }
 
   async updateApi(apiText: string) {
-    let api = await parseAsyncApi(apiText);
+    let api = buildDebugmenuElements(apiText);
     console.log(api)
     this.api.set(api);
   }

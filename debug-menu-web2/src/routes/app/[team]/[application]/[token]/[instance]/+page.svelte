@@ -21,15 +21,25 @@
 </div>
 
 {#if api?.categories}
-	{#each api.categories as category}
-		<div>{category.id}</div>
+	<Tabs.Root value="default" class="my-2 space-y-1">
+		{#if api.categories.length > 1}
+			<Tabs.List class=" ">
+				{#each api.categories as category}
+					<Tabs.Trigger value={category.id ?? 'default'}>{category.id ?? 'Default'}</Tabs.Trigger>
+				{/each}
+			</Tabs.List>
+		{/if}
 
-		<div
-			class="space-y-8 rounded-lg border-2 border-dashed border-gray-200 p-4 pt-6 dark:border-gray-700"
-		>
-			{#each category.groups as group}
-				<GroupTree {group}></GroupTree>
-			{/each}
-		</div>
-	{/each}
+		{#each api.categories as category}
+			<Tabs.Content value={category.id ?? 'default'}>
+				<div
+					class="space-y-8 rounded-lg border-2 border-dashed border-gray-200 p-4 pt-6 dark:border-gray-700"
+				>
+					{#each category.groups as group}
+						<GroupTree {group} {commandSender}></GroupTree>
+					{/each}
+				</div></Tabs.Content
+			>
+		{/each}
+	</Tabs.Root>
 {/if}
