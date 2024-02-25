@@ -14,6 +14,7 @@
 	});
 
 	async function update() {
+		console.log('parsing');
 		doc = await parseAsyncApi(asyncapiMockData);
 
 		console.log(doc.categories);

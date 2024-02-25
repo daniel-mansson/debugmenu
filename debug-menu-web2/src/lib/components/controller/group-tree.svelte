@@ -6,11 +6,11 @@
 	export let level = 0;
 </script>
 
-<Group title={group.id}>
+<Group title={group.id ?? ''}>
 	<div slot="content" class="space-b-2 space-x-2">
-		{#each group.elements as e}
+		{#each group.channels as e}
 			{#if e.type === 'button'}
-				<SimpleButton label={e.id}></SimpleButton>
+				<SimpleButton label={e.name}></SimpleButton>
 			{/if}
 		{/each}
 		{#each group.groups as g}

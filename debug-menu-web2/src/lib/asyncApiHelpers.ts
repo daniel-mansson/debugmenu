@@ -61,6 +61,7 @@ export async function parseAsyncApi(asyncApiYaml: string) {
 
 function getByTagAndOp(document: AsyncAPIDocumentInterface, operationName: "publish" | "subscribe", tagName: string) {
     let commands = [];
+    console.log('hejj')
     for (let operation of document.allOperations()) {
         if (operation.id() === operationName) {
             let hasOpTag = operation.tags().filterBy((t) => t.name() === tagName).length == 1;
@@ -81,6 +82,8 @@ function getByTagAndOp(document: AsyncAPIDocumentInterface, operationName: "publ
 
                 let channelParts = operation.channels()[0].id().split('/');
 
+                console.log('hejj')
+                console.log(operation.channels()[0])
                 let category = '';
                 if (channelParts.length > 1) {
                     // category = channelParts[0];
