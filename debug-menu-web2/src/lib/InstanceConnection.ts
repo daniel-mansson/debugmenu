@@ -106,6 +106,8 @@ export class InstanceConnection {
   }
 
   async updateApi(apiText: string) {
+    console.log(apiText)
+
     let api = buildDebugmenuElements(apiText);
     console.log(api)
     this.api.set(api);

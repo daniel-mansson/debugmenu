@@ -12,7 +12,10 @@
 	<div slot="content" class="space-b-2 space-x-2">
 		{#each group.channels as channel}
 			{#if channel.type === 'button'}
-				<SimpleButton label={channel.name} on:click={() => commandSender?.send(channel, {})}
+				<SimpleButton
+					settings={channel.settings}
+					label={channel.name}
+					on:click={() => commandSender?.send(channel, {})}
 				></SimpleButton>
 			{/if}
 		{/each}

@@ -3,16 +3,24 @@
 	import { parseAsyncApi } from '$lib/asyncApiHelpers.js';
 	import GroupTree from '$lib/components/controller/group-tree.svelte';
 	import * as Tabs from '$lib/components/ui/tabs';
-	import { onMount } from 'svelte';
 
 	export let data;
 
-	let api = undefined;
+	let api: any = undefined;
 	currentConnection.subscribe((c) => {
 		c?.api.subscribe((a) => {
 			api = a;
 		});
 	});
+
+	let commandSender = {
+		send: function (source: any, data: any) {
+			console.log('Command! ' + source.channel);
+			console.log(source);
+			console.log(data);
+			$currentConnection?.send(source.channel, data);
+		}
+	};
 </script>
 
 <div class="my-1 flex items-center justify-between">

@@ -55,8 +55,11 @@ export let asyncapiMockData = `{
       "type": "button",
       "publish": {}
     },
-    "progression/add-xp": {
+    "progression/add-xp2": {
       "type": "button",
+      "settings": {
+        "color": "blue"
+      },
       "publish": {}
     },
     "progression/economy/add-gold": {

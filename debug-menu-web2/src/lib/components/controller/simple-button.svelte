@@ -4,7 +4,9 @@
 	import { mode } from 'mode-watcher';
 
 	export let label: string;
-	export let color: string = 'white';
+	export let settings = {
+		color: 'white'
+	};
 
 	const lookupHSL: any = {
 		red: { h: 15, s: 100, l: 0 },
@@ -34,7 +36,7 @@
 		return { h: 200, s: 20 };
 	}
 	$: dark = $mode === 'dark';
-	$: colorValue = getColorValue(color);
+	$: colorValue = getColorValue(settings.color ?? 'white');
 	$: bgColor = toHsla(colorValue.h, colorValue.s, dark ? 5 : 92 + colorValue.l, 0.9);
 	$: outlineColor = toHsla(colorValue.h - 3, colorValue.s, dark ? 70 : 50, 1.0);
 

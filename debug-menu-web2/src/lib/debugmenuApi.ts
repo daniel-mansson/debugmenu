@@ -10,6 +10,9 @@ function buildChannel([key, value]: [string, any]) {
     let fallbackName = groups[groups.length - 1];
     groups.pop();
 
+    console.log(key)
+
+    console.log(value)
     return {
         channel: key,
         name: value.name ?? fallbackName,
