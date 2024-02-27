@@ -21,7 +21,7 @@ var id = "8c57f858-7d30-4b34-b32c-df88e677a267";
 //
 // var controller = new Controller($"wss://localhost:8082/ws/room/{producer.SessionId}/controller", "hej");
 
-var token = "6FE3EA8B0F8E39FCBE6B95EA17D487A687BB57E0DA6591FD";
+var token = "B056B5B8C1065365CC1A292A7F30A1C648CE613605C41C24";
 var metadata = new Dictionary<string, string>();
 
 var url = "https://localhost:8082";
@@ -43,7 +43,7 @@ producerHandler.ReceivedJson += message => {
     Console.WriteLine($"Producer received ({message.channel}): {message.payload.ToString()}");
 };
 
-producerHandler.ConnectedAfterHandshake += SendApi;
+producerHandler.ConnectedAfterHandshake += () => SendApi(Mock.api1);
 
 // var controllerHandler = new DebugMenuWebSocketClient($"wss://localhost:8082/ws/room/{id}/controller");
 // controllerHandler.ReceivedJson += message => {
@@ -86,8 +86,11 @@ while (true) {
                 _ => delayMax
             };
             switch (key.KeyChar) {
-              case 'a':
-                SendApi();
+            case 'a':
+                SendApi(Mock.api1);
+                break;
+            case 's':
+                SendApi(Mock.api2);
                 break;
             }
 
@@ -99,109 +102,8 @@ while (true) {
     }
 }
 
-const string api1 = """"
-  {
-  "asyncapi": "2.6.0",
-"info": {
-  "title": "Example AsyncAPI specification",
-  "version": "0.1.0"
-},
-"channels": {
-  "log": {
-    "subscribe": {
-      "tags": [
-      {
-        "name": "log"
-      }
-      ],
-      "message": {
-        "payload": {
-          "type": "object",
-          "properties": {
-            "text": {
-              "type": "string"
-            },
-            "details": {
-              "type": "string"
-            },
-            "type": {
-              "type": "string"
-            }
-          }
-        }
-      }
-    }
-  },
-  "gameplay/spawn": {
-    "publish": {
-      "description": "asdf",
-      "tags": [
-      {
-        "name": "button"
-      }
-      ],
-      "message": {
-        "payload": {
-          "type": "object",
-          "properties": {
-            "exampleField": {
-              "type": "string",
-              "description": "This is an example text field"
-            },
-            "exampleNumber": {
-              "type": "number"
-            },
-            "exampleDate": {
-              "type": "string",
-              "format": "date-time"
-            }
-          }
-        }
-      }
-    }
-  },
-  "gameplay/restart": {
-    "publish": {
-      "tags": [
-      {
-        "name": "button"
-      }
-      ]
-    }
-  },
-  "progression/level-up": {
-    "publish": {
-      "tags": [
-      {
-        "name": "button"
-      }
-      ]
-    }
-  },
-  "progression/reset": {
-    "publish": {
-      "tags": [
-      {
-        "name": "button"
-      }
-      ]
-    }
-  },
-  "progression/add-xp": {
-    "publish": {
-      "tags": [
-      {
-        "name": "button"
-      }
-      ]
-    }
-  }
-}
-}
-"""";
-
-Task SendApi() {
+Task SendApi(string api) {
   return producerHandler.SendBytes("__internal/api",
-    Encoding.UTF8.GetBytes(api1),
+    Encoding.UTF8.GetBytes(api),
     CancellationToken.None);
 }
