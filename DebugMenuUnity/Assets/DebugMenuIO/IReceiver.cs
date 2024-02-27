@@ -1,6 +1,6 @@
 #nullable enable
 using System;
-using Unity.Plastic.Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Linq;
 
 public interface IReceiver {
     event Action<(string channel, JObject payload)> ReceivedJson;

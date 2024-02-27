@@ -9,15 +9,16 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using DebugMenuIO;
-using DebugMenuIO.AsyncApi;
+using DebugMenuIO.Schema;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
-using Unity.Plastic.Newtonsoft.Json;
-using Unity.Plastic.Newtonsoft.Json.Linq;
 using UnityEngine;
-using UnityEngine.XR;
-using Channel = DebugMenuIO.AsyncApi.Channel;
+using Channel = DebugMenuIO.Schema.Channel;
 using JsonSerializerSettings = Newtonsoft.Json.JsonSerializerSettings;
 using NullValueHandling = Newtonsoft.Json.NullValueHandling;
+using Payload = DebugMenuIO.Schema.Payload;
+using Property = DebugMenuIO.Schema.Property;
 
 namespace DebugMenu {
     public class DebugMenuClient : IDisposable {
@@ -57,7 +58,8 @@ namespace DebugMenu {
             public int ApplicationId { get; set; }
         }
 
-        public async Task<RunningInstance> Run(CancellationToken cancellationToken, RunningInstance? runningInstance = null) {
+        public async Task<RunningInstance> Run(CancellationToken cancellationToken,
+            RunningInstance? runningInstance = null) {
             if(_clientTask != null) {
                 throw new InvalidOperationException($"{nameof(DebugMenuClient)} is already running.");
             }
@@ -67,7 +69,8 @@ namespace DebugMenu {
             }
 
             _webSocketClient =
-                new DebugMenuWebSocketClient(runningInstance.WebsocketUrl! + "/instance", _token, _metadata, OnConnected);
+                new DebugMenuWebSocketClient(runningInstance.WebsocketUrl! + "/instance", _token, _metadata,
+                    OnConnected);
 
             _webSocketClient.ReceivedJson += OnReceivedJson;
             _webSocketClient.ErrorOccurred += OnError;
@@ -88,9 +91,12 @@ namespace DebugMenu {
             });
             var content = new StringContent(body, Encoding.UTF8, "application/json");
             var client = new HttpClient();
+
+            Debug.Log($"Requesting instance");
             var response = await client.PostAsync(_url + "/api/instances", content, cancellationToken);
 
             var responseJson = await response.Content.ReadAsStringAsync();
+            Debug.Log($"Got instance {responseJson}");
             var i = JsonConvert.DeserializeObject<RunningInstance>(responseJson)!;
             return i;
         }
@@ -112,12 +118,8 @@ namespace DebugMenu {
         }
 
         private string BuildApi() {
-            var document = new Document() {
-                Asyncapi = "2.6.0",
-                Info = new Info() {
-                    Title = "Test",
-                    Version = "1.0.0"
-                },
+            var document = new Api() {
+                DebugMenuApi = "1.0.0",
                 Channels = _handlers.ToDictionary(
                     kvp => kvp.Key,
                     kvp => BuildChannel(kvp.Value))
@@ -127,29 +129,21 @@ namespace DebugMenu {
                 ContractResolver = new CamelCasePropertyNamesContractResolver(),
                 NullValueHandling = NullValueHandling.Ignore
             };
-            return Newtonsoft.Json.JsonConvert.SerializeObject(document, settings);
+            return JsonConvert.SerializeObject(document, settings);
         }
 
         private Channel BuildChannel(HandlerInfo handlerInfo) {
             var parameters = handlerInfo.Method.GetParameters();
 
             return new Channel() {
-                Publish = new Publish() {
-                    Tags = new List<Tag>() {
-                        new Tag() {
-                            Name = "button"
-                        }
-                    },
-                    Message = new Message() {
-                        Payload = new Payload() {
-                            Type = "object",
-                            Properties = parameters.Select(p => {
-                                return (p.Name, new Property() {
-                                    Type = GetPropertyType(p.ParameterType),
-                                });
-                            }).ToDictionary(p => p.Name, p => p.Item2)
-                        }
-                    }
+                Type = "button",
+                Publish = new Payload() {
+                    Type = "object",
+                    Properties = parameters.Select(p => {
+                        return (p.Name, new Property() {
+                            Type = GetPropertyType(p.ParameterType)
+                        });
+                    }).ToDictionary(p => p.Name, p => p.Item2)
                 }
             };
         }
@@ -185,15 +179,19 @@ namespace DebugMenu {
             if(p.ParameterType == typeof(int)) {
                 return property.Value<int>();
             }
+
             if(p.ParameterType == typeof(long)) {
                 return property.Value<long>();
             }
+
             if(p.ParameterType == typeof(float)) {
                 return property.Value<float>();
             }
+
             if(p.ParameterType == typeof(double)) {
                 return property.Value<double>();
             }
+
             if(p.ParameterType == typeof(string)) {
                 return property.Value<string>();
             }

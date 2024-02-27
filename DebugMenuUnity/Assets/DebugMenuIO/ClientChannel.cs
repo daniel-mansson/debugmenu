@@ -1,6 +1,7 @@
 #nullable enable
 using System;
 using System.Threading;
+using Newtonsoft.Json.Linq;
 
 public class ClientChannel : IChannel {
     private readonly DebugMenuWebSocketClient _client;
@@ -17,13 +18,13 @@ public class ClientChannel : IChannel {
     }
 
     private void OnReceivedBytes((string channel, ReadOnlyMemory<byte> payload) message) {
-        if (message.channel == _channelPath) {
+        if(message.channel == _channelPath) {
             ReceivedBytes?.Invoke(message.payload);
         }
     }
 
-    private void OnReceivedJson((string channel, Unity.Plastic.Newtonsoft.Json.Linq.JObject payload) message) {
-        if (message.channel == _channelPath) {
+    private void OnReceivedJson((string channel, JObject payload) message) {
+        if(message.channel == _channelPath) {
             ReceivedJson?.Invoke(message.payload);
         }
     }
@@ -36,6 +37,6 @@ public class ClientChannel : IChannel {
         _client.SendBytes(_channelPath, bytes, _cancellationToken);
     }
 
-    public event Action<Unity.Plastic.Newtonsoft.Json.Linq.JObject>? ReceivedJson;
+    public event Action<JObject>? ReceivedJson;
     public event Action<ReadOnlyMemory<byte>>? ReceivedBytes;
 }

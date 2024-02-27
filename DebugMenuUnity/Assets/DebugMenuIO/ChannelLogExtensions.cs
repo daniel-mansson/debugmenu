@@ -1,17 +1,15 @@
 #nullable enable
 using System;
-using UnityEditor.PackageManager;
 
 public static class ChannelLogExtensions {
-
     [Serializable]
-    class LogMessage {
-        public string text = String.Empty;
+    private class LogMessage {
+        public string text = string.Empty;
         public string level = "info";
-        public string details = String.Empty;
+        public string details = string.Empty;
     }
-    
-    public static void SendLog(this IChannel channel, string text, LogLevel logLevel, string details) {
+
+    public static void SendLog(this IChannel channel, string text, string logLevel, string details) {
         channel.SendJson(new LogMessage() {
             text = text,
             details = details,

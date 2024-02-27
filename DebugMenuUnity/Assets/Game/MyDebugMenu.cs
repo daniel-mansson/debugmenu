@@ -13,10 +13,13 @@ namespace Game {
     public class MyDebugMenu : MonoBehaviour {
         [SerializeField] private string token;
         [SerializeField] private string url;
-        [Header("Editor only")]
-        [SerializeField] private bool reuseInstance;
+
+        [Header("Editor only")] [SerializeField]
+        private bool reuseInstance;
 
         private DebugMenuClient _debugMenuClient;
+
+        public Rigidbody body;
 
         private async void Start() {
             _debugMenuClient = new DebugMenuClient(url, token, new Dictionary<string, string>());
@@ -30,7 +33,7 @@ namespace Game {
 #endif
             instance = await _debugMenuClient.Run(CancellationToken.None, instance);
 #if UNITY_EDITOR
-                UnityEditor.EditorPrefs.SetString("DebugMenuInstance", JsonConvert.SerializeObject(instance));
+            UnityEditor.EditorPrefs.SetString("DebugMenuInstance", JsonConvert.SerializeObject(instance));
 #endif
             _debugMenuClient.RegisterController(this);
         }
@@ -43,6 +46,18 @@ namespace Game {
         [DebugMenuIO.Button]
         public void Reset() {
             Debug.Log("Reset was called");
+            body.position = Vector3.up * 2;
+            body.rotation = Quaternion.identity;
+            body.velocity = Vector3.zero;
+            body.angularVelocity = Vector3.zero;
+        }
+
+        [DebugMenuIO.Button]
+        public void Push() {
+            Debug.Log("Push");
+            body.AddForce((Vector3.up * 7f + Random.insideUnitSphere) * Random.Range(1f, 3f) - body.position,
+                ForceMode.Impulse);
+            body.AddRelativeTorque(Random.insideUnitSphere * Random.Range(1f, 2f), ForceMode.Impulse);
         }
 
         [DebugMenuIO.Button]
@@ -56,26 +71,26 @@ namespace Game {
         }
 
         [ContextMenu("json")]
-        void TestJson() {
+        private void TestJson() {
             var doc = new Document() {
                 Asyncapi = "2.6.0",
-                Info = new() {
+                Info = new Info {
                     Title = "Test",
                     Version = "1.0.0"
                 },
-                Channels = new() {
+                Channels = new Dictionary<string, Channel> {
                     {
-                        "progression/addXp", new() {
-                            Publish = new() {
-                                Tags = new() {
-                                    new Tag() {
+                        "progression/addXp", new Channel {
+                            Publish = new Publish {
+                                Tags = new List<Tag> {
+                                    new() {
                                         Name = "button"
                                     }
                                 },
-                                Message = new() {
-                                    Payload = new() {
+                                Message = new Message {
+                                    Payload = new Payload {
                                         Type = "object",
-                                        Properties = new() {
+                                        Properties = new Dictionary<string, Property> {
                                             {
                                                 "xp", new Property() {
                                                     Type = "number"
