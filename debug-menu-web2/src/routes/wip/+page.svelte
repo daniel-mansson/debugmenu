@@ -4,6 +4,7 @@
 	import Button from '$lib/components/ui/button/button.svelte';
 	import Group from '$lib/components/controller/group.svelte';
 	import SimpleButton from '$lib/components/controller/simple-button.svelte';
+	import Toggle from '$lib/components/controller/toggle.svelte';
 </script>
 
 <div class="my-1 flex items-center justify-between">
@@ -18,6 +19,7 @@
 		<Tabs.Trigger value="errors">Errors</Tabs.Trigger>
 	</Tabs.List>
 </Tabs.Root>
+
 <div
 	class="space-y-8 rounded-lg border-2 border-dashed border-gray-200 p-4 pt-6 dark:border-gray-700"
 >
@@ -25,28 +27,18 @@
 		<div slot="content" class="mt-2 space-y-6">
 			<Group title="erger" color="blue">
 				<div slot="content">
-					<div class="grid grid-cols-3 gap-4 md:grid-cols-4 lg:grid-cols-6">
-						<SimpleButton label="Yellow" color="yellow" />
-						<SimpleButton label="Red" color="red" />
-						<SimpleButton label="Blue" color="blue" />
-						<SimpleButton label="No def" />
-						<SimpleButton label="Invalid" color="asdfasdf" />
-						<SimpleButton label="grass" color="grass" />
-					</div>
+					<SimpleButton label="Yellow" settings={{ color: 'yellow' }} />
+					<SimpleButton label="Red" settings={{ color: 'red' }} />
+					<Toggle label="Red" settings={{ color: 'red' }} />
+					<SimpleButton label="Red" settings={{ color: 'red' }} />
+					<SimpleButton label="Red" settings={{ color: 'red' }} />
+					<SimpleButton label="Red" settings={{ color: 'red' }} />
 				</div>
 			</Group>
 			<Group title="asdf" color="green">
 				<div slot="content">
 					<div class="grid grid-cols-3 gap-4 md:grid-cols-4 lg:grid-cols-6">
-						<SimpleButton label="teal" color="teal" />
-						<SimpleButton label="yellow" color="yellow" />
-						<SimpleButton label="purple" color="purple" />
-						<SimpleButton label="green" color="green" />
-						<SimpleButton label="red" color="red" />
-						<SimpleButton label="orange" color="orange" />
-						<SimpleButton label="grass" color="grass" />
-						<SimpleButton label="aqua" color="aqua" />
-						<SimpleButton label="magenta" color="magenta" />
+						<SimpleButton label="teal" settings={{ color: 'teal' }} />
 					</div>
 				</div>
 			</Group>
