@@ -30,6 +30,8 @@
 					<SimpleButton label="Yellow" settings={{ color: 'yellow' }} />
 					<SimpleButton label="Red" settings={{ color: 'red' }} />
 					<Toggle label="Red" settings={{ color: 'red' }} />
+					<Toggle label="Red" settings={{ color: 'red' }} />
+					<Toggle label="Red" settings={{ color: 'red' }} />
 					<SimpleButton label="Red" settings={{ color: 'red' }} />
 					<SimpleButton label="Red" settings={{ color: 'red' }} />
 					<SimpleButton label="Red" settings={{ color: 'red' }} />

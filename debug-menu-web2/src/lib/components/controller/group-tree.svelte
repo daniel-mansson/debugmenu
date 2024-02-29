@@ -2,6 +2,7 @@
 	import { createEventDispatcher } from 'svelte';
 	import Group from './group.svelte';
 	import SimpleButton from './simple-button.svelte';
+	import Toggle from './toggle.svelte';
 
 	export let group: any;
 	export let level = 0;
@@ -17,6 +18,14 @@
 					label={channel.name}
 					on:click={() => commandSender?.send(channel, {})}
 				></SimpleButton>
+			{:else if channel.type === 'toggle'}
+				<Toggle
+					settings={channel.settings}
+					label={channel.name}
+					on:change={(value) => {
+						console.log(value);
+					}}
+				></Toggle>
 			{/if}
 		{/each}
 		{#each group.groups as g}

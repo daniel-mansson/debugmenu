@@ -1,3 +1,4 @@
+import { writable } from "svelte/store";
 
 export function parseDebugmenuApi(apiJson: string) {
     let api = JSON.parse(apiJson);
@@ -21,7 +22,8 @@ function buildChannel([key, value]: [string, any]) {
         type: value.type,
         settings: value.settings ?? {},
         publish: value.publish,
-        subscribe: value.subscribe
+        subscribe: value.subscribe,
+        state: writable<any>()
     };
 }
 

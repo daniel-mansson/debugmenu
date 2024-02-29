@@ -47,8 +47,8 @@
 					{#each category.groups as group}
 						<GroupTree {group} {commandSender}></GroupTree>
 					{/each}
-				</div></Tabs.Content
-			>
+				</div>
+			</Tabs.Content>
 		{/each}
 	</Tabs.Root>
 {/if}

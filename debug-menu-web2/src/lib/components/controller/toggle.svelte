@@ -3,11 +3,13 @@
 	import { mode } from 'mode-watcher';
 	import Switch from '../ui/switch/switch.svelte';
 	import Label from '../ui/label/label.svelte';
+	import { writable } from 'svelte/store';
 
 	export let label: string;
 	export let settings = {
 		color: 'white'
 	};
+	export let state = writable<any>();
 
 	const lookupHSL: any = {
 		red: { h: 15, s: 100, l: 0 },
@@ -43,13 +45,17 @@
 
 	let dispatch = createEventDispatcher();
 
-	function onValueChanged() {}
+	function onValueChanged(value: boolean) {
+		dispatch('change', value);
+	}
 
-	let value = true;
-	$: console.log(value);
+	let checked = !!$state;
+	state.subscribe((s) => {
+		checked = !!s;
+	});
 </script>
 
 <div class=" my-2 flex h-10 items-center justify-start space-x-2">
-	<Switch bind:checked={value} id="airplane-mode" />
-	<Label>Airplane Mode</Label>
+	<Switch onCheckedChange={onValueChanged} bind:checked />
+	<Label>{label}</Label>
 </div>
