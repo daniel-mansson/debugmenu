@@ -211,6 +211,10 @@ namespace DebugMenu {
                 return null;
             }
 
+            if(p.ParameterType == typeof(bool)) {
+                return property.Value<bool>();
+            }
+
             if(p.ParameterType == typeof(int)) {
                 return property.Value<int>();
             }

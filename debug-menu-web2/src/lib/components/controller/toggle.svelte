@@ -52,7 +52,7 @@
 	let checked = $state?.value;
 	state.subscribe((s) => {
 		console.log('set ' + s?.value);
-		checked = s?.value;
+		//checked = s?.value;
 	});
 </script>
 
