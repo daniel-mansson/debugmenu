@@ -1,6 +1,5 @@
 import { derived, get, writable, type Writable } from "svelte/store";
 import { ArrayQueue, ConstantBackoff, Websocket, WebsocketBuilder, WebsocketEvent } from "websocket-ts";
-import { parseAsyncApi } from "./asyncApiHelpers";
 import type { RunningInstanceDto } from "./backend/backend";
 import { buildDebugmenuElements } from "./debugmenuApi";
 
@@ -103,6 +102,12 @@ export class InstanceConnection {
       m.push(messageWithTimestamp);
       return m;
     })
+
+    let channels = get(this.api).channels;
+    let channel = channels.find((c: any) => c.channel === message.channel);
+    if (channel) {
+      channel.state.set(message.payload);
+    }
   }
 
   async updateApi(apiText: string) {

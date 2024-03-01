@@ -20,10 +20,11 @@
 				></SimpleButton>
 			{:else if channel.type === 'toggle'}
 				<Toggle
+					state={channel.state}
 					settings={channel.settings}
 					label={channel.name}
-					on:change={(value) => {
-						console.log(value);
+					on:change={(evt) => {
+						commandSender?.send(channel, { value: evt.detail });
 					}}
 				></Toggle>
 			{/if}

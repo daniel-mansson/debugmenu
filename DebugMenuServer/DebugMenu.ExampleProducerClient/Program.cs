@@ -92,6 +92,12 @@ while (true) {
             case 's':
                 SendApi(Mock.api2);
                 break;
+            case 't':
+                producerHandler.SendJson("progression/double-xp", true, CancellationToken.None);
+                break;
+            case 'y':
+                producerHandler.SendJson("progression/double-xp", false, CancellationToken.None);
+                break;
             }
 
             Console.WriteLine($"Delay max set to {delayMax}");

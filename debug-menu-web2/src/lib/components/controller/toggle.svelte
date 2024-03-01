@@ -49,13 +49,15 @@
 		dispatch('change', value);
 	}
 
-	let checked = !!$state;
+	let checked = $state?.value;
 	state.subscribe((s) => {
-		checked = !!s;
+		console.log('set ' + s?.value);
+		checked = s?.value;
 	});
 </script>
 
 <div class=" my-2 flex h-10 items-center justify-start space-x-2">
 	<Switch onCheckedChange={onValueChanged} bind:checked />
 	<Label>{label}</Label>
+	<Label>{JSON.stringify($state)}</Label>
 </div>

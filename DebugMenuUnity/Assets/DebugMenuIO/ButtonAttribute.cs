@@ -10,4 +10,8 @@ namespace DebugMenuIO {
     public class ControllerAttribute : Attribute {
         public string? Path { get; set; } = null;
     }
+
+    public class ToggleAttribute : Attribute {
+        public string? Path { get; set; } = null;
+    }
 }

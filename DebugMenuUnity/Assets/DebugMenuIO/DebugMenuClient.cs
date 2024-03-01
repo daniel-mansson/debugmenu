@@ -135,16 +135,47 @@ namespace DebugMenu {
         private Channel BuildChannel(HandlerInfo handlerInfo) {
             var parameters = handlerInfo.Method.GetParameters();
 
+            if(handlerInfo.Type == "button") {
+                return new Channel() {
+                    Type = handlerInfo.Type,
+                    Publish = new Payload() {
+                        Type = "object",
+                        Properties = parameters.Select(p => {
+                            return (p.Name, new Property() {
+                                Type = GetPropertyType(p.ParameterType)
+                            });
+                        }).ToDictionary(p => p.Name, p => p.Item2)
+                    }
+                };
+            }
+            else if(handlerInfo.Type == "toggle") {
+                return new Channel() {
+                    Type = handlerInfo.Type,
+                    Publish = new Payload() {
+                        Type = "object",
+                        Properties = new Dictionary<string, Property> {
+                            {
+                                "value", new Property {
+                                    Type = "boolean"
+                                }
+                            }
+                        }
+                    },
+                    Subscribe = new Payload() {
+                        Type = "object",
+                        Properties = new Dictionary<string, Property> {
+                            {
+                                "value", new Property {
+                                    Type = "boolean"
+                                }
+                            }
+                        }
+                    }
+                };
+            }
+
             return new Channel() {
-                Type = "button",
-                Publish = new Payload() {
-                    Type = "object",
-                    Properties = parameters.Select(p => {
-                        return (p.Name, new Property() {
-                            Type = GetPropertyType(p.ParameterType)
-                        });
-                    }).ToDictionary(p => p.Name, p => p.Item2)
-                }
+                Type = handlerInfo.Type
             };
         }
 
@@ -166,7 +197,11 @@ namespace DebugMenu {
                     .Select(p => ToValue(message.payload, p))
                     .ToArray();
 
-                handler.Method.Invoke(handler.Instance, parameters);
+                var returnValue = handler.Method.Invoke(handler.Instance, parameters);
+                if(returnValue != null) {
+                    Debug.Log($"Return value: {returnValue}");
+                    _webSocketClient?.SendJson(message.channel, new { value = returnValue }, CancellationToken.None);
+                }
             }
         }
 
@@ -233,18 +268,31 @@ namespace DebugMenu {
                 return;
             }
 
-            var methods = type.GetMethods()
-                .Where(m => m.GetCustomAttribute<ButtonAttribute>() != null)
-                .ToList();
-
-            foreach(var method in methods) {
-                RegisterHandler(controller, method);
-            }
+            RegisterButtons(controller, type);
+            RegisterToggles(controller, type);
 
             TryUpdateSchema();
         }
 
-        public void RegisterHandler(object instance, MethodInfo methodInfo) {
+        private void RegisterButtons(object controller, Type type) {
+            var methods = type.GetMethods()
+                .Where(m => m.GetCustomAttribute<ButtonAttribute>() != null)
+                .ToList();
+            foreach(var method in methods) {
+                RegisterHandler(controller, method, "button");
+            }
+        }
+
+        private void RegisterToggles(object controller, Type type) {
+            var methods = type.GetMethods()
+                .Where(m => m.GetCustomAttribute<ToggleAttribute>() != null)
+                .ToList();
+            foreach(var method in methods) {
+                RegisterHandler(controller, method, "toggle");
+            }
+        }
+
+        public void RegisterHandler(object instance, MethodInfo methodInfo, string type) {
             var channel = GetChannel(instance, methodInfo);
             var id = channel.ToLowerInvariant();
 
@@ -255,13 +303,15 @@ namespace DebugMenu {
             var handler = new HandlerInfo() {
                 Channel = channel,
                 Instance = instance,
-                Method = methodInfo
+                Method = methodInfo,
+                Type = type
             };
             _handlers.Add(id, handler);
         }
 
         private class HandlerInfo {
             public string Channel { get; set; }
+            public string Type { get; set; }
             public object Instance { get; set; }
             public MethodInfo Method { get; set; }
         }

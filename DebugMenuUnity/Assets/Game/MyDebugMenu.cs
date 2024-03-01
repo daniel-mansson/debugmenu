@@ -65,6 +65,12 @@ namespace Game {
             Debug.Log($"Set gold to {gold}");
         }
 
+        [DebugMenuIO.Toggle]
+        public bool DoubleXp(bool doubleXp) {
+            Debug.Log($"Set DoubleXp to {doubleXp}");
+            return doubleXp;
+        }
+
         [DebugMenuIO.Button]
         public void SetSomething(string id, int value) {
             Debug.Log($"Set {id} => {value}");

@@ -64,6 +64,16 @@ public const string api1 = """"
                           "type": "button",
                           "publish": {}
                         },
+                        "progression/double-xp": {
+                          "name": "Double XP",
+                          "type": "toggle",
+                          "publish": {
+                            "type": "boolean"
+                          },
+                          "subscribe": {
+                            "type": "boolean"
+                          }
+                        },
                         "progression/economy/add-gold": {
                           "type": "button",
                           "publish": {}

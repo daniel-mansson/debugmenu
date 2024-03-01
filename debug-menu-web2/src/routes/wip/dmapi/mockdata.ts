@@ -55,6 +55,16 @@ export let asyncapiMockData = `{
       "type": "button",
       "publish": {}
     },
+    "progression/double-xp": {
+      "name": "Double XP",
+      "type": "toggle",
+      "publish": {
+        "type": "boolean"
+      },
+      "subscribe": {
+        "type": "boolean"
+      }
+    },
     "progression/add-xp2": {
       "type": "button",
       "settings": {

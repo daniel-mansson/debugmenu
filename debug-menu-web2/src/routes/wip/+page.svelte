@@ -5,6 +5,13 @@
 	import Group from '$lib/components/controller/group.svelte';
 	import SimpleButton from '$lib/components/controller/simple-button.svelte';
 	import Toggle from '$lib/components/controller/toggle.svelte';
+	import { writable } from 'svelte/store';
+
+	let toggleState = writable<boolean>(false);
+
+	function toggleChange(evt: CustomEvent) {
+		toggleState.set(evt.detail);
+	}
 </script>
 
 <div class="my-1 flex items-center justify-between">
@@ -29,9 +36,14 @@
 				<div slot="content">
 					<SimpleButton label="Yellow" settings={{ color: 'yellow' }} />
 					<SimpleButton label="Red" settings={{ color: 'red' }} />
-					<Toggle label="Red" settings={{ color: 'red' }} />
-					<Toggle label="Red" settings={{ color: 'red' }} />
-					<Toggle label="Red" settings={{ color: 'red' }} />
+					<Toggle label="Red" settings={{ color: 'red' }} state={toggleState} />
+					<Toggle label="Red" settings={{ color: 'red' }} state={toggleState} />
+					<Toggle
+						label="Red"
+						settings={{ color: 'red' }}
+						state={toggleState}
+						on:change={toggleChange}
+					/>
 					<SimpleButton label="Red" settings={{ color: 'red' }} />
 					<SimpleButton label="Red" settings={{ color: 'red' }} />
 					<SimpleButton label="Red" settings={{ color: 'red' }} />
@@ -47,3 +59,5 @@
 		</div>
 	</Group>
 </div>
+
+{$toggleState}
