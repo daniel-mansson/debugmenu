@@ -21,7 +21,7 @@ var id = "8c57f858-7d30-4b34-b32c-df88e677a267";
 //
 // var controller = new Controller($"wss://localhost:8082/ws/room/{producer.SessionId}/controller", "hej");
 
-var token = "B056B5B8C1065365CC1A292A7F30A1C648CE613605C41C24";
+var token = "FA32BE0E7866B2B7C1786B0217678A3927DC3D5B18013BE0";
 var metadata = new Dictionary<string, string>();
 
 var url = "https://localhost:8082";
@@ -93,10 +93,10 @@ while (true) {
                 SendApi(Mock.api2);
                 break;
             case 't':
-                producerHandler.SendJson("progression/double-xp", true, CancellationToken.None);
+                producerHandler.SendJson("progression/double-xp", new{value = true}, CancellationToken.None);
                 break;
             case 'y':
-                producerHandler.SendJson("progression/double-xp", false, CancellationToken.None);
+                producerHandler.SendJson("progression/double-xp", new{value = false}, CancellationToken.None);
                 break;
             }
 

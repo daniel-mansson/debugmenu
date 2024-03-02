@@ -66,9 +66,9 @@ namespace Game {
         }
 
         [DebugMenuIO.Toggle]
-        public bool DoubleXp(bool doubleXp) {
-            Debug.Log($"Set DoubleXp to {doubleXp}");
-            return doubleXp;
+        public bool DoubleXp(bool value) {
+            Debug.Log($"Set DoubleXp to {value}");
+            return value;
         }
 
         [DebugMenuIO.Button]

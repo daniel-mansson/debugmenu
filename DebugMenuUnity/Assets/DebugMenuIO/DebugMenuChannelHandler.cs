@@ -1,7 +1,4 @@
 ﻿#nullable enable
-using System;
-using System.Reflection;
-using DebugMenuIO;
 using DebugMenuIO.Schema;
 using Newtonsoft.Json.Linq;
 
@@ -14,27 +11,7 @@ namespace DebugMenu {
             Channel = channel;
         }
 
-        public abstract bool Register(object controller, Type type);
-        public abstract object HandleMessage(JObject payload);
-    }
-
-    public class ButtonDebugMenuChannelHandler : DebugMenuChannelHandler {
-        public override string Type => "button";
-
-        public ButtonDebugMenuChannelHandler(string channel, object instance, MethodInfo methodInfo,
-            ButtonAttribute attribute) : base(channel) {
-        }
-
-        public Channel GetSchema() {
-            return new Channel();
-        }
-
-        public override bool Register(object controller, Type type) {
-            throw new NotImplementedException();
-        }
-
-        public override object HandleMessage(JObject payload) {
-            throw new NotImplementedException();
-        }
+        public abstract Channel GetSchema();
+        public abstract object? HandleMessage(JObject payload);
     }
 }

@@ -17,6 +17,8 @@ export const load = (async () => {
 
 export const actions = {
     default: async ({ request, locals, fetch }) => {
+        console.log('POST r', request);
+
         const form = await superValidate(request, schema);
         console.log('POST', form);
 

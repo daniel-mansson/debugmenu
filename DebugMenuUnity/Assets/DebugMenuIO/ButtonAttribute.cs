@@ -3,7 +3,8 @@
 #nullable enable
 
 namespace DebugMenuIO {
-    public class ButtonAttribute : Attribute {
+    public class DebugMenuChannelAttribute : Attribute {
+        public string? Name { get; set; } = null;
         public string? Path { get; set; } = null;
     }
 
@@ -11,7 +12,9 @@ namespace DebugMenuIO {
         public string? Path { get; set; } = null;
     }
 
-    public class ToggleAttribute : Attribute {
-        public string? Path { get; set; } = null;
+    public class ToggleAttribute : DebugMenuChannelAttribute {
+    }
+
+    public class ButtonAttribute : DebugMenuChannelAttribute {
     }
 }

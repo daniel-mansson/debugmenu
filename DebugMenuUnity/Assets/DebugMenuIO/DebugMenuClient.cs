@@ -142,7 +142,7 @@ namespace DebugMenu {
                         Type = "object",
                         Properties = parameters.Select(p => {
                             return (p.Name, new Property() {
-                                Type = GetPropertyType(p.ParameterType)
+                                Type = DebugMenuUtils.GetPropertyType(p.ParameterType)
                             });
                         }).ToDictionary(p => p.Name, p => p.Item2)
                     }
@@ -179,22 +179,10 @@ namespace DebugMenu {
             };
         }
 
-        private string GetPropertyType(Type type) {
-            if(type == typeof(int) || type == typeof(float) || type == typeof(double)) {
-                return "number";
-            }
-
-            if(type == typeof(string)) {
-                return "string";
-            }
-
-            return "unknown";
-        }
-
         private void OnReceivedJson((string channel, JObject payload) message) {
             if(_handlers.TryGetValue(message.channel.ToLowerInvariant(), out var handler)) {
                 var parameters = handler.Method.GetParameters()
-                    .Select(p => ToValue(message.payload, p))
+                    .Select(p => DebugMenuUtils.ToValue(message.payload, p))
                     .ToArray();
 
                 var returnValue = handler.Method.Invoke(handler.Instance, parameters);
@@ -203,39 +191,6 @@ namespace DebugMenu {
                     _webSocketClient?.SendJson(message.channel, new { value = returnValue }, CancellationToken.None);
                 }
             }
-        }
-
-        private static object? ToValue(JObject payload, ParameterInfo p) {
-            var property = payload[p.Name];
-            if(property == null) {
-                return null;
-            }
-
-            if(p.ParameterType == typeof(bool)) {
-                return property.Value<bool>();
-            }
-
-            if(p.ParameterType == typeof(int)) {
-                return property.Value<int>();
-            }
-
-            if(p.ParameterType == typeof(long)) {
-                return property.Value<long>();
-            }
-
-            if(p.ParameterType == typeof(float)) {
-                return property.Value<float>();
-            }
-
-            if(p.ParameterType == typeof(double)) {
-                return property.Value<double>();
-            }
-
-            if(p.ParameterType == typeof(string)) {
-                return property.Value<string>();
-            }
-
-            return property.Value<object>();
         }
 
         public void Dispose() {
