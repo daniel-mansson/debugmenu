@@ -14,12 +14,14 @@ namespace Game {
         [SerializeField] private string token;
         [SerializeField] private string url;
 
+        public Rigidbody body;
+        public Material[] materials;
+
         [Header("Editor only")] [SerializeField]
         private bool reuseInstance;
 
         private DebugMenuClient _debugMenuClient;
 
-        public Rigidbody body;
 
         private async void Start() {
             _debugMenuClient = new DebugMenuClient(url, token, new Dictionary<string, string>());
@@ -36,6 +38,8 @@ namespace Game {
             UnityEditor.EditorPrefs.SetString("DebugMenuInstance", JsonConvert.SerializeObject(instance));
 #endif
             _debugMenuClient.RegisterController(this);
+
+            body.GetComponent<MeshRenderer>().material = materials[0];
         }
 
         private void OnDestroy() {
@@ -68,6 +72,7 @@ namespace Game {
         [DebugMenuIO.Toggle]
         public bool DoubleXp(bool value) {
             Debug.Log($"Set DoubleXp to {value}");
+            body.GetComponent<MeshRenderer>().material = materials[value ? 1 : 0];
             return value;
         }
 

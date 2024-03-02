@@ -14,21 +14,18 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 using UnityEngine;
-using Channel = DebugMenuIO.Schema.Channel;
 using JsonSerializerSettings = Newtonsoft.Json.JsonSerializerSettings;
 using NullValueHandling = Newtonsoft.Json.NullValueHandling;
-using Payload = DebugMenuIO.Schema.Payload;
-using Property = DebugMenuIO.Schema.Property;
 
 namespace DebugMenu {
     public class DebugMenuClient : IDisposable {
         private readonly string _url;
         private readonly string _token;
         private readonly Dictionary<string, string> _metadata;
+
         private DebugMenuWebSocketClient? _webSocketClient;
         private Task? _clientTask;
-        private readonly Dictionary<string, ClientChannel> _channels = new();
-        private readonly Dictionary<string, HandlerInfo> _handlers = new();
+
         private readonly Dictionary<string, DebugMenuChannelHandler> _handlers2 = new();
 
         public DebugMenuClient(string url, string token, Dictionary<string, string> metadata) {
@@ -121,9 +118,9 @@ namespace DebugMenu {
         private string BuildApi() {
             var document = new Api() {
                 DebugMenuApi = "1.0.0",
-                Channels = _handlers.ToDictionary(
+                Channels = _handlers2.ToDictionary(
                     kvp => kvp.Key,
-                    kvp => BuildChannel(kvp.Value))
+                    kvp => kvp.Value.GetSchema())
             };
 
             var settings = new JsonSerializerSettings {
@@ -133,63 +130,12 @@ namespace DebugMenu {
             return JsonConvert.SerializeObject(document, settings);
         }
 
-        private Channel BuildChannel(HandlerInfo handlerInfo) {
-            var parameters = handlerInfo.Method.GetParameters();
-
-            if(handlerInfo.Type == "button") {
-                return new Channel() {
-                    Type = handlerInfo.Type,
-                    Publish = new Payload() {
-                        Type = "object",
-                        Properties = parameters.Select(p => {
-                            return (p.Name, new Property() {
-                                Type = DebugMenuUtils.GetPropertyType(p.ParameterType)
-                            });
-                        }).ToDictionary(p => p.Name, p => p.Item2)
-                    }
-                };
-            }
-            else if(handlerInfo.Type == "toggle") {
-                return new Channel() {
-                    Type = handlerInfo.Type,
-                    Publish = new Payload() {
-                        Type = "object",
-                        Properties = new Dictionary<string, Property> {
-                            {
-                                "value", new Property {
-                                    Type = "boolean"
-                                }
-                            }
-                        }
-                    },
-                    Subscribe = new Payload() {
-                        Type = "object",
-                        Properties = new Dictionary<string, Property> {
-                            {
-                                "value", new Property {
-                                    Type = "boolean"
-                                }
-                            }
-                        }
-                    }
-                };
-            }
-
-            return new Channel() {
-                Type = handlerInfo.Type
-            };
-        }
-
         private void OnReceivedJson((string channel, JObject payload) message) {
-            if(_handlers.TryGetValue(message.channel.ToLowerInvariant(), out var handler)) {
-                var parameters = handler.Method.GetParameters()
-                    .Select(p => DebugMenuUtils.ToValue(message.payload, p))
-                    .ToArray();
-
-                var returnValue = handler.Method.Invoke(handler.Instance, parameters);
+            if(_handlers2.TryGetValue(message.channel.ToLowerInvariant(), out var handler)) {
+                var returnValue = handler.HandleMessage(message.payload);
                 if(returnValue != null) {
                     Debug.Log($"Return value: {returnValue}");
-                    _webSocketClient?.SendJson(message.channel, new { value = returnValue }, CancellationToken.None);
+                    _webSocketClient?.SendJson(message.channel, returnValue, CancellationToken.None);
                 }
             }
         }
@@ -198,20 +144,6 @@ namespace DebugMenu {
             _webSocketClient?.Dispose();
             _webSocketClient = null;
             _clientTask = null;
-        }
-
-        public IChannel Channel(string channelPath) {
-            if(_webSocketClient == null) {
-                throw new Exception($"{nameof(DebugMenuClient)} not yet initialized.");
-            }
-
-            if(!_channels.TryGetValue(channelPath, out var channel)) {
-                channel = new ClientChannel(_webSocketClient, channelPath,
-                    CancellationToken.None); //TODO cancellation token
-                _channels.Add(channelPath, channel);
-            }
-
-            return channel;
         }
 
         public void RegisterController(object controller) {
@@ -224,10 +156,8 @@ namespace DebugMenu {
 
             var handlers = RegisterMethods(controller, type);
             foreach(var handler in handlers) {
-                _handlers2.Add(handler.Channel, handler);
+                _handlers2.Add(handler.Channel.ToLowerInvariant(), handler);
             }
-            // RegisterButtons(controller, type);
-            // RegisterToggles(controller, type);
 
             TryUpdateSchema();
         }
@@ -250,48 +180,6 @@ namespace DebugMenu {
             }
 
             return handlers;
-        }
-
-        private void RegisterButtons(object controller, Type type) {
-            var methods = type.GetMethods()
-                .Where(m => m.GetCustomAttribute<ButtonAttribute>() != null)
-                .ToList();
-            foreach(var method in methods) {
-                RegisterHandler(controller, method, "button");
-            }
-        }
-
-        private void RegisterToggles(object controller, Type type) {
-            var methods = type.GetMethods()
-                .Where(m => m.GetCustomAttribute<ToggleAttribute>() != null)
-                .ToList();
-            foreach(var method in methods) {
-                RegisterHandler(controller, method, "toggle");
-            }
-        }
-
-        public void RegisterHandler(object instance, MethodInfo methodInfo, string type) {
-            var channel = GetChannel(instance, methodInfo);
-            var id = channel.ToLowerInvariant();
-
-            if(_handlers.ContainsKey(id)) {
-                return;
-            }
-
-            var handler = new HandlerInfo() {
-                Channel = channel,
-                Instance = instance,
-                Method = methodInfo,
-                Type = type
-            };
-            _handlers.Add(id, handler);
-        }
-
-        private class HandlerInfo {
-            public string Channel { get; set; }
-            public string Type { get; set; }
-            public object Instance { get; set; }
-            public MethodInfo Method { get; set; }
         }
 
         private string GetChannel(object instance, MethodInfo methodInfo) {

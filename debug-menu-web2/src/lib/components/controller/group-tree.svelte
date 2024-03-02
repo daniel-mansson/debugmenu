@@ -10,7 +10,7 @@
 </script>
 
 <Group title={group.id ?? ''}>
-	<div slot="content" class="space-b-2 space-x-2">
+	<div slot="content" class="">
 		{#each group.channels as channel}
 			{#if channel.type === 'button'}
 				<SimpleButton

@@ -18,8 +18,6 @@ namespace DebugMenu {
             var instance = await _debugMenuClient.Run(CancellationToken.None);
 
             Debug.Log(JsonConvert.SerializeObject(instance));
-
-            _debugMenuClient.Channel("log");
         }
 
 

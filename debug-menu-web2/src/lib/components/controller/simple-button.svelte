@@ -47,7 +47,7 @@
 	on:click={() => dispatch('click')}
 	variant="empty"
 	style="background-color:{bgColor}; outline-color:{outlineColor}"
-	class="overflow-hidden rounded-sm font-mono shadow-md shadow-gray-300 outline outline-1 hover:shadow-lg
+	class="mb-2 mr-2 overflow-hidden rounded-sm font-mono shadow-md shadow-gray-300 outline outline-1 hover:shadow-lg
 	hover:shadow-gray-300 hover:outline-offset-1 active:outline-double active:outline-4 
 	active:outline-offset-1 dark:bg-neutral-900  dark:shadow-gray-800
 	 dark:active:bg-neutral-800 dark:active:outline-4">{label}</Button

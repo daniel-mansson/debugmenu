@@ -58,7 +58,7 @@
 	});
 </script>
 
-<div class=" my-2 flex h-10 items-center justify-start space-x-2">
+<div class="mb-2 mr-2 flex h-10 items-center justify-start space-x-2">
 	<Switch onCheckedChange={onValueChanged} bind:checked />
 	<Label>{label}</Label>
 	<Label>{JSON.stringify($state)}</Label>
