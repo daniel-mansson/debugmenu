@@ -29,6 +29,7 @@ namespace DebugMenu {
         private Task? _clientTask;
         private readonly Dictionary<string, ClientChannel> _channels = new();
         private readonly Dictionary<string, HandlerInfo> _handlers = new();
+        private readonly Dictionary<string, DebugMenuChannelHandler> _handlers2 = new();
 
         public DebugMenuClient(string url, string token, Dictionary<string, string> metadata) {
             _url = url;
@@ -213,12 +214,6 @@ namespace DebugMenu {
             return channel;
         }
 
-        public void RegisterHandler(Action reset) {
-        }
-
-        public void RegisterHandler<T>(Action<T> setGold) {
-        }
-
         public void RegisterController(object controller) {
             var type = controller.GetType();
 
@@ -227,10 +222,34 @@ namespace DebugMenu {
                 return;
             }
 
-            RegisterButtons(controller, type);
-            RegisterToggles(controller, type);
+            var handlers = RegisterMethods(controller, type);
+            foreach(var handler in handlers) {
+                _handlers2.Add(handler.Channel, handler);
+            }
+            // RegisterButtons(controller, type);
+            // RegisterToggles(controller, type);
 
             TryUpdateSchema();
+        }
+
+        private List<DebugMenuChannelHandler> RegisterMethods(object controller, Type type) {
+            var handlers = new List<DebugMenuChannelHandler>();
+            var methods = type.GetMethods();
+
+            foreach(var methodInfo in methods) {
+                var buttonAttr = methodInfo.GetCustomAttribute<ButtonAttribute>();
+                if(buttonAttr != null) {
+                    handlers.Add(new ButtonDebugMenuChannelHandler(GetChannel(controller, methodInfo), controller, methodInfo, buttonAttr));
+                    continue;
+                }
+
+                var toggleAttr = methodInfo.GetCustomAttribute<ToggleAttribute>();
+                if(toggleAttr != null) {
+                    handlers.Add(new ToggleDebugMenuChannelHandler(GetChannel(controller, methodInfo), controller, methodInfo, toggleAttr));
+                }
+            }
+
+            return handlers;
         }
 
         private void RegisterButtons(object controller, Type type) {
@@ -278,7 +297,7 @@ namespace DebugMenu {
         private string GetChannel(object instance, MethodInfo methodInfo) {
             var type = instance.GetType();
             var controllerAttribute = type.GetCustomAttribute<ControllerAttribute>();
-            var methodAttribute = methodInfo.GetCustomAttribute<ButtonAttribute>();
+            var methodAttribute = methodInfo.GetCustomAttribute<DebugMenuChannelAttribute>();
 
             return $"{controllerAttribute?.Path ?? type.Name}/{methodAttribute?.Path ?? methodInfo.Name}";
         }
