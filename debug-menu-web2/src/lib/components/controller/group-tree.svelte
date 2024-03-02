@@ -3,6 +3,7 @@
 	import Group from './group.svelte';
 	import SimpleButton from './simple-button.svelte';
 	import Toggle from './toggle.svelte';
+	import ModalButton from './modal-button.svelte';
 
 	export let group: any;
 	export let level = 0;
@@ -13,11 +14,20 @@
 	<div slot="content" class="">
 		{#each group.channels as channel}
 			{#if channel.type === 'button'}
-				<SimpleButton
-					settings={channel.settings}
-					label={channel.name}
-					on:click={() => commandSender?.send(channel, {})}
-				></SimpleButton>
+				{#if channel.publish.type === 'object' && Object.keys(channel.publish.properties).length > 0}
+					<ModalButton
+						properties={channel.publish.properties}
+						settings={channel.settings}
+						label={channel.name}
+						on:submit={(evt) => commandSender?.send(channel, evt.detail)}
+					></ModalButton>
+				{:else}
+					<SimpleButton
+						settings={channel.settings}
+						label={channel.name}
+						on:click={() => commandSender?.send(channel, {})}
+					></SimpleButton>
+				{/if}
 			{:else if channel.type === 'toggle'}
 				<Toggle
 					state={channel.state}

@@ -21,7 +21,6 @@ export let asyncapiMockData = `{
     },
     "gameplay/spawn": {
       "name": "Spawn",
-      "category": "Commands",
       "type": "button",
       "settings": {
         "color": "red"
@@ -34,11 +33,11 @@ export let asyncapiMockData = `{
             "description": "This is an example text field"
           },
           "exampleNumber": {
-            "type": "number"
+            "type": "number",
+            "format": "integer"
           },
-          "exampleDate": {
-            "type": "string",
-            "format": "date-time"
+          "exampleFloat": {
+            "type": "number"
           }
         }
       }
@@ -59,10 +58,20 @@ export let asyncapiMockData = `{
       "name": "Double XP",
       "type": "toggle",
       "publish": {
-        "type": "boolean"
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "boolean"
+          }
+        }
       },
       "subscribe": {
-        "type": "boolean"
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "boolean"
+          }
+        }
       }
     },
     "progression/add-xp2": {

@@ -29,7 +29,8 @@ namespace DebugMenu {
                     Type = "object",
                     Properties = parameters.Select(p => {
                         return (p.Name, new Property() {
-                            Type = DebugMenuUtils.GetPropertyType(p.ParameterType)
+                            Type = DebugMenuUtils.GetPropertyType(p.ParameterType),
+                            Format = DebugMenuUtils.GetPropertyFormat(p.ParameterType)
                         });
                     }).ToDictionary(p => p.Name, p => p.Item2)
                 }

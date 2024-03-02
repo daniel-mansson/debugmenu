@@ -20,6 +20,13 @@ namespace DebugMenu {
 
             return "unknown";
         }
+        public static string? GetPropertyFormat(Type type) {
+            if(type == typeof(int) || type == typeof(long) || type == typeof(byte) || type == typeof(short)) {
+                return "integer";
+            }
+
+            return null;
+        }
 
         public static object? ToValue(JObject payload, ParameterInfo p) {
             var property = payload[p.Name];

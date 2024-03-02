@@ -6,12 +6,33 @@
 	import SimpleButton from '$lib/components/controller/simple-button.svelte';
 	import Toggle from '$lib/components/controller/toggle.svelte';
 	import { writable } from 'svelte/store';
+	import ModalButton from '$lib/components/controller/modal-button.svelte';
 
 	let toggleState = writable<boolean>(false);
 
 	function toggleChange(evt: CustomEvent) {
 		toggleState.set(evt.detail);
 	}
+
+	let props = {
+		someString: {
+			type: 'string',
+			description: 'Some string'
+		},
+		someBoolean: {
+			type: 'boolean',
+			description: 'Some boolean'
+		},
+		someNumber: {
+			type: 'number',
+			description: 'some number'
+		},
+		someInteger: {
+			type: 'number',
+			format: 'integer',
+			description: 'some integer'
+		}
+	};
 </script>
 
 <div class="my-1 flex items-center justify-between">
@@ -35,7 +56,7 @@
 			<Group title="erger" color="blue">
 				<div slot="content">
 					<SimpleButton label="Yellow" settings={{ color: 'yellow' }} />
-					<SimpleButton label="Red" settings={{ color: 'red' }} />
+					<ModalButton label="Modal" properties={props} settings={{ color: 'red' }} />
 					<Toggle label="Red" settings={{ color: 'red' }} state={toggleState} />
 					<Toggle label="Red" settings={{ color: 'red' }} state={toggleState} />
 					<Toggle
