@@ -1,15 +1,20 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
 	import { mode } from 'mode-watcher';
-	import Switch from '../ui/switch/switch.svelte';
-	import Label from '../ui/label/label.svelte';
 	import { writable } from 'svelte/store';
+	import Label from '../ui/label/label.svelte';
+	import { Slider } from '../ui/slider';
 
 	export let label: string;
 	export let settings = {
 		color: 'white'
 	};
 	export let state = writable<any>();
+	export let range = {
+		min: 0,
+		max: 100,
+		step: 0.1
+	};
 
 	const lookupHSL: any = {
 		red: { h: 15, s: 100, l: 0 },
@@ -49,10 +54,10 @@
 		dispatch('change', value);
 	}
 
-	let checked = $state?.value;
+	let value = $state?.value;
 	state.subscribe((s) => {
 		if (s) {
-			checked = s?.value;
+			value = s?.value;
 		}
 	});
 </script>
@@ -61,6 +66,5 @@
 	style="border-color:{outlineColor};"
 	class="mb-2 mr-2 flex h-10 shrink items-center justify-start space-x-2 rounded-3xl border-l pl-2"
 >
-	<Switch onCheckedChange={onValueChanged} bind:checked />
 	<Label>{label}</Label>
 </div>

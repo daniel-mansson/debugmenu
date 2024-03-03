@@ -9,7 +9,7 @@
 	import { CaretDown } from 'radix-icons-svelte';
 
 	export let label: string;
-	export let description: string | undefine = undefined;
+	export let description: string | undefined = undefined;
 	export let settings = {
 		color: 'white'
 	};

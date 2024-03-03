@@ -74,6 +74,29 @@ public const string api1 = """"
                             "type": "boolean"
                           }
                         },
+                        "progression/power-scale": {
+                          "name": "Power Scale",
+                          "type": "slider",
+                          "publish": {
+                            "type": "object",
+                            "properties": {
+                              "value": {
+                                "type": "number"
+                                "min": 10,
+                                "max": 120,
+                                "step": 0.1
+                              }
+                            }
+                          },
+                          "subscribe": {
+                            "type": "object",
+                            "properties": {
+                              "value": {
+                                "type": "number"
+                              }
+                            }
+                          }
+                        },
                         "progression/economy/add-gold": {
                           "type": "button",
                           "publish": {}

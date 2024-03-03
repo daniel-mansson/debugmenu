@@ -7,8 +7,11 @@
 	import Toggle from '$lib/components/controller/toggle.svelte';
 	import { writable } from 'svelte/store';
 	import ModalButton from '$lib/components/controller/modal-button.svelte';
+	import Slider2 from '$lib/components/controller/slider2.svelte';
+	import Slider from '$lib/components/ui/slider/slider.svelte';
 
 	let toggleState = writable<boolean>(false);
+	let sliderState = writable<number>(0);
 
 	function toggleChange(evt: CustomEvent) {
 		toggleState.set(evt.detail);
@@ -57,14 +60,9 @@
 				<div slot="content">
 					<SimpleButton label="Yellow" settings={{ color: 'yellow' }} />
 					<ModalButton label="Modal" properties={props} settings={{ color: 'red' }} />
-					<Toggle label="Red" settings={{ color: 'red' }} state={toggleState} />
-					<Toggle label="Red" settings={{ color: 'red' }} state={toggleState} />
-					<Toggle
-						label="Red"
-						settings={{ color: 'red' }}
-						state={toggleState}
-						on:change={toggleChange}
-					/>
+					<Slider2 label="Slider" settings={{ color: 'red' }} state={sliderState} />
+					<Toggle label="Red" settings={{ color: 'blue' }} state={toggleState} />
+					<Toggle label="Red" state={toggleState} on:change={toggleChange} />
 					<SimpleButton label="Red" settings={{ color: 'red' }} />
 					<SimpleButton label="Red" settings={{ color: 'red' }} />
 					<SimpleButton label="Red" settings={{ color: 'red' }} />
