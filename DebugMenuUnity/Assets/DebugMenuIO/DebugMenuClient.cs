@@ -177,6 +177,11 @@ namespace DebugMenu {
                 if(toggleAttr != null) {
                     handlers.Add(new ToggleDebugMenuChannelHandler(GetChannel(controller, methodInfo), controller, methodInfo, toggleAttr));
                 }
+
+                var textFieldAttr = methodInfo.GetCustomAttribute<TextFieldAttribute>();
+                if(textFieldAttr != null) {
+                    handlers.Add(new TextFieldDebugMenuChannelHandler(GetChannel(controller, methodInfo), controller, methodInfo, textFieldAttr));
+                }
             }
 
             return handlers;

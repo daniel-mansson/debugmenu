@@ -15,6 +15,10 @@ namespace DebugMenuIO.Schema {
         public Payload Publish { get; set; }
     }
 
+    public class ChannelSettings {
+        public string Color { get; set; }
+    }
+
     public class Payload {
         public string Type { get; set; }
         public Dictionary<string, Property> Properties { get; set; }
@@ -24,5 +28,6 @@ namespace DebugMenuIO.Schema {
         public string Type { get; set; }
         public string Format { get; set; }
         public string Description { get; set; }
+        public int? MaxLength { get; set; }
     }
 }

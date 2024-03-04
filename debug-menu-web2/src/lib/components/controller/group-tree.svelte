@@ -4,6 +4,7 @@
 	import SimpleButton from './simple-button.svelte';
 	import Toggle from './toggle.svelte';
 	import ModalButton from './modal-button.svelte';
+	import SingleText from './single-text.svelte';
 
 	export let group: any;
 	export let level = 0;
@@ -37,6 +38,16 @@
 						commandSender?.send(channel, { value: evt.detail });
 					}}
 				></Toggle>
+			{:else if channel.type === 'text-field' && Object.keys(channel.publish.properties).length > 0}
+				<SingleText
+					maxLength={channel?.publish?.properties?.value?.maxLength}
+					state={channel.state}
+					settings={channel.settings}
+					label={channel.name}
+					on:submit={(evt) => {
+						commandSender?.send(channel, { value: evt.detail });
+					}}
+				></SingleText>
 			{/if}
 		{/each}
 		{#each group.groups as g}

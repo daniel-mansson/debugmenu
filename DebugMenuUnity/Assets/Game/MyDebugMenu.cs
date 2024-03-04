@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using DebugMenu;
@@ -7,6 +8,7 @@ using Newtonsoft.Json.Serialization;
 using UnityEngine;
 using UnityEngine.Serialization;
 using Channel = DebugMenuIO.AsyncApi.Channel;
+using Random = UnityEngine.Random;
 
 namespace Game {
     [DebugMenuIO.Controller]
@@ -74,6 +76,17 @@ namespace Game {
             Debug.Log($"Set DoubleXp to {value}");
             body.GetComponent<MeshRenderer>().material = materials[value ? 1 : 0];
             return value;
+        }
+
+        [DebugMenuIO.TextField(MaxLength = 13)]
+        public string Name(string name) {
+            Debug.Log($"Set Name to {name}");
+            return name.Substring(0, Mathf.Min(3, name.Length));
+        }
+
+        [DebugMenuIO.TextField]
+        public void SomeText(string value) {
+            Debug.Log($"Set SomeText to {value}");
         }
 
         [DebugMenuIO.Button]

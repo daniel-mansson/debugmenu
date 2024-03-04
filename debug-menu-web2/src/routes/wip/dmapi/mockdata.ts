@@ -74,6 +74,50 @@ export let asyncapiMockData = `{
         }
       }
     },
+    "progression/power-scale": {
+      "name": "Power Scale",
+      "type": "slider",
+      "publish": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "number",
+            "min": 10,
+            "max": 120,
+            "step": 0.1
+          }
+        }
+      },
+      "subscribe": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "number"
+          }
+        }
+      }
+    },
+    "progression/name": {
+      "name": "Player Name ASDf asd",
+      "type": "text-field",
+      "publish": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string",
+            "maxLength": 15
+          }
+        }
+      },
+      "subscribe": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        }
+      }
+    },
     "progression/add-xp2": {
       "type": "button",
       "settings": {
