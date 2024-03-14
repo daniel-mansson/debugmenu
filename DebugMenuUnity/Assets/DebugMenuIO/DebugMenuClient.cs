@@ -146,6 +146,15 @@ namespace DebugMenu {
             _clientTask = null;
         }
 
+        public void SendLog(string channel, string type, string message, string details, long timestamp) {
+            _webSocketClient?.SendJson(channel, new {
+                message = message,
+                type = type,
+                details = details,
+                timestamp = timestamp
+            }, CancellationToken.None);
+        }
+
         public void RegisterController(object controller) {
             var type = controller.GetType();
 
@@ -169,18 +178,21 @@ namespace DebugMenu {
             foreach(var methodInfo in methods) {
                 var buttonAttr = methodInfo.GetCustomAttribute<ButtonAttribute>();
                 if(buttonAttr != null) {
-                    handlers.Add(new ButtonDebugMenuChannelHandler(GetChannel(controller, methodInfo), controller, methodInfo, buttonAttr));
+                    handlers.Add(new ButtonDebugMenuChannelHandler(GetChannel(controller, methodInfo), controller,
+                        methodInfo, buttonAttr));
                     continue;
                 }
 
                 var toggleAttr = methodInfo.GetCustomAttribute<ToggleAttribute>();
                 if(toggleAttr != null) {
-                    handlers.Add(new ToggleDebugMenuChannelHandler(GetChannel(controller, methodInfo), controller, methodInfo, toggleAttr));
+                    handlers.Add(new ToggleDebugMenuChannelHandler(GetChannel(controller, methodInfo), controller,
+                        methodInfo, toggleAttr));
                 }
 
                 var textFieldAttr = methodInfo.GetCustomAttribute<TextFieldAttribute>();
                 if(textFieldAttr != null) {
-                    handlers.Add(new TextFieldDebugMenuChannelHandler(GetChannel(controller, methodInfo), controller, methodInfo, textFieldAttr));
+                    handlers.Add(new TextFieldDebugMenuChannelHandler(GetChannel(controller, methodInfo), controller,
+                        methodInfo, textFieldAttr));
                 }
             }
 

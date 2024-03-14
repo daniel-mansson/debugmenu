@@ -42,6 +42,11 @@ namespace Game {
             _debugMenuClient.RegisterController(this);
 
             body.GetComponent<MeshRenderer>().material = materials[0];
+
+            Application.logMessageReceivedThreaded += OnLogMessage;
+        }
+
+        private void OnLogMessage(string message, string stacktrace, LogType type) {
         }
 
         private void OnDestroy() {

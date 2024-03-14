@@ -5,6 +5,7 @@
 	import Toggle from './toggle.svelte';
 	import ModalButton from './modal-button.svelte';
 	import SingleText from './single-text.svelte';
+	import LogTable from './log-table.svelte';
 
 	export let group: any;
 	export let level = 0;
@@ -48,6 +49,13 @@
 						commandSender?.send(channel, { value: evt.detail });
 					}}
 				></SingleText>
+			{:else if channel.type === 'log'}
+				<LogTable
+					state={channel.state}
+					history={channel.history}
+					settings={channel.settings}
+					label={channel.name}
+				></LogTable>
 			{/if}
 		{/each}
 		{#each group.groups as g}

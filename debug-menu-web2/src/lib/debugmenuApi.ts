@@ -23,7 +23,8 @@ function buildChannel([key, value]: [string, any]) {
         settings: value.settings ?? {},
         publish: value.publish,
         subscribe: value.subscribe,
-        state: writable<any>()
+        state: writable<any>(),
+        history: writable<any[]>([])
     };
 }
 

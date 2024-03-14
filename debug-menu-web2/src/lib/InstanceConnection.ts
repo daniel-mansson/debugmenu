@@ -107,6 +107,10 @@ export class InstanceConnection {
     let channel = channels.find((c: any) => c.channel === message.channel);
     if (channel) {
       channel.state.set(message.payload);
+      channel.history.update(list => {
+        list.push(message.payload);
+        return list;
+      })
     }
   }
 

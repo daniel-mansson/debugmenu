@@ -1,12 +1,16 @@
 export let asyncapiMockData = `{
   "debugmenuapi": "1.0.0",
   "channels": {
-    "log": {
-      "name": "Log",
+    "unity/log": {
+      "name": "Console Log",
       "type": "log",
+      "category": "Logs",
       "subscribe": {
         "type": "object",
         "properties": {
+          "timestamp": {
+            "type": "long"
+          },
           "text": {
             "type": "string"
           },
