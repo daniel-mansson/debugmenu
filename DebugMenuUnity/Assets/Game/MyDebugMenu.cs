@@ -44,9 +44,38 @@ namespace Game {
             body.GetComponent<MeshRenderer>().material = materials[0];
 
             Application.logMessageReceivedThreaded += OnLogMessage;
+            _debugMenuClient.AddExplicitSchema("log/unity", new DebugMenuIO.Schema.Channel() {
+                Name = "Unity Log",
+                Category = "Logs",
+                Type = "log",
+                Subscribe = new DebugMenuIO.Schema.Payload() {
+                    Type = "object",
+                    Properties = new Dictionary<string, DebugMenuIO.Schema.Property> {
+                        {
+                            "timestamp", new DebugMenuIO.Schema.Property {
+                                Type = "long"
+                            }
+                        }, {
+                            "text", new DebugMenuIO.Schema.Property {
+                                Type = "string"
+                            }
+                        }, {
+                            "details", new DebugMenuIO.Schema.Property {
+                                Type = "string"
+                            }
+                        }, {
+                            "type", new DebugMenuIO.Schema.Property {
+                                Type = "string"
+                            }
+                        }
+                    }
+                }
+            });
         }
 
         private void OnLogMessage(string message, string stacktrace, LogType type) {
+            _debugMenuClient.SendLog("log/unity", message, type.ToString().ToLower(), stacktrace,
+                DateTimeOffset.UtcNow.ToUnixTimeMilliseconds());
         }
 
         private void OnDestroy() {
@@ -97,6 +126,29 @@ namespace Game {
         [DebugMenuIO.Button]
         public void SetSomething(string id, int value) {
             Debug.Log($"Set {id} => {value}");
+        }
+
+        private void OnGUI() {
+            if(GUILayout.Button("log")) {
+                Debug.Log("here is a log message", gameObject);
+            }
+
+            if(GUILayout.Button("warning")) {
+                Debug.LogWarning("here is a warning message", gameObject);
+            }
+
+            if(GUILayout.Button("error")) {
+                Debug.LogError("here is an error message", gameObject);
+            }
+
+            if(GUILayout.Button("exception")) {
+                var ex = new NotFiniteNumberException("ex message");
+                Debug.LogException(ex, gameObject);
+            }
+
+            if(GUILayout.Button("assertion")) {
+                Debug.LogAssertion("here is an assertion message", gameObject);
+            }
         }
 
         [ContextMenu("json")]

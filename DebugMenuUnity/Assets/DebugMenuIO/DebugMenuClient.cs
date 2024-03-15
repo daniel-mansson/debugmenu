@@ -123,6 +123,10 @@ namespace DebugMenu {
                     kvp => kvp.Value.GetSchema())
             };
 
+            foreach(var kvp in _explicitSchemas) {
+                document.Channels.Add(kvp.Key, kvp.Value);
+            }
+
             var settings = new JsonSerializerSettings {
                 ContractResolver = new CamelCasePropertyNamesContractResolver(),
                 NullValueHandling = NullValueHandling.Ignore
@@ -146,7 +150,14 @@ namespace DebugMenu {
             _clientTask = null;
         }
 
-        public void SendLog(string channel, string type, string message, string details, long timestamp) {
+        private Dictionary<string, Channel> _explicitSchemas = new();
+
+        public void AddExplicitSchema(string channel, Channel schema) {
+            _explicitSchemas.Add(channel, schema);
+            TryUpdateSchema();
+        }
+
+        public void SendLog(string channel, string message, string type, string details, long timestamp) {
             _webSocketClient?.SendJson(channel, new {
                 message = message,
                 type = type,

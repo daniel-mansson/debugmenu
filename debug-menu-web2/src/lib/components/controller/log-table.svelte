@@ -40,16 +40,20 @@
 	<Table.Header>
 		<Table.Row>
 			<Table.Head class="w-0">Timestamp</Table.Head>
+			<Table.Head class="w-0">Type</Table.Head>
 			<Table.Head>Message</Table.Head>
 		</Table.Row>
 	</Table.Header>
 	<Table.Body>
 		{#each logs as entry, i (i)}
-			<Table.Row>
-				<Table.Cell class="font-medium"
+			<Table.Row class={i % 2 ? '' : ''}>
+				<Table.Cell class="py-1 font-mono font-medium opacity-50"
 					>{getTimeWithMilliseconds(new Date(entry.timestamp))}</Table.Cell
 				>
-				<Table.Cell>
+				<Table.Cell class="py-1 ">
+					{entry.type}
+				</Table.Cell>
+				<Table.Cell class="py-1 ">
 					{entry.message}
 				</Table.Cell>
 			</Table.Row>
