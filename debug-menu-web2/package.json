@@ -43,7 +43,7 @@
 		"@lucia-auth/adapter-sqlite": "^3.0.1",
 		"arctic": "^1.2.1",
 		"better-sqlite3": "^9.4.3",
-		"bits-ui": "^0.13.6",
+		"bits-ui": "^0.19.7",
 		"clsx": "^2.1.0",
 		"cmdk-sv": "^0.0.12",
 		"formsnap": "^0.4.4",
