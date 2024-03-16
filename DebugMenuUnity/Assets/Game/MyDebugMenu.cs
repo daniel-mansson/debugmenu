@@ -151,6 +151,20 @@ namespace Game {
             }
         }
 
+        private void Update() {
+            if(Random.value < 0.01f) {
+                Debug.Log("update log", gameObject);
+            }
+
+            if(Random.value < 0.005f) {
+                Debug.LogWarning("update warn", gameObject);
+            }
+
+            if(Random.value < 0.002f) {
+                Debug.LogError("update error", gameObject);
+            }
+        }
+
         [ContextMenu("json")]
         private void TestJson() {
             var doc = new Document() {
