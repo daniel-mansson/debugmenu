@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { writable } from 'svelte/store';
 
-	import { ScrollArea } from '$lib/components/ui/scroll-area/index';
 	import * as Table from '$lib/components/ui/table/index.js';
 	export let label: string;
 	export let settings = {
@@ -53,20 +52,18 @@
 	</Table.Header>
 	<Table.Body>
 		asdasd
-		<ScrollArea class="h-96">
-			{#each logs as entry, i (i)}
-				<Table.Row class={i % 2 ? '' : ''}>
-					<Table.Cell class="py-1 font-mono font-medium opacity-50"
-						>{getTimeWithMilliseconds(new Date(entry.timestamp))}</Table.Cell
-					>
-					<Table.Cell class="py-1 {getTypeClass(entry.type)}">
-						{entry.type}
-					</Table.Cell>
-					<Table.Cell class="py-1 ">
-						{entry.message}
-					</Table.Cell>
-				</Table.Row>
-			{/each}
-		</ScrollArea>
+		{#each logs as entry, i (i)}
+			<Table.Row class={i % 2 ? '' : ''}>
+				<Table.Cell class="py-1 font-mono font-medium opacity-50"
+					>{getTimeWithMilliseconds(new Date(entry.timestamp))}</Table.Cell
+				>
+				<Table.Cell class="py-1 {getTypeClass(entry.type)}">
+					{entry.type}
+				</Table.Cell>
+				<Table.Cell class="py-1 ">
+					{entry.message}
+				</Table.Cell>
+			</Table.Row>
+		{/each}
 	</Table.Body>
 </Table.Root>
