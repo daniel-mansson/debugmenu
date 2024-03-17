@@ -76,7 +76,7 @@
 		}
 
 		let file = content.join('\n');
-		download('test.txt', file);
+		download('logs.txt', file);
 	}
 
 	let selectedEntry: LogEntry | undefined = undefined;
