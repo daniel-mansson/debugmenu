@@ -144,7 +144,7 @@
 		<div class="h-[20vh]">
 			<Separator></Separator>
 			<ScrollArea class="h-full">
-				<div class="whitespace-pre-wrap font-mono">{selectedEntry.details}</div>
+				<div class="whitespace-pre-wrap font-mono text-xs">{selectedEntry.details}</div>
 			</ScrollArea>
 		</div>
 	{/if}
