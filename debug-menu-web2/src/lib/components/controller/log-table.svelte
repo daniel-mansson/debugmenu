@@ -7,7 +7,8 @@
 	import { Label } from '$lib/components/ui/label/index.js';
 	import { Button } from '$lib/components/ui/button/index.js';
 	import Separator from '../ui/separator/separator.svelte';
-	import { ClipboardCopyIcon } from 'lucide-svelte';
+	import { ClipboardCopyIcon } from 'lucide-svelte'; 
+	import { toast } from "svelte-sonner";
 	export let label: string;
 	export let settings = {
 		color: 'white'
@@ -99,6 +100,7 @@
       	)
     	});
    	 	navigator.clipboard.write([clipboardItem]);
+		toast("Copied to Clipboard!");
 	}
 </script>
 
