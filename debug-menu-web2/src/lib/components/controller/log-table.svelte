@@ -7,6 +7,7 @@
 	import { Label } from '$lib/components/ui/label/index.js';
 	import { Button } from '$lib/components/ui/button/index.js';
 	import Separator from '../ui/separator/separator.svelte';
+	import { ClipboardCopyIcon } from 'lucide-svelte';
 	export let label: string;
 	export let settings = {
 		color: 'white'
@@ -79,15 +80,35 @@
 		}
 		filteredLogs = filteredLogs;
 	}
+
+	function copyToClipboard(entry: LogEntry | undefined) {
+		if(!entry)
+			return;
+
+		let content = [];
+
+		content.push(getTimeWithMilliseconds(new Date(entry.timestamp)) + ' ' + entry.type);
+		content.push(entry.message);
+		content.push(entry.details);
+		let text = content.join('\n');
+
+		const clipboardItem = new ClipboardItem({
+      		"text/plain": new Blob(
+       		[text.trim()],
+        	{ type: "text/plain" }
+      	)
+    	});
+   	 	navigator.clipboard.write([clipboardItem]);
+	}
 </script>
 
-<div class="mb-2 flex gap-2">
-	<div class="mr-12 text-lg font-medium">{label}</div>
+<div class="mb-2 text-lg font-medium">{label}</div>
+<div class="mb-2 grid grid-cols-2 gap-2 sm:grid-cols-4">
 	<div class="flex w-full max-w-sm flex-col gap-1.5">
 		<Label for="filter">Quick Filter</Label>
 		<Input bind:value={filterString} type="text" id="filter" placeholder="" class="" />
 	</div>
-	<div class="flex w-full max-w-32 flex-col gap-1.5">
+	<div class="flex w-full max-w-sm flex-col gap-1.5">
 		<Label for="visible">Limit ({logs.length})</Label>
 		<Input
 			bind:value={maxVisible}
@@ -100,13 +121,13 @@
 		/>
 	</div>
 
-	<div class="mt-5 flex w-full max-w-24 flex-col gap-1.5">
+	<div class="flex w-full max-w-24 flex-col gap-1.5 sm:mt-5">
 		<Button on:click={() => (pauseIndex = pauseIndex ? undefined : logs.length)} variant="outline"
 			>{pauseIndex ? `Resume (${logs.length - pauseIndex})` : 'Pause'}</Button
 		>
 	</div>
 
-	<div class="ml-auto mt-5 flex w-full max-w-24 flex-col gap-1.5">
+	<div class="flex w-full max-w-24 flex-col gap-1.5 sm:ml-auto sm:mt-5">
 		<Button on:click={downloadFullLog} variant="outline">Download</Button>
 	</div>
 </div>
@@ -144,6 +165,17 @@
 		<div class="h-[20vh]">
 			<Separator></Separator>
 			<ScrollArea class="h-full">
+				<div class="my-1 flex gap-4 text-sm">
+					<div>{getTimeWithMilliseconds(new Date(selectedEntry.timestamp))}</div>
+					<div class={getTypeClass(selectedEntry.type)}>{selectedEntry.type}</div>
+					<div>{selectedEntry.message}</div>
+					<Button
+						on:click={() => copyToClipboard(selectedEntry)}
+						variant="outline"
+						class="ml-auto h-8 w-8 text-xs"><ClipboardCopyIcon class="absolute h-5 w-5" /></Button
+					>
+				</div>
+
 				<div class="whitespace-pre-wrap font-mono text-xs">{selectedEntry.details}</div>
 			</ScrollArea>
 		</div>
