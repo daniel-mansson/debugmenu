@@ -7,8 +7,8 @@
 	import { Label } from '$lib/components/ui/label/index.js';
 	import { Button } from '$lib/components/ui/button/index.js';
 	import Separator from '../ui/separator/separator.svelte';
-	import { ClipboardCopyIcon } from 'lucide-svelte'; 
-	import { toast } from "svelte-sonner";
+	import { ClipboardCopyIcon } from 'lucide-svelte';
+	import { toast } from 'svelte-sonner';
 	export let label: string;
 	export let settings = {
 		color: 'white'
@@ -26,9 +26,9 @@
 	$: logs = $history ?? [];
 	$: filteredLogs = logs.filter(
 		(entry, index) =>
-			entry === selectedEntry || (
-			(!pauseIndex || index < pauseIndex) &&
-			entry.message.toLowerCase().includes(filterString.toLowerCase()))
+			entry === selectedEntry ||
+			((!pauseIndex || index < pauseIndex) &&
+				entry.message.toLowerCase().includes(filterString.toLowerCase()))
 	);
 
 	function getTimeWithMilliseconds(date: Date) {
@@ -40,6 +40,13 @@
 		if (type === 'warning' || type === 'warn') return 'text-yellow-500';
 		if (type === 'error' || type === 'exception' || type === 'assert') return 'text-red-500';
 		return 'text-gray-500';
+	}
+
+	function getTypeBorderClass(type: string) {
+		if (type === 'warning' || type === 'warn') return 'border-l border-l-yellow-500 ';
+		if (type === 'error' || type === 'exception' || type === 'assert')
+			return 'border-l border-l-red-500';
+		return 'border-l border-l-gray-500';
 	}
 
 	let pauseIndex: number | undefined = undefined;
@@ -74,7 +81,7 @@
 
 	let selectedEntry: LogEntry | undefined = undefined;
 	function selectRow(entry: LogEntry, index: number) {
-		if(selectedEntry === entry) {
+		if (selectedEntry === entry) {
 			selectedEntry = undefined;
 		} else {
 			selectedEntry = entry;
@@ -83,8 +90,7 @@
 	}
 
 	function copyToClipboard(entry: LogEntry | undefined) {
-		if(!entry)
-			return;
+		if (!entry) return;
 
 		let content = [];
 
@@ -94,14 +100,14 @@
 		let text = content.join('\n');
 
 		const clipboardItem = new ClipboardItem({
-      		"text/plain": new Blob(
-       		[text.trim()],
-        	{ type: "text/plain" }
-      	)
-    	});
-   	 	navigator.clipboard.write([clipboardItem]);
-		toast("Copied to Clipboard!");
+			'text/plain': new Blob([text.trim()], { type: 'text/plain' })
+		});
+		navigator.clipboard.write([clipboardItem]);
+		toast('Copied to Clipboard!');
 	}
+
+	let timestampVisible = true;
+	let typeVisible = true;
 </script>
 
 <div class="mb-2 text-lg font-medium">{label}</div>
@@ -138,24 +144,52 @@
 		<Table.Root>
 			<Table.Header>
 				<Table.Row>
-					<Table.Head class="w-0">Timestamp</Table.Head>
-					<Table.Head class="w-0">Type</Table.Head>
-					<Table.Head>Message</Table.Head>
+					{#if timestampVisible}
+						<Table.Head class="w-0"
+							><button on:click={() => (timestampVisible = !timestampVisible)}>Timestamp</button
+							></Table.Head
+						>
+					{/if}
+					{#if typeVisible}
+						<Table.Head class="w-0"
+							><button on:click={() => (typeVisible = !typeVisible)}>Type</button></Table.Head
+						>
+					{/if}
+
+					<Table.Head class="flex gap-2"
+						><div class="my-auto mr-auto">Message</div>
+						{#if !timestampVisible}
+							<button class="line-through" on:click={() => (timestampVisible = !timestampVisible)}
+								>Timestamp</button
+							>
+						{/if}
+						{#if !typeVisible}
+							<button class="line-through" on:click={() => (typeVisible = !typeVisible)}
+								>Type</button
+							>
+						{/if}</Table.Head
+					>
 				</Table.Row>
 			</Table.Header>
 			<Table.Body>
 				{#each filteredLogs.filter((m, index) => index >= filteredLogs.length - maxVisible) as entry, i (i)}
 					<Table.Row
 						on:click={() => selectRow(entry, i)}
-						class={entry === selectedEntry ? 'bg-gray-200 hover:bg-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700' : ''}
+						class="{entry === selectedEntry
+							? 'bg-gray-200 hover:bg-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700'
+							: ''} "
 					>
-						<Table.Cell class="py-1 font-mono font-medium opacity-50"
-							>{getTimeWithMilliseconds(new Date(entry.timestamp))}</Table.Cell
-						>
-						<Table.Cell class="py-1 {getTypeClass(entry.type)}">
-							{entry.type}
-						</Table.Cell>
-						<Table.Cell class="w-full py-1">
+						{#if timestampVisible}
+							<Table.Cell class="py-1 font-mono font-medium opacity-50 "
+								>{getTimeWithMilliseconds(new Date(entry.timestamp))}</Table.Cell
+							>
+						{/if}
+						{#if typeVisible}
+							<Table.Cell class="py-1 font-mono {getTypeClass(entry.type)}">
+								{entry.type}
+							</Table.Cell>
+						{/if}
+						<Table.Cell class="w-full py-1 {!typeVisible ? getTypeBorderClass(entry.type) : ''}">
 							{entry.message}
 						</Table.Cell>
 					</Table.Row>
@@ -167,18 +201,23 @@
 		<div class="h-[20vh]">
 			<Separator></Separator>
 			<ScrollArea class="h-full">
-				<div class="my-1 flex gap-4 text-sm">
-					<div>{getTimeWithMilliseconds(new Date(selectedEntry.timestamp))}</div>
-					<div class={getTypeClass(selectedEntry.type)}>{selectedEntry.type}</div>
-					<div>{selectedEntry.message}</div>
+				<div class="text-md my-1 flex gap-4">
+					<div class="my-auto font-mono opacity-50">
+						{getTimeWithMilliseconds(new Date(selectedEntry.timestamp))}
+					</div>
+					<div class="{getTypeClass(selectedEntry.type)} my-auto font-mono">
+						{selectedEntry.type}
+					</div>
+					<div class="my-auto mr-8">{selectedEntry.message}</div>
 					<Button
 						on:click={() => copyToClipboard(selectedEntry)}
-						variant="outline"
-						class="ml-auto h-8 w-8 text-xs"><ClipboardCopyIcon class="absolute h-5 w-5" /></Button
+						variant="ghost"
+						class="absolute right-1 ml-auto h-8 w-8 text-xs"
+						><ClipboardCopyIcon class="absolute h-4 w-4 stroke-gray-500" /></Button
 					>
 				</div>
 
-				<div class="whitespace-pre-wrap font-mono text-xs">{selectedEntry.details}</div>
+				<div class="whitespace-pre-wrap font-mono text-sm">{selectedEntry.details}</div>
 			</ScrollArea>
 		</div>
 	{/if}
