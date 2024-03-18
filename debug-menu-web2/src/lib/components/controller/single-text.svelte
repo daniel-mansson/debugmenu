@@ -65,7 +65,7 @@
 		bind:value
 		maxlength={maxLength === 0 ? undefined : maxLength}
 		style="border-color:{outlineColor}"
-		class="max-w-sm bg-white bg-opacity-60 dark:bg-black"
+		class="max-w-sm bg-white bg-opacity-60 dark:bg-black dark:bg-opacity-30"
 		type="text"
 		placeholder={label}
 	/>

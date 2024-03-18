@@ -32,9 +32,3 @@
 <div class="p-4 {sidebarVisible ? 'sm:ml-64' : ''}">
 	<slot />
 </div>
-
-<div class="absolute bottom-0 right-0 font-mono">
-	{data.user.name}
-	u:{$currentUser?.id}
-	t:{$currentTeam}
-</div>

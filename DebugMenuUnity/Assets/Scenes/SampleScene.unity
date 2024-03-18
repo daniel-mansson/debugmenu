@@ -477,7 +477,7 @@ MonoBehaviour:
   materials:
   - {fileID: 2100000, guid: aae97308aeb9f4a8caaa29b9b518ce51, type: 2}
   - {fileID: 2100000, guid: 49ee1eb690a2249f6b4a77854814feb4, type: 2}
-  reuseInstance: 1
+  reuseInstance: 0
 --- !u!4 &1823248117
 Transform:
   m_ObjectHideFlags: 0

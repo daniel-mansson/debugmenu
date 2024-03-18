@@ -54,7 +54,7 @@
 	$: bgColor2 = toHsla(
 		colorValue.h,
 		colorValue.s,
-		dark ? 5 - colorValue.l : 95 + colorValue.l,
+		dark ? 5 - colorValue.l : 97 + colorValue.l,
 		0.5
 	);
 	$: outlineColor = toHsla(

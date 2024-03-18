@@ -114,7 +114,13 @@
 <div class="mb-2 grid grid-cols-2 gap-2 sm:grid-cols-4">
 	<div class="flex w-full max-w-sm flex-col gap-1.5">
 		<Label for="filter">Quick Filter</Label>
-		<Input bind:value={filterString} type="text" id="filter" placeholder="" class="" />
+		<Input
+			bind:value={filterString}
+			type="text"
+			id="filter"
+			placeholder=""
+			class="bg-white bg-opacity-50 dark:bg-black dark:bg-opacity-30"
+		/>
 	</div>
 	<div class="flex w-full max-w-sm flex-col gap-1.5">
 		<Label for="visible">Limit ({logs.length})</Label>
@@ -125,7 +131,7 @@
 			min="0"
 			step="10"
 			placeholder=""
-			class=""
+			class="bg-white bg-opacity-50 dark:bg-black dark:bg-opacity-30"
 		/>
 	</div>
 
@@ -171,8 +177,8 @@
 					>
 				</Table.Row>
 			</Table.Header>
-			<Table.Body>
-				{#each filteredLogs.filter((m, index) => index >= filteredLogs.length - maxVisible) as entry, i (i)}
+			<Table.Body class="bg-white bg-opacity-50 dark:bg-transparent">
+				{#each filteredLogs.filter((e, index) => e === selectedEntry || index >= filteredLogs.length - maxVisible) as entry, i (i)}
 					<Table.Row
 						on:click={() => selectRow(entry, i)}
 						class="{entry === selectedEntry
