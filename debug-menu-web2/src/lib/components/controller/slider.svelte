@@ -3,7 +3,8 @@
 	import { mode } from 'mode-watcher';
 	import { writable } from 'svelte/store';
 	import Label from '../ui/label/label.svelte';
-	import { Slider } from '../ui/slider';
+	import Slider from '../ui/slider/slider.svelte';
+	import Input from '../ui/input/input.svelte';
 
 	export let label: string;
 	export let settings = {
@@ -50,21 +51,48 @@
 
 	let dispatch = createEventDispatcher();
 
-	function onValueChanged(value: boolean) {
-		dispatch('change', value);
+	let lock = false;
+
+	function onValueChanged(v: number) {
+		if (inputValue !== +v) {
+			dispatch('change', v);
+			inputValue = +v;
+			sliderValue = [+v];
+		}
 	}
 
-	let value = $state?.value;
 	state.subscribe((s) => {
-		if (s) {
-			value = s?.value;
+		if (s?.value) {
+			inputValue = s?.value;
+			sliderValue = [s?.value];
 		}
 	});
+
+	let value = $state?.value ?? 0;
+	let sliderValue = [value];
+	let inputValue = value;
 </script>
 
 <div
 	style="border-color:{outlineColor};"
-	class="mb-2 mr-2 flex h-10 shrink items-center justify-start space-x-2 rounded-3xl border-l pl-2"
+	class="mb-2 mr-2 flex h-12 shrink items-center justify-start gap-4 space-x-2 rounded-md border py-5 pl-2"
 >
 	<Label>{label}</Label>
+	<Slider
+		onValueChange={(v) => onValueChanged(v[0])}
+		step={range.step}
+		min={range.min}
+		max={range.max}
+		bind:value={sliderValue}
+		on:change={() => console.log('asdfgas')}
+	></Slider>
+	<Input
+		type="number"
+		class="w-20 border-none bg-white bg-opacity-20 dark:bg-black dark:bg-opacity-20"
+		step={range.step}
+		min={range.min}
+		max={range.max}
+		bind:value={inputValue}
+		on:change={(evt) => onValueChanged(inputValue)}
+	></Input>
 </div>

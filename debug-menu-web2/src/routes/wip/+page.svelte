@@ -7,8 +7,7 @@
 	import Toggle from '$lib/components/controller/toggle.svelte';
 	import { writable } from 'svelte/store';
 	import ModalButton from '$lib/components/controller/modal-button.svelte';
-	import Slider2 from '$lib/components/controller/slider2.svelte';
-	import Slider from '$lib/components/ui/slider/slider.svelte';
+	import Slider from '$lib/components/controller/slider.svelte';
 	import SingleText from '$lib/components/controller/single-text.svelte';
 
 	let toggleState = writable<boolean>(false);
@@ -37,8 +36,15 @@
 			description: 'some integer'
 		}
 	};
+
+	function randSlider() {
+		sliderState.set({
+			value: Math.random() * 100
+		});
+	}
 </script>
 
+<Button on:click={randSlider}>random slider</Button>
 <div class="my-1 flex items-center justify-between">
 	<h2 class="text-3xl font-bold tracking-tight">Instance Dashboard</h2>
 	<div class="flex items-center space-x-2">Status and Settings</div>
@@ -61,12 +67,18 @@
 				<div slot="content">
 					<SimpleButton label="Yellow" settings={{ color: 'yellow' }} />
 					<ModalButton label="Modal" properties={props} settings={{ color: 'red' }} />
-					<SingleText label="SetText" settings={{ color: 'red' }} state={sliderState} />
+					<SingleText label="SetText" settings={{ color: 'red' }} />
 					<Toggle label="Red" settings={{ color: 'blue' }} state={toggleState} />
 					<Toggle label="Red" state={toggleState} on:change={toggleChange} />
 					<SimpleButton label="Red" settings={{ color: 'red' }} />
 					<SimpleButton label="Red" settings={{ color: 'red' }} />
-					<SimpleButton label="Red" settings={{ color: 'red' }} />
+					<Slider
+						label="Red"
+						range={{ min: 10, max: 500, step: 5 }}
+						settings={{ color: 'red' }}
+						state={sliderState}
+					/>
+					<Slider label="Time of something  " settings={{ color: 'green' }} state={sliderState} />
 				</div>
 			</Group>
 			<Group title="asdf" color="green">
