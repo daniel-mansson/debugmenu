@@ -1,4 +1,4 @@
-export let asyncapiMockData = `{
+export let mockData = `{
   "debugmenuapi": "1.0.0",
   "channels": {
     "unity/log": {

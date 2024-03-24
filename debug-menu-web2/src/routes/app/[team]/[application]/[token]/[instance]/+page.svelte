@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { currentConnection } from '$lib/appstate.js';
-	import { parseAsyncApi } from '$lib/asyncApiHelpers.js';
 	import GroupTree from '$lib/components/controller/group-tree.svelte';
 	import * as Tabs from '$lib/components/ui/tabs';
 

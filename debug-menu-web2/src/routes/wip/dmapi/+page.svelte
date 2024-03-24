@@ -1,7 +1,7 @@
 <script lang="ts">
 	import * as Tabs from '$lib/components/ui/tabs';
 	import { onMount } from 'svelte';
-	import { asyncapiMockData } from './mockdata';
+	import { mockData } from './mockdata';
 	import GroupTree from '$lib/components/controller/group-tree.svelte';
 	import { buildDebugmenuElements } from '$lib/debugmenuApi';
 	import Button from '$lib/components/ui/button/button.svelte';
@@ -19,7 +19,7 @@
 	};
 
 	async function update() {
-		api = buildDebugmenuElements(asyncapiMockData);
+		api = buildDebugmenuElements(mockData);
 		console.log(api.categories);
 	}
 	let api: any = undefined;
