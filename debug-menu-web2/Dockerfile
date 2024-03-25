@@ -5,9 +5,9 @@ WORKDIR /app
 # copy everything
 COPY . .
 # install dependencies
-RUN npm i
+RUN pnpm i
 # build the SvelteKit app
-RUN npm run build
+RUN pnpm run build
 
 # run stage, to separate it from the build stage, to save disk storage
 FROM node:16-alpine
