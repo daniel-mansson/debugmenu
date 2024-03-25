@@ -6,9 +6,9 @@ WORKDIR /app
 # copy everything
 COPY . .
 # install dependencies
-RUN pnpm i
+RUN pnpm i --frozen-lockfile
 # build the SvelteKit app
-RUN pnpm run build
+RUN pnpm build
 
 # run stage, to separate it from the build stage, to save disk storage
 FROM node:16-alpine
