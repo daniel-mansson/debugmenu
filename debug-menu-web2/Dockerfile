@@ -1,6 +1,7 @@
  # build stage
 FROM node:16-alpine as build
 
+RUN npm install -g pnpm
 WORKDIR /app
 # copy everything
 COPY . .
