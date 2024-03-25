@@ -1,4 +1,4 @@
-import { PUBLIC_BACKEND_URL } from "$env/dynamic/public";
+import { PUBLIC_BACKEND_URL } from "$env/static/public";
 
 type SvelteFetch = (input: RequestInfo | URL, init?: RequestInit | undefined) => Promise<Response>;
 

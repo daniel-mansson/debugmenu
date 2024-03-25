@@ -5,8 +5,8 @@ import pkg from 'pg';
 const { Pool } = pkg;
 import { GitHub } from "arctic";
 import { Google } from "arctic";
-import { GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET } from "$env/dynamic/private";
-import { GOOGLE_ID, GOOGLE_SECRET } from "$env/dynamic/private";
+import { GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET } from "$env/static/private";
+import { GOOGLE_ID, GOOGLE_SECRET } from "$env/static/private";
 
 export const pool = new Pool({
 	host: "localhost",
