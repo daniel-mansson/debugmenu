@@ -14,4 +14,4 @@ COPY debug-menu-web2/ .
 RUN pnpm build
 
 EXPOSE 3000
-CMD ["node", "build"]
+CMD ["node", "run", "start"]
