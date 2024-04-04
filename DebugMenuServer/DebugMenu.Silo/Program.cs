@@ -27,7 +27,7 @@ using Microsoft.IdentityModel.Tokens;
 var reference = typeof(DebugInstanceGrain);
 
 var builder = WebApplication.CreateBuilder(args);
-builder.WebHost.UseUrls("https://0.0.0.0:8080");
+builder.WebHost.UseUrls("http://0.0.0.0:8080");
 
 var websocketManager = new WebsocketManager();
 
