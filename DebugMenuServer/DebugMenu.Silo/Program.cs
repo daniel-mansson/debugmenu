@@ -176,7 +176,6 @@ app.MapControllers();
 
 await app.StartAsync();
 
-
 Console.WriteLine("Orleans is running.\nPress Enter to terminate...");
 
 while(true) {
@@ -184,6 +183,7 @@ while(true) {
         await Task.Delay(1000);
     }
     catch(Exception e) {
+        Console.WriteLine($"Exit exception: {e}");
         break;
     }
 }

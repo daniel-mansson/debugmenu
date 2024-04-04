@@ -6,6 +6,10 @@ public interface ILocalWebsocketUrlProvider {
 
 public class LocalWebsocketUrlProvider : ILocalWebsocketUrlProvider {
     public string GetLocalUrl() {
+#if DEBUG
         return "wss://localhost:8082";
+#else
+        return "wss://debugmenu-5ttpcqzivq-lz.a.run.app";
+#endif
     }
 }

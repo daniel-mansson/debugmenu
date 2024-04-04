@@ -21,10 +21,10 @@ var id = "8c57f858-7d30-4b34-b32c-df88e677a267";
 //
 // var controller = new Controller($"wss://localhost:8082/ws/room/{producer.SessionId}/controller", "hej");
 
-var token = "FA32BE0E7866B2B7C1786B0217678A3927DC3D5B18013BE0";
+var token = "6DB7D045DF5D1271396FE6982C4EC8850FCBFD9BEE7021AF";
 var metadata = new Dictionary<string, string>();
 
-var url = "https://localhost:8082";
+var url = "https://debugmenu-5ttpcqzivq-lz.a.run.app";
 var client = new HttpClient();
 var body = JsonContent.Create(new CreateRunningInstanceRequest() {
     Token = token,
