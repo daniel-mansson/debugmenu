@@ -85,14 +85,21 @@ builder
         options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
         options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     })
-    .AddJwtBearer(options => options.TokenValidationParameters = new TokenValidationParameters {
-        ValidateIssuer = true,
-        ValidIssuer = "debugmenu.io",
-        ValidateAudience = true,
-        ValidAudience = "https://debugmenu.io",
-        IssuerSigningKey = key,
-        ValidateIssuerSigningKey = true,
-        ValidateLifetime = false
+    .AddJwtBearer(options => {
+        options.TokenValidationParameters = new TokenValidationParameters {
+            ValidateIssuer = true,
+            ValidIssuer = "debugmenu.io",
+            ValidateAudience = true,
+            ValidAudience = "https://debugmenu.io",
+            IssuerSigningKey = key,
+            ValidateIssuerSigningKey = true,
+            ValidateLifetime = false,
+            AudienceValidator = (a, b, c) => {
+                Console.WriteLine($"Debug Validate Audience: {string.Join(";", a)}, {b.Issuer} {c.ValidAudience} {string.Join(";", c.ValidAudiences)}");
+                return true;
+            }
+        };
+
     });
 
 builder.Services.AddScoped<IJwtService, DebugMenuIoJwtService>();
