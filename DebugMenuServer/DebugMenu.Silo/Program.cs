@@ -41,7 +41,7 @@ using var host = new HostBuilder()
             .AddMemoryStreams(Constants.InMemoryStream)
             .AddMemoryGrainStorageAsDefault()
             .UseInMemoryReminderService()
-            .UseDashboard();
+            .UseDashboard(o => o.Port = 5000);
 
         // siloBuilder.Configure<GrainCollectionOptions>(options => {
         //     options.CollectionAge = TimeSpan.FromSeconds(15);
