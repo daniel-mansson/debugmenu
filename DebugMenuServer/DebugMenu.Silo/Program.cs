@@ -71,16 +71,7 @@ builder.Services
     .AddControllers();
 
 builder.Services
-    .AddDbContext<DebugMenuDbContext>(options => {
-        // options.UseNpgsql(
-        //     builder.Configuration.GetConnectionString(
-        //         "Host=localhost;Port=5432;Database=debugmenue;Username=postgres;Password=postgres;Include Error Detail=true;")
-        //     !,
-        //     serverOptions => serverOptions
-        //         .EnableRetryOnFailure(5, TimeSpan.FromSeconds(30), null)
-        //         .MigrationsAssembly("DebugMenu.Silo")
-        // );
-    });
+    .AddDbContext<DebugMenuDbContext>(options => { });
 
 string jwtSecretKey = "ed5b824bd6f6a2db591c0273d9fb176decae1c5f6b86e6ab03df741815827e90";
 var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecretKey));
@@ -96,9 +87,9 @@ builder
     })
     .AddJwtBearer(options => options.TokenValidationParameters = new TokenValidationParameters {
         ValidateIssuer = true,
-        ValidIssuer = "debugmenu",
+        ValidIssuer = "debugmenu.io",
         ValidateAudience = true,
-        ValidAudience = "http://debugmenu.io",
+        ValidAudience = "https://debugmenu.io",
         IssuerSigningKey = key,
         ValidateIssuerSigningKey = true,
         ValidateLifetime = false

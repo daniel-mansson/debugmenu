@@ -37,7 +37,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 		var signOptions: SignOptions = {
 			issuer: "debugmenu.io",
 			subject: user?.id,
-			audience: "http://debugmenu.io",
+			audience: "https://debugmenu.io",
 			algorithm: "HS256",
 			expiresIn: "7d",
 			keyid: "dm",
