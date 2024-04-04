@@ -21,13 +21,13 @@ var token2 = new JwtSecurityToken(
     claims: new []{new Claim(ClaimTypes.Sid, "asdf")},
     expires: DateTime.UtcNow.AddDays(1),
     signingCredentials: cred,
-    audience:"http://debugmenu.io",
+    audience:"https://debugmenu.io",
     issuer:"debugmenu.io"
 );
 var jwt = new JwtSecurityTokenHandler().WriteToken(token2);
 
 string token =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImRtIn0.eyJkYXRhIjoiaGVqIiwiaWF0IjoxNzA3NjkxNTQxLCJleHAiOjE3MDgyOTYzNDEsImF1ZCI6Imh0dHA6Ly9kZWJ1Z21lbnUuaW8iLCJpc3MiOiJkZWJ1Z21lbnUuaW8iLCJzdWIiOiJ1c2VyIn0.FDxcFzVpGWqNpY2Si7wnqWVzbnCiIpVJXDNr2FuReXk";
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImRtIn0.eyJpZCI6ImRwNHBrM2wyYXJxZjI5NGZhdXhlb212OTQyd2t3OTIwbWVvM3Y4YmsiLCJ1c2VySWQiOiJiY2VpZ3Vqc3k4eXU0ZHIiLCJmcmVzaCI6ZmFsc2UsImV4cGlyZXNBdCI6IjIwMjQtMDUtMDRUMjA6MjA6MDcuNjg2WiIsImlhdCI6MTcxMjI2MjAxMCwiZXhwIjoxNzEyODY2ODEwLCJhdWQiOiJodHRwczovL2RlYnVnbWVudS5pbyIsImlzcyI6ImRlYnVnbWVudS5pbyIsInN1YiI6ImJjZWlndWpzeTh5dTRkciJ9.Og4LqrUhJc_agFEnpL39A0bBrv5qEO_MxRzvukEj51E";
 
 //token = jwt;
 try {
@@ -35,6 +35,9 @@ try {
     tokenHandler.ValidateToken(token, _parameters, out var validatedToken);
     Console.WriteLine(validatedToken);
 }
+catch(SecurityTokenInvalidAudienceException ex) {
+    Console.WriteLine(ex.Message + " \nInvalid audience: " + ex.InvalidAudience + "\n\n" + token);
+}
 catch(SecurityTokenValidationException ex) {
-    Console.WriteLine(ex.Message);
+    Console.WriteLine(ex.Message + " \n\n" + token);
 }
