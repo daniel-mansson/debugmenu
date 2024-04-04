@@ -41,7 +41,7 @@ using var host = new HostBuilder()
             .AddMemoryStreams(Constants.InMemoryStream)
             .AddMemoryGrainStorageAsDefault()
             .UseInMemoryReminderService()
-            .UseDashboard(o => o.Port = 5000);
+            .UseDashboard(o => o.Port = 8081);
 
         // siloBuilder.Configure<GrainCollectionOptions>(options => {
         //     options.CollectionAge = TimeSpan.FromSeconds(15);
@@ -179,8 +179,13 @@ await app.StartAsync();
 
 Console.WriteLine("Orleans is running.\nPress Enter to terminate...");
 
-while(!Console.KeyAvailable) {
-    await Task.Delay(1000);
+while(true) {
+    try {
+        await Task.Delay(1000);
+    }
+    catch(Exception e) {
+        break;
+    }
 }
 
 Console.WriteLine("Orleans is stopping...");
