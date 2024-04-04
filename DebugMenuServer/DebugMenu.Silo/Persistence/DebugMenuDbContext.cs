@@ -23,8 +23,7 @@ public class DebugMenuDbContext : DbContext {
     public virtual DbSet<RuntimeTokenEntity> RuntimeTokens { get; set; } = null!;
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseNpgsql(
-            "Host=localhost;Database=debugmenu2;Username=postgres;Password=postgres;Include Error Detail=true;");
+        => optionsBuilder.UseNpgsql(Constants.TempDatabaseString);
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
         modelBuilder.Entity<SessionEntity>(entity => {

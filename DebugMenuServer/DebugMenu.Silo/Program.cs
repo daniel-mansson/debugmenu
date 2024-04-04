@@ -27,7 +27,7 @@ using Microsoft.IdentityModel.Tokens;
 var reference = typeof(DebugInstanceGrain);
 
 var builder = WebApplication.CreateBuilder(args);
-builder.WebHost.UseUrls("https://localhost:8082");
+builder.WebHost.UseUrls("https://0.0.0.0:8080");
 
 var websocketManager = new WebsocketManager();
 
@@ -119,8 +119,10 @@ var app = builder.Build();
 
 app.UseCors(b => {
     b.WithOrigins("http://localhost:5173",
-            "http://localhost:8082",
-            "https://localhost:8082",
+            "http://0.0.0.0:8080",
+            "https://0.0.0.0:8080",
+            "http://localhost:8080",
+            "https://localhost:8080",
             "http://192.168.10.180:5173")
         .AllowAnyMethod()
         .AllowCredentials()
@@ -155,8 +157,7 @@ app.MapGet("/get-jwt", () => {
     return Results.Ok(new JwtSecurityTokenHandler().WriteToken(token));
 });
 
-app.MapGet("/version", () => "1.0.0")
-    .RequireAuthorization();
+app.MapGet("/version", () => "1.0.0");
 
 app.MapApplicationsEndpoints();
 app.MapUsersEndpoints();
