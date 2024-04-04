@@ -81,7 +81,7 @@ public const string api1 = """"
                             "type": "object",
                             "properties": {
                               "value": {
-                                "type": "number"
+                                "type": "number",
                                 "min": 10,
                                 "max": 120,
                                 "step": 0.1
