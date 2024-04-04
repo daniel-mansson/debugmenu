@@ -23,6 +23,7 @@ namespace Game {
         private bool reuseInstance;
 
         private DebugMenuClient _debugMenuClient;
+        private bool _spamLogs;
 
 
         private async void Start() {
@@ -149,19 +150,23 @@ namespace Game {
             if(GUILayout.Button("assertion")) {
                 Debug.LogAssertion("here is an assertion message", gameObject);
             }
+
+            _spamLogs = GUILayout.Toggle(_spamLogs, "Spam Logs");
         }
 
         private void Update() {
-            if(Random.value < 0.01f) {
-                Debug.Log("update log", gameObject);
-            }
+            if(_spamLogs) {
+                if(Random.value < 0.01f) {
+                    Debug.Log("update log", gameObject);
+                }
 
-            if(Random.value < 0.005f) {
-                Debug.LogWarning("update warn", gameObject);
-            }
+                if(Random.value < 0.005f) {
+                    Debug.LogWarning("update warn", gameObject);
+                }
 
-            if(Random.value < 0.002f) {
-                Debug.LogError("update error", gameObject);
+                if(Random.value < 0.002f) {
+                    Debug.LogError("update error", gameObject);
+                }
             }
         }
 

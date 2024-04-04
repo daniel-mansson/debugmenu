@@ -471,8 +471,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55aefe6b826f47a41a9e8303734af35d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  token: B056B5B8C1065365CC1A292A7F30A1C648CE613605C41C24
-  url: https://localhost:8082
+  token: 6DB7D045DF5D1271396FE6982C4EC8850FCBFD9BEE7021AF
+  url: https://debugmenu-5ttpcqzivq-lz.a.run.app
   body: {fileID: 240071724}
   materials:
   - {fileID: 2100000, guid: aae97308aeb9f4a8caaa29b9b518ce51, type: 2}

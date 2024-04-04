@@ -15,7 +15,7 @@ public class DebugMenuIoJwtService :IJwtService {
             ValidateIssuer = true,
             ValidIssuer = "debugmenu.io",
             ValidateAudience = true,
-            ValidAudience = "http://debugmenu.io",
+            ValidAudience = "https://debugmenu.io",
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = key,
             IssuerSigningKeys = new []{ key },
