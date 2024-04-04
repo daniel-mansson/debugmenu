@@ -9,7 +9,7 @@ public class LocalWebsocketUrlProvider : ILocalWebsocketUrlProvider {
 #if DEBUG
         return "wss://localhost:8082";
 #else
-        return "wss://debugmenu-5ttpcqzivq-lz.a.run.app";
+        return "wss://debugmenu.dev";
 #endif
     }
 }
