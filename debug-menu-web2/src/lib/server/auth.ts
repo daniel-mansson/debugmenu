@@ -8,7 +8,6 @@ import { Google } from "arctic";
 import { GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET } from "$env/static/private";
 import { GOOGLE_ID, GOOGLE_SECRET, GOOGLE_CALLBACK, DB_SECRET, DB_HOST, DB_NAME, DB_USER } from "$env/static/private";
 
-console.log(DB_USER)
 export const pool = new Pool({
 	host: DB_HOST,
 	database: DB_NAME,

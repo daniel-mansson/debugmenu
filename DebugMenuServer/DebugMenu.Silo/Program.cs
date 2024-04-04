@@ -123,6 +123,8 @@ app.UseCors(b => {
             "https://0.0.0.0:8080",
             "http://localhost:8080",
             "https://localhost:8080",
+            "https://debugmenu.io",
+            "https://debugmenu.dev",
             "http://192.168.10.180:5173")
         .AllowAnyMethod()
         .AllowCredentials()
