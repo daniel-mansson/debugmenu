@@ -4,6 +4,7 @@
 	import { Separator } from '$lib/components/ui/separator';
 	import icon from '$lib/assets/up_arrow.svg';
 	import { Button } from '$lib/components/ui/button';
+	import { UploadCloudIcon } from 'lucide-svelte';
 
 	export let data;
 </script>
@@ -12,7 +13,7 @@
 	<nav class="border-gray-200">
 		<div class="mx-auto flex max-w-screen-xl flex-wrap items-center justify-between p-4">
 			<a href="/" class="flex items-center space-x-3 rtl:space-x-reverse">
-				<img src={icon} class="h-8 dark:invert" alt="Flowbite Logo" />
+				<UploadCloudIcon class="ml-2 h-6 dark:stroke-white"></UploadCloudIcon>
 				<span class="self-center whitespace-nowrap text-xl font-semibold dark:text-white"
 					>DEBUGMENU.IO</span
 				>

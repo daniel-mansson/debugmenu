@@ -4,6 +4,7 @@
 	import Separator from '$lib/components/ui/separator/separator.svelte';
 	import icon from '$lib/assets/up_arrow.svg';
 	import { goto } from '$app/navigation';
+	import { UploadCloudIcon } from 'lucide-svelte';
 
 	function signInClicked(provider: string) {
 		console.log(provider);
@@ -16,7 +17,7 @@
 		<nav class="border-gray-200">
 			<div class="mx-auto flex max-w-screen-xl flex-wrap items-center justify-between p-4">
 				<a href="/" class="flex items-center space-x-3 rtl:space-x-reverse">
-					<img src={icon} class="h-8 dark:invert" alt="Flowbite Logo" />
+					<UploadCloudIcon class="ml-2 h-6 dark:stroke-white"></UploadCloudIcon>
 					<span class="self-center whitespace-nowrap text-xl font-semibold dark:text-white"
 						>DEBUGMENU.IO</span
 					>

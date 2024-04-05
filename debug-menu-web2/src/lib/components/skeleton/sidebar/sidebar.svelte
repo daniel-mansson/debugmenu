@@ -14,9 +14,9 @@
 		CloudOff,
 		ChevronsLeftIcon,
 		SatelliteDishIcon,
-		SatelliteDish
+		SatelliteDish,
+		UploadCloudIcon
 	} from 'lucide-svelte';
-	import icon from '$lib/assets/up_arrow.svg';
 
 	import { toggleMode } from 'mode-watcher';
 	import { Separator } from '$lib/components/ui/separator';
@@ -51,7 +51,7 @@
 	<div class=" h-[calc(100vh-3rem)] overflow-y-auto bg-primary-foreground px-3 py-4">
 		<div class="flex">
 			<a href="/app" class="mb-2 flex items-center space-x-2 rtl:space-x-reverse">
-				<img src={icon} class="h-6 dark:invert" alt="Flowbite Logo" />
+				<UploadCloudIcon class="ml-2 h-6 dark:stroke-white"></UploadCloudIcon>
 				<span class="self-center whitespace-nowrap text-lg font-semibold dark:text-white"
 					>DEBUGMENU.IO</span
 				>

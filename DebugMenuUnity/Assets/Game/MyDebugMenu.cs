@@ -27,6 +27,8 @@ namespace Game {
 
 
         private async void Start() {
+            Application.targetFrameRate = 60;
+
             _debugMenuClient = new DebugMenuClient(url, token, new Dictionary<string, string>());
 
             DebugMenuClient.RunningInstance instance = null;
