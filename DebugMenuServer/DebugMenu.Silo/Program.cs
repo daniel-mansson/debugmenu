@@ -14,6 +14,7 @@ using DebugMenu.Silo.Web.RunningInstances;
 using DebugMenu.Silo.Web.RuntimeTokens;
 using DebugMenu.Silo.Web.RuntimeTokens.Persistence;
 using DebugMenu.Silo.Web.RuntimeTokens.Persistence.EntityFramework;
+using DebugMenu.Silo.Web.Startup;
 using DebugMenu.Silo.Web.Teams;
 using DebugMenu.Silo.Web.Teams.Persistence;
 using DebugMenu.Silo.Web.Teams.Persistence.EntityFramework;
@@ -157,6 +158,7 @@ app.MapUsersEndpoints();
 app.MapRuntimeTokensEndpoints();
 app.MapRunningInstancesEndpoints();
 app.MapTeamsEndpoints();
+app.MapStartupEndpoints();
 
 app.MapPost("/instance/start", async (StartInstanceRequestDto request, IClusterClient clusterClient) =>
     await clusterClient.GetGrain<IDebugInstanceGrain>(Guid.NewGuid().ToString())

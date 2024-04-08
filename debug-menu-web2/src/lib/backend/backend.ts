@@ -125,5 +125,12 @@ export function DebugMenuBackend(fetch: SvelteFetch, token: string) {
                 "Content-Type": "application/json",
             }
         }),
+        processStartupEventsByUser: (userId: string) => fetch(`${PUBLIC_BACKEND_URL}/api/startup/process-by-user/${userId}`, {
+            method: 'POST',
+            headers: {
+                authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+            }
+        }),
     };
 }
