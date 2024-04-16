@@ -19,6 +19,12 @@ public class CreateTeamHandler : IRequestHandler<CreateTeamRequest, TeamDto> {
 
     public async Task<TeamDto> Handle(CreateTeamRequest request, CancellationToken cancellationToken) {
         //TODO: Validate current user is set as owner OR is super admin
+        if(request.OwnerUserId != null) {
+            var owner = await _userRepository.GetByIdAsync(request.OwnerUserId);
+            if(owner == null) {
+                throw new ArgumentException("OwnerUserId was not null and user did not exist");
+            }
+        }
 
         var team = _teamsRepository.Create(new TeamEntity() {
             Name = request.Item.Name
